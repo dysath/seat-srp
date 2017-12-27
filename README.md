@@ -1,7 +1,7 @@
 # seat-srp
 A module for SeAT that tracks SRP requests
 
-This plugin write for [SeAT](https://github.com/eveseat/seat) is providing to your instance a way to manage your Slack Team with SeAT using both Api Keys and a grant permission system.
+This plugin write for [SeAT](https://github.com/eveseat/seat) is providing to your instance a way to manage your ship replacement program (SRP)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/denngarr/seat-srp.svg?style=flat-square)]()
 [![Build Status](https://img.shields.io/travis/dysath/seat-srp.svg?style=flat-square)](https://travis-ci.org/dysath/seat-srp)
