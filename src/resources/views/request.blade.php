@@ -52,13 +52,13 @@
               <td data-order="">{{ number_format($kill->cost) }} ISK</td>
               <td data-order="">
                   @if ($kill->approved === 0)
-                    Pending
+                    <span class="label label-warning">Pending</span>
                   @elseif ($kill->approved === -1)
-                    Rejected
+                    <span class="label label-danger">Rejected</span>
                   @elseif ($kill->approved === 1)
-                    Approved
+                    <span class="label label-success">Approved</span>
                   @elseif ($kill->approved === 2)
-                    Paid Out
+                    <span class="label label-primary">Paid Out</span>
                   @endif
               </td>
               <td data-order="">{{ $kill->created_at }}</td>
@@ -76,17 +76,17 @@
             <h3 class="panel-title">Killmail Details</h3>
         </div>
         <div class="panel-body" id="killMailSheet">
-            <table border="0" width="100%">
+            <table class="table">
                 <tr>
                     <td><label>Pilot:</label><label id="characterName"></label></td>
                     <td><label>Ship:</label><label id="shipType"></label></td>
                     <td style="text-align: right"><label id="price"></label></td>
                 </tr>
             </table>
-            <table id="killReport" border="2" width="100%">
+            <table id="killReport" class="table table-striped" width="100%">
             <tr>
                 <th>Low Slot Module</th>
-                <th>Number</th>
+                <th style="width: 2em">Number</th>
             <tr>
             @for ($slot = 0; $slot < 8; $slot++)
             <tr>
@@ -125,13 +125,13 @@
             </tr>
             @endfor
             </table>
-            <table id="dronebay" border="2" width="100%">
+            <table id="dronebay" class="table table-striped">
             <tr>
                 <th>Drone Bay</th>
                 <th width="10em">Number</th>
             <tr>
             </table>
-            <table id="cargo" border="2" width="100%">
+            <table id="cargo" class="table table-striped">
             <tr>
                 <th>Cargo Bay Contents</th>
                 <th width="10em">Number</th>

@@ -29,13 +29,13 @@
               <td data-order="">{{ $kill->ship_type }}</td>
               <td data-order="">{{ number_format($kill->cost) }} ISK</td>
               @if ($kill->approved === 0)
-                <td data-order="" style="background-color: yellow; color: black;" id="id-{{ $kill->kill_id }}"> Pending </td>
+                <td data-order="" id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
               @elseif ($kill->approved === -1)
-                <td data-order="" style="background-color: red; color: white;" id="id-{{ $kill->kill_id }}"> Rejected </td>
+                <td data-order="" id="id-{{ $kill->kill_id }}"><span class="label label-danger">Rejected</span></td>
               @elseif ($kill->approved === 1)
-                <td data-order="" style="background-color: green; color: white;" id="id-{{ $kill->kill_id }}"> Approved </td>
+                <td data-order="" id="id-{{ $kill->kill_id }}"><span class="label label-success">Approved</span></td>
               @elseif ($kill->approved === 2)
-                <td data-order="" style="background-color: blue; color: white;" id="id-{{ $kill->kill_id }}"> Paid Out </td>
+                <td data-order="" id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
               @endif
               <td data-order="">{{ $kill->created_at }}</td>
               <td data-order="">
@@ -63,21 +63,13 @@ $(':button').click(function(data) {
     }).done(function (data) {
 console.log(data);
       if (data.name === "Approve") {
-          $("#id-"+data.value).css('background-color', 'green');
-          $("#id-"+data.value).css('color', 'white');
-          $("#id-"+data.value).text("Approved");
+          $("#id-"+data.value).html('<span class="label label-success">Approved</span>');
       } else if (data.name === "Reject") {
-          $("#id-"+data.value).css('background-color', 'red');
-          $("#id-"+data.value).css('color', 'white');
-          $("#id-"+data.value).text("Rejected");
+          $("#id-"+data.value).html('<span class="label label-danger">Rejected</span>');
       } else if (data.name === "Paid Out") {
-          $("#id-"+data.value).css('background-color', 'blue');
-          $("#id-"+data.value).css('color', 'white');
-          $("#id-"+data.value).text("Paid Out");
+          $("#id-"+data.value).html('<span class="label label-primary">Paid Out</span>');
       } else if (data.name === "Pending") {
-          $("#id-"+data.value).css('background-color', 'yellow');
-          $("#id-"+data.value).css('color', 'black');
-          $("#id-"+data.value).text("Pending");
+          $("#id-"+data.value).html('<span class="label label-warning">Pending</span>');
       }
     });
 
