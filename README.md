@@ -15,7 +15,7 @@ In your seat directory (By default:  /var/www/seat), type the following:
 
 ```
 php artisan down
-composer require denngarr/smf-bridge
+composer require denngarr/seat-srp
 ```
 
 After a successful installation, you can include the actual plugin by editing **config/app.php** and adding the following after:
@@ -34,6 +34,9 @@ and save the file.  Now you're ready to tell SeAT how to use the plugin:
 
 ```
 php artisan vendor:publish --force
+php artisan migrate
+
+php artisan up
 ```
 
 And now, when you log into 'Seat', you should see a 'Ship Replacement Program' link on the left.
