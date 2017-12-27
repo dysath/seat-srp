@@ -9,7 +9,7 @@
             <h3 class="panel-title">Request New SRP</h3>
         </div>
         <div class="panel-body">
-	    <p>Copy and paste the link from 'External Blah' on your kill list.</p>
+	    <p>Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.</p>
             <div class="form-group">
                 <div class="input-group input-group-sm">
                     <input type="text" class="loading" id="killMailUrl" name="killMailUrl" size="60"/>
