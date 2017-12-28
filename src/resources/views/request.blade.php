@@ -4,35 +4,36 @@
 @section('page_header', trans('srp::srp.request'))
 
 @section('left')
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Request New SRP</h3>
+    <div class="box box-success box-solid">
+        <div class="box-header">
+            <h3 class="box-title">Request New SRP</h3>
         </div>
-        <div class="panel-body">
-	    <p>Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.</p>
-            <div class="form-group">
-                <div class="input-group input-group-sm">
-                    <input type="text" class="loading" id="killMailUrl" name="killMailUrl" size="60"/>
-                    <input type="button" id="readUrl" name="readUrl" value="Verify Killmail" />
-                    <form role="form" action="{{ route('srp.saveKillMail') }}" method="post">
-                        <input type="submit" id="saveKillMail" value="Submit Killmail" />
-                        <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value="" />
-                        <input type="hidden" class="form-control" id="srpShipType" name="srpShipType" value="" />
-                        <input type="hidden" class="form-control" id="srpCost" name="srpCost" value="" />
-                        <input type="hidden" class="form-control" id="srpKillId" name="srpKillId" value="" />
-                        <input type="hidden" class="form-control" id="srpKillToken" name="srpKillToken" value="" />
-                        {{ csrf_field() }}
-                    </form>
-                </div>
-           </div>
+        <div class="box-body">
+            <form role="form" action="{{ route('srp.saveKillMail') }}" method="post">
+            <p>Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.</p>
+            <input type="text" class="form-control" id="killMailUrl" name="killMailUrl" size="60"/>
+        </div>
+        <div class="box-footer">
+            <input type="button" class="btn" id="readUrl" name="readUrl" value="Verify Killmail" />
+                <input type="submit" class="btn btn-primary" id="saveKillMail" value="Submit Killmail" />
+                <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value="" />
+                <input type="hidden" class="form-control" id="srpShipType" name="srpShipType" value="" />
+                <input type="hidden" class="form-control" id="srpCost" name="srpCost" value="" />
+                <input type="hidden" class="form-control" id="srpKillId" name="srpKillId" value="" />
+                <input type="hidden" class="form-control" id="srpKillToken" name="srpKillToken" value="" />
+                {{ csrf_field() }}
+            </form>
+        </div>
+        <div class="overlay">
+          <i class="fa fa-refresh fa-spin"></i>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">My SRP Requests</h3>
+    <div class="box box-success box-solid">
+        <div class="box-header">
+            <h3 class="box-title">My SRP Requests</h3>
         </div>
-        <div class="panel-body">
-          <table class="table datatable table-condensed table-hover table-responsive">
+        <div class="box-body">
+          <table id="srps" class="table table table-bordered table-striped">
             <thead>
             <tr>
               <th>{{ trans('srp::srp.id') }}</th>
@@ -46,11 +47,11 @@
             <tbody>
             @foreach ($kills as $kill)
             <tr>
-              <td data-order=""><a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a></td>
-              <td data-order="">{{ $kill->character_name }}</td>
-              <td data-order="">{{ $kill->ship_type }}</td>
-              <td data-order="">{{ number_format($kill->cost) }} ISK</td>
-              <td data-order="">
+              <td><a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a></td>
+              <td>{{ $kill->character_name }}</td>
+              <td>{{ $kill->ship_type }}</td>
+              <td>{{ number_format($kill->cost) }} ISK</td>
+              <td>
                   @if ($kill->approved === 0)
                     <span class="label label-warning">Pending</span>
                   @elseif ($kill->approved === -1)
@@ -71,67 +72,62 @@
 @stop
 
 @section('right')
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Killmail Details</h3>
+    <div class="box box-primary box-solid">
+        <div class="box-header">
+            <h3 class="box-title">Killmail Details</h3>
         </div>
-        <div class="panel-body" id="killMailSheet">
-            <table class="table">
-                <tr>
-                    <td><label>Pilot:</label><label id="characterName"></label></td>
-                    <td><label>Ship:</label><label id="shipType"></label></td>
-                    <td style="text-align: right"><label id="price"></label></td>
-                </tr>
-            </table>
-            <table id="killReport" class="table table-striped" width="100%">
+        <div class="box-body" id="killMailSheet">
+          <div>
+            <dl class="dl-horizontal">
+              <dt><label class="label label-primary">Pilot:</label></dt>
+              <dd><label id="characterName"></label></dd>
+              <dt><label class="label label-primary">Ship:</label></dt>
+              <dd><label id="shipType"></label></dd>
+              <dt><label class="label label-primary">Cost:</label></dt>
+              <dd><label id="price"></label></dd>
+            </dl>
+          </div>
+            <table id="killReport" class="table table-condensed" width="100%">
             <tr>
                 <th>Low Slot Module</th>
-                <th style="width: 2em">Number</th>
             <tr>
             @for ($slot = 0; $slot < 8; $slot++)
             <tr>
                 <td id="LoSlot{{ $slot }}"></td>
-                <td id="LoSlot{{ $slot }}-qty"></td>
             </tr>
             @endfor
             <tr>
                 <th>Mid Slot Module</th>
-                <th>Number</th>
             <tr>
             @for ($slot = 0; $slot < 8; $slot++)
             <tr>
                 <td id="MedSlot{{ $slot }}"></td>
-                <td id="MedSlot{{ $slot }}-qty"></td>
             </tr>
             @endfor
             <tr>
                 <th>High Slot Module</th>
-                <th>Number</th>
             <tr>
             @for ($slot = 0; $slot < 8; $slot++)
             <tr>
                 <td id="HiSlot{{ $slot }}"></td>
-                <td id="HiSlot{{ $slot }}-qty" width="10em"></td>
             </tr>
             @endfor
             <tr>
                 <th>Rigs</th>
-                <th>Number</th>
             <tr>
             @for ($slot = 0; $slot < 3; $slot++)
             <tr>
                 <td id="RigSlot{{ $slot }}"></td>
-                <td id="RigSlot{{ $slot }}-qty" width="10em"></td>
             </tr>
             @endfor
             </table>
-            <table id="dronebay" class="table table-striped">
+            <table id="dronebay" class="table table-condensed">
             <tr>
                 <th>Drone Bay</th>
                 <th width="10em">Number</th>
             <tr>
             </table>
-            <table id="cargo" class="table table-striped">
+            <table id="cargo" class="table table-condensed">
             <tr>
                 <th>Cargo Bay Contents</th>
                 <th width="10em">Number</th>
@@ -152,12 +148,26 @@
 </style>
 
 <script type="application/javascript">
-    $('.loading').css('background-image', 'none');
+  $(function () {
+    $('#srps').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+
+<script type="application/javascript">
+    $('.overlay').hide();
     $('#killMailSheet').hide();
     $('#saveKillMail').hide();
 
     $('#readUrl').on('click', function () {
-      $('.loading').css('background-image', 'url("{{ asset('web/img/spinner.gif') }}")');
+      $('.overlay').show();
       $.ajax({
         headers: function() {},
         url: "{{ route('srp.getKillMail') }}",
@@ -165,22 +175,21 @@
         data: 'km=' + encodeURIComponent($('#killMailUrl').val()),
         timeout: 10000,
       }).done(function (result) {
-        $('.loading').css('background-image', 'none');
+        $('.overlay').hide();
 
         if (result) {
           $('#killMailSheet').show();
           $('#saveKillMail').show();
           for (var slot in result) {
             if ((slot != "cargo") && (slot != "dronebay")) {
-              $('#' + slot).html("<img src='https://image.eveonline.com/Type/" + result[slot].id + "_32.png' />" + result[slot].name);
-              $('#' + slot + '-qty').html(result[slot].qty);
+              $('#' + slot).html("<img src='https://image.eveonline.com/Type/" + result[slot].id + "_32.png' height='16' />" + result[slot].name);
             }
           }
           for (var slot in result["cargo"]) {
-            $('#cargo').append("<tr><td><img src='https://image.eveonline.com/Type/" + slot + "_32.png' />" + result["cargo"][slot].name + "</td><td>" + result["cargo"][slot].qty + "</td><tr>\n");
+            $('#cargo').append("<tr><td><img src='https://image.eveonline.com/Type/" + slot + "_32.png' height='16' />" + result["cargo"][slot].name + "</td><td>" + result["cargo"][slot].qty + "</td><tr>\n");
           }
           for (var slot in result["dronebay"]) {
-            $('#dronebay').append("<tr><td><img src='https://image.eveonline.com/Type/" + slot + "_32.png' />" + result["dronebay"][slot].name + "</td><td>" + result["dronebay"][slot].qty + "</td></tr>\n");
+            $('#dronebay').append("<tr><td><img src='https://image.eveonline.com/Type/" + slot + "_32.png' height='16' />" + result["dronebay"][slot].name + "</td><td>" + result["dronebay"][slot].qty + "</td></tr>\n");
           }
           formattedPrice = result["price"];
           $('#price').html(formattedPrice.toLocaleString() + " ISK");
@@ -194,11 +203,11 @@
           $('#srpShipType').val(result["shipType"]);
         }
         else {
-          $('.loading').css('background-image', 'none');
+          $('.overlay').hide();
           $('#killMailUrl').append("Killmail not Found");
         }
       }).fail(function () {
-          $('.loading').css('background-image', 'none');
+          $('.overlay').hide();
           $('#killMailUrl').append("Killmail not Found");
       });
     });

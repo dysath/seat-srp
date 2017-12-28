@@ -7,7 +7,6 @@
 
 return [
     'srp' => [
-        'view',
         'request',
         'settle'
     ]
