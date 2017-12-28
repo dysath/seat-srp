@@ -39,10 +39,10 @@
               @endif
               <td>{{ $kill->created_at }}</td>
               <td>
-                  <input type="button" class="btn btn-success" name="{{ $kill->kill_id }}" value="Approve" />
-                  <input type="button" class="btn btn-danger" name="{{ $kill->kill_id }}" value="Reject" />
-                  <input type="button" class="btn btn-primary" name="{{ $kill->kill_id }}" value="Paid Out" />
-                  <input type="button" class="btn btn-warning" name="{{ $kill->kill_id }}" value="Pending" /></td>
+                  <input type="button" class="btn-sm btn-success" name="{{ $kill->kill_id }}" value="Approve" />
+                  <input type="button" class="btn-sm btn-danger" name="{{ $kill->kill_id }}" value="Reject" />
+                  <input type="button" class="btn-sm btn-primary" name="{{ $kill->kill_id }}" value="Paid Out" />
+                  <input type="button" class="btn-sm btn-warning" name="{{ $kill->kill_id }}" value="Pending" /></td>
             </tr>
             @endforeach
             </tbody>

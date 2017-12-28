@@ -14,8 +14,10 @@
             <input type="text" class="form-control" id="killMailUrl" name="killMailUrl" size="60"/>
         </div>
         <div class="box-footer">
-            <input type="button" class="btn" id="readUrl" name="readUrl" value="Verify Killmail" />
+           <div class="btn-group pull-right" role="group">
+                <input type="button" class="btn btn-default" id="readUrl" name="readUrl" value="Verify Killmail" />
                 <input type="submit" class="btn btn-primary" id="saveKillMail" value="Submit Killmail" />
+           </div>
                 <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value="" />
                 <input type="hidden" class="form-control" id="srpShipType" name="srpShipType" value="" />
                 <input type="hidden" class="form-control" id="srpCost" name="srpCost" value="" />
@@ -78,14 +80,21 @@
         </div>
         <div class="box-body" id="killMailSheet">
           <div>
-            <dl class="dl-horizontal">
-              <dt><label class="label label-primary">Pilot:</label></dt>
-              <dd><label id="characterName"></label></dd>
-              <dt><label class="label label-primary">Ship:</label></dt>
-              <dd><label id="shipType"></label></dd>
-              <dt><label class="label label-primary">Cost:</label></dt>
-              <dd><label id="price"></label></dd>
-            </dl>
+            <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th class="bg-primary"><label class="label pull-right">Pilot:</label></th>
+                <th class="bg-white"><label id="characterName"></label></th>
+              </tr>
+              <tr>
+                <th class="bg-primary"><label class="label pull-right">Ship:</label></th>
+                <th class="bg-white"><label id="shipType"></label></th>
+              </tr>
+              <tr>
+                <th class="bg-primary"><label class="label pull-right">Cost:</label></th>
+                <th class="bg-white"><label id="price"></label></th>
+              </tr>
+            </thead>
           </div>
             <table id="killReport" class="table table-condensed" width="100%">
             <tr>
