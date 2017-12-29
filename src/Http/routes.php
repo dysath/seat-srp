@@ -12,31 +12,31 @@ Route::group([
         Route::get('/', [
             'as'   => 'srp.request',
             'uses' => 'SrpController@srpGetRequests',
-            'middleware' => 'bouncer:srp.view'
+            'middleware' => 'bouncer:srp.request'
         ]);
 
         Route::get('/getkillmail', [
             'as'   => 'srp.getKillMail',
             'uses' => 'SrpController@srpGetKillMail',
-            'middleware' => 'bouncer:srp.view'
+            'middleware' => 'bouncer:srp.request'
         ]);
 
         Route::post('/savekillmail', [
             'as'   => 'srp.saveKillMail',
             'uses' => 'SrpController@srpSaveKillMail',
-            'middleware' => 'bouncer:srp.view'
+            'middleware' => 'bouncer:srp.request'
         ]);
 
         Route::get('/admin', [
             'as'   => 'srpadmin.list',
             'uses' => 'SrpAdminController@srpGetKillMails',
-            'middleware' => 'bouncer:srp.approve'
+            'middleware' => 'bouncer:srp.settle'
         ]);
 
         Route::get('/admin/{action}/{kill_id}', [
-            'as'   => 'srpadmin.approve',
+            'as'   => 'srpadmin.settle',
             'uses' => 'SrpAdminController@srpApprove',
-            'middleware' => 'bouncer:srp.approve'
+            'middleware' => 'bouncer:srp.settle'
         ]);
     });
 });
