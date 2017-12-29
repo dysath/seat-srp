@@ -49,6 +49,7 @@ class SrpController extends Controller {
             'kill_token'     => $request->input('srpKillToken'),
             'approved'       => 0,
             'cost'           => $request->input('srpCost'),
+            'type_id'        => $request->input('srpTypeId'),
             'ship_type'      => $request->input('srpShipType')
         ]);
 
@@ -110,6 +111,7 @@ class SrpController extends Controller {
         }
 
         $searchedItem = InvType::find($killMail->victim->ship_type_id);
+        $slots['typeId'] = $killMail->victim->ship_type_id;
         $slots['shipType'] = $searchedItem->typeName;
         array_push($priceList, $searchedItem->typeName);
         $prices = $this->srpGetPrice($priceList);

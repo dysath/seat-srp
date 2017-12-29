@@ -20,6 +20,7 @@
                 <input type="submit" class="btn btn-primary" id="saveKillMail" value="Submit Killmail"/>
             </div>
             <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value=""/>
+            <input type="hidden" class="form-control" id="srpTypeId" name="srpTypeId" value="" />
             <input type="hidden" class="form-control" id="srpShipType" name="srpShipType" value=""/>
             <input type="hidden" class="form-control" id="srpCost" name="srpCost" value=""/>
             <input type="hidden" class="form-control" id="srpKillId" name="srpKillId" value=""/>
@@ -54,7 +55,11 @@
                                target="_blank">{{ $kill->kill_id }}</a></td>
                         <td>{{ $kill->character_name }}</td>
                         <td>{{ $kill->ship_type }}</td>
-                        <td>{{ number_format($kill->cost) }} ISK</td>
+                        <td>
+                            <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
+                                {{ number_format($kill->cost) }} ISK
+                            </button>
+                        </td>
                         <td>
                             @if ($kill->approved === 0)
                                 <span class="label label-warning">Pending</span>
@@ -75,6 +80,7 @@
             </table>
         </div>
     </div>
+    @include('srp::includes.insurances-modal')
 @stop
 
 @section('right')
@@ -162,7 +168,7 @@
 @push('javascript')
     <script type="application/javascript">
         $(function () {
-            $('#srps').DataTable()
+            $('#srps').DataTable();
             $('#example2').DataTable({
                 'paging': true,
                 'lengthChange': false,
@@ -170,7 +176,87 @@
                 'ordering': true,
                 'info': true,
                 'autoWidth': false
+            });
+
+            $('#insurances').on('show.bs.modal', function(e){
+                var link = '{{ route('srpadmin.insurances', 0) }}';
+                var table = $('#insurances').find('table');
+
+                if (!$.fn.DataTable.isDataTable(table)) {
+                    table.DataTable({
+                        "ajax": {
+                            url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+                            dataSrc: ''
+                        },
+                        "searching": false,
+                        "ordering": true,
+                        "info": false,
+                        "paging": false,
+                        "processing": true,
+                        "order": [[0, "asc"]],
+                        "columnDefs": [
+                            {
+                                "render": function(data, type, row) {
+                                    return row.name;
+                                },
+                                "targets": 0
+                            },
+                            {
+                                "className": "text-right",
+                                "render": function(data, type, row) {
+                                    return parseFloat(row.cost).toLocaleString(undefined, {
+                                        "style":"currency",
+                                        "currency": "ISK",
+                                        "minimumFractionDigits": 2,
+                                        "maximumFractionDigits": 2
+                                    });
+                                },
+                                "targets": 1
+                            },
+                            {
+                                "className": "text-right",
+                                "render": function(data, type, row) {
+                                    return parseFloat(row.payout).toLocaleString(undefined, {
+                                        "style":"currency",
+                                        "currency": "ISK",
+                                        "minimumFractionDigits": 2,
+                                        "maximumFractionDigits": 2
+                                    });
+                                },
+                                "targets": 2
+                            },
+                            {
+                                "className": "text-right",
+                                "render": function(data, type, row) {
+                                    return parseFloat(row.refunded).toLocaleString(undefined, {
+                                        "style":"currency",
+                                        "currency": "ISK",
+                                        "minimumFractionDigits": 2,
+                                        "maximumFractionDigits": 2
+                                    });
+                                },
+                                "targets": 3
+                            },
+                            {
+                                "className": "text-right",
+                                "render": function(data, type, row) {
+                                    return parseFloat(row.remaining).toLocaleString(undefined, {
+                                        "style":"currency",
+                                        "currency": "ISK",
+                                        "minimumFractionDigits": 2,
+                                        "maximumFractionDigits": 2
+                                    });
+                                },
+                                "targets": 4
+                            }
+                        ]
+                    });
+                }
             })
+            .on('hidden.bs.modal', function(e){
+                var table = $('#insurances').find('table').DataTable();
+                table.destroy();
+            });
         })
     </script>
 
@@ -238,6 +324,7 @@
                     $('#srpCharacterName').val(result["characterName"]);
                     $('#srpCost').val(result["price"]);
                     $('#srpShipType').val(result["shipType"]);
+                    $('#srpTypeId').val(result["shipTypeID"])
                 }
                 else {
                     $('.overlay').hide();

@@ -33,10 +33,16 @@ Route::group([
             'middleware' => 'bouncer:srp.settle'
         ]);
 
-        Route::get('/admin/{action}/{kill_id}', [
+        Route::get('/admin/{kill_id}/{action}', [
             'as'   => 'srpadmin.approve',
             'uses' => 'SrpAdminController@srpApprove',
             'middleware' => 'bouncer:srp.settle'
+        ])->where(['action' => 'Approve|Reject|Paid Out|Pending']);
+
+        Route::get('/admin/insurances/{kill_id}', [
+            'as' => 'srpadmin.insurances',
+            'uses' => 'SrpAdminController@getInsurances',
+            'middleware' => 'bouncer:srp.settle',
         ]);
     });
 });

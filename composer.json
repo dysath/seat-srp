@@ -18,6 +18,7 @@
     "require": {
         "eveseat/services": "^2.0",
         "eveseat/eveapi": "^2.0",
-        "eveseat/web": "^2.0"
+        "eveseat/web": "^2.0",
+        "eveseat/eseye": "0.*"
     }
 }
