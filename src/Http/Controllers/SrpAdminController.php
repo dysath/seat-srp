@@ -23,17 +23,24 @@ class SrpAdminController extends Controller {
     public function srpApprove($kill_id, $action) {
         $killmail = KillMail::find($kill_id);
 
-        if ($action === 'Approve') 
-            $killmail->approved = '1';
-        elseif ($action === 'Reject')
-            $killmail->approved = '-1';
-        elseif ($action === 'Paid Out')
-            $killmail->approved = '2';
-        elseif ($action === 'Pending')
-            $killmail->approved = '0';
+        switch ($action)
+        {
+            case 'Approve':
+                $killmail->approved = '1';
+                break;
+            case 'Reject':
+                $killmail->approved = '-1';
+                break;
+            case 'Paid Out':
+                $killmail->approved = '2';
+                break;
+            case 'Pending':
+                $killmail->approved = '0';
+                break;
+        }
 
         $killmail->save();
-  
+
         return json_encode(['name' => $action, 'value' => $kill_id]);
     }
 }

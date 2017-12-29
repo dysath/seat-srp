@@ -6,7 +6,7 @@
 @section('full')
     <div class="box box-primary box-solid">
         <div class="box-header">
-            <h3 class="box-title">My SRP Requests</h3>
+            <h3 class="box-title">SRP Requests</h3>
         </div>
         <div class="box-body">
           <table id="srps" class="table table-bordered">
@@ -37,12 +37,14 @@
               @elseif ($kill->approved === 2)
                 <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
               @endif
-              <td>{{ $kill->created_at }}</td>
               <td>
-                  <input type="button" class="btn-sm btn-success" name="{{ $kill->kill_id }}" value="Approve" />
-                  <input type="button" class="btn-sm btn-danger" name="{{ $kill->kill_id }}" value="Reject" />
-                  <input type="button" class="btn-sm btn-primary" name="{{ $kill->kill_id }}" value="Paid Out" />
-                  <input type="button" class="btn-sm btn-warning" name="{{ $kill->kill_id }}" value="Pending" /></td>
+                  <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
+              </td>
+              <td>
+                  <input type="button" class="btn btn-xs btn-success" name="{{ $kill->kill_id }}" value="Approve" />
+                  <input type="button" class="btn btn-xs btn-danger" name="{{ $kill->kill_id }}" value="Reject" />
+                  <input type="button" class="btn btn-xs btn-primary" name="{{ $kill->kill_id }}" value="Paid Out" />
+                  <input type="button" class="btn btn-xs btn-warning" name="{{ $kill->kill_id }}" value="Pending" /></td>
             </tr>
             @endforeach
             </tbody>
