@@ -23,4 +23,3 @@ class KillMail extends Model {
                 'user_id', 'kill_id', 'character_name', 'kill_token', 'approved', 'cost', 'ship_type'
         ];
 }
-
