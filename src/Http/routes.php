@@ -34,7 +34,7 @@ Route::group([
         ]);
 
         Route::get('/admin/{kill_id}/{action}', [
-            'as'   => 'srpadmin.approve',
+            'as'   => 'srpadmin.settle',
             'uses' => 'SrpAdminController@srpApprove',
             'middleware' => 'bouncer:srp.settle'
         ])->where(['action' => 'Approve|Reject|Paid Out|Pending']);

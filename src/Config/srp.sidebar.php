@@ -11,6 +11,7 @@ return [
 				'name' => 'Request',
 				'icon' => 'fa-medkit',
 				'route' => 'srp.request',
+				'permission' => 'srp.request',
 			],
 			[
 				'name' => 'Approval',

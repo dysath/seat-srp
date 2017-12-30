@@ -94,15 +94,15 @@
                     <table class="table table-condensed">
                         <thead>
                         <tr>
-                            <th class="bg-primary"><label class="label pull-right">Pilot:</label></th>
+                            <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Pilot:</label></th>
                             <th class="bg-white"><label id="characterName"></label></th>
                         </tr>
                         <tr>
-                            <th class="bg-primary"><label class="label pull-right">Ship:</label></th>
+                            <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Ship:</label></th>
                             <th class="bg-white"><label id="shipType"></label></th>
                         </tr>
                         <tr>
-                            <th class="bg-primary"><label class="label pull-right">Cost:</label></th>
+                            <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Cost:</label></th>
                             <th class="bg-white"><label id="price"></label></th>
                         </tr>
                         </thead>
@@ -169,14 +169,6 @@
     <script type="application/javascript">
         $(function () {
             $('#srps').DataTable();
-            $('#example2').DataTable({
-                'paging': true,
-                'lengthChange': false,
-                'searching': false,
-                'ordering': true,
-                'info': true,
-                'autoWidth': false
-            });
 
             $('#insurances').on('show.bs.modal', function(e){
                 var link = '{{ route('srpadmin.insurances', 0) }}';
