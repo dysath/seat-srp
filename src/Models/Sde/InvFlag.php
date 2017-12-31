@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvFlag extends Model {
 
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public $incrementing = false;
+    public $incrementing = false;
 
-	protected $table = 'invFlags';
+    protected $table = 'invFlags';
 
-	protected $primaryKey = 'flagID';
+    protected $primaryKey = 'flagID';
 
 }

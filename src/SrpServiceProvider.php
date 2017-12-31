@@ -2,6 +2,7 @@
 
 namespace Denngarr\Seat\SeatSrp;
 
+use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
 use Illuminate\Support\ServiceProvider;
 
 class SrpServiceProvider extends ServiceProvider
@@ -13,6 +14,7 @@ class SrpServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->addCommands();
         $this->add_routes();
         // $this->add_middleware($router);
         $this->add_views();
@@ -51,7 +53,7 @@ class SrpServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/Config/srp.config.php', 'api.config');
+            __DIR__ . '/Config/srp.config.php', 'srp.config');
 
         $this->mergeConfigFrom(
             __DIR__ . '/Config/srp.sidebar.php', 'package.sidebar');
@@ -65,6 +67,13 @@ class SrpServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/resources/assets'     => public_path('web'),
             __DIR__ . '/database/migrations/' => database_path('migrations')
+        ]);
+    }
+
+    private function addCommands()
+    {
+        $this->commands([
+            InsuranceUpdate::class,
         ]);
     }
 

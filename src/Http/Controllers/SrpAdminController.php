@@ -20,6 +20,30 @@ class SrpAdminController extends Controller {
         return view('srp::list', compact('killmails'));
     }
 
+    public function getInsurances($kill_id)
+    {
+        $killmail = KillMail::where('kill_id', $kill_id)->first();
+
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retried killmail %s', $kill_id)], 404);
+
+        $data = [];
+
+        foreach ($killmail->type->insurances as $insurance) {
+
+            array_push($data, [
+                'name' => $insurance->name,
+                'cost' => $insurance->cost,
+                'payout' => $insurance->payout,
+                'refunded' => $insurance->refunded(),
+                'remaining' => $insurance->remaining($killmail),
+            ]);
+
+        }
+
+        return response()->json($data);
+    }
+
     public function srpApprove($kill_id, $action) {
         $killmail = KillMail::find($kill_id);
 
