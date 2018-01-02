@@ -6,6 +6,7 @@ use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Seat\Services\Models\Note;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterSheet;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
@@ -53,9 +54,49 @@ class SrpController extends Controller {
             'ship_type'      => $request->input('srpShipType')
         ]);
 
+        if (!is_null($request->input('srpPingContent')) && $request->input('srpPingContent') != '')
+        	KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
+
         return redirect()->back()
                          ->with('success', trans('srp::request'));
     }
+
+	public function getInsurances($kill_id)
+	{
+		$killmail = KillMail::where('kill_id', $kill_id)->first();
+
+		if (is_null($killmail))
+			return response()->json(['msg' => sprintf('Unable to retried killmail %s', $kill_id)], 404);
+
+		$data = [];
+
+		foreach ($killmail->type->insurances as $insurance) {
+
+			array_push($data, [
+				'name' => $insurance->name,
+				'cost' => $insurance->cost,
+				'payout' => $insurance->payout,
+				'refunded' => $insurance->refunded(),
+				'remaining' => $insurance->remaining($killmail),
+			]);
+
+		}
+
+		return response()->json($data);
+	}
+
+	public function getPing($kill_id)
+	{
+		$killmail = KillMail::find($kill_id);
+
+		if (is_null($killmail))
+			return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
+
+		if (!is_null($killmail->ping()))
+			return response()->json($killmail->ping());
+
+		return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
+	}
 
     private function srpPopulateSlots(stdClass $killMail) : array
     {

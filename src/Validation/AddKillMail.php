@@ -19,7 +19,9 @@ class AddKillMail extends FormRequest
             'srpKillId' => 'unique:seat_srp_srp,kill_id|required|integer',
             'srpKillToken' => 'required|string',
             'srpCost' => 'numeric',
-            'srpShipType' => 'string'
+            'srpShipType' => 'string',
+	        'srpTypeId' => 'required|integer',
+	        'srpPingContent' => 'string'
         ];
     }
 }

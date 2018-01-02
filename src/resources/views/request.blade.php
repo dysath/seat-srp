@@ -9,25 +9,33 @@
             <h3 class="box-title">Request New SRP</h3>
         </div>
         <form role="form" action="{{ route('srp.saveKillMail') }}" method="post">
-        <div class="box-body">
+            <div class="box-body">
                 <p>Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External
-                    URL into the box below.</p>
-                <input type="text" class="form-control" id="killMailUrl" name="killMailUrl" size="60"/>
-        </div>
-        <div class="box-footer">
-            <div class="btn-group pull-right" role="group">
-                <input type="button" class="btn btn-default" id="readUrl" name="readUrl" value="Verify Killmail"/>
-                <input type="submit" class="btn btn-primary" id="saveKillMail" value="Submit Killmail"/>
+                   URL into the box below.</p>
+                <div class="form-group">
+                    <label for="killMailUrl" class="control-label">External Url</label>
+                    <input type="text" class="form-control" id="killMailUrl" name="killMailUrl" placeholder="https://esi.tech.ccp.is/v1/killmails/9999999/sidufhus6f4654fdsdf4/?datasource=tranquility" />
+                    <span class="help-block" style="display: none;">Invalid killmail address</span>
+                </div>
+                <div class="form-group">
+                    <label for="srpPingContent">Ping</label>
+                    <textarea class="form-control" name="srpPingContent" rows="3" placeholder="Put the ping content related to the fleet where you loose this ship."></textarea>
+                </div>
             </div>
-            <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value=""/>
-            <input type="hidden" class="form-control" id="srpTypeId" name="srpTypeId" value="" />
-            <input type="hidden" class="form-control" id="srpShipType" name="srpShipType" value=""/>
-            <input type="hidden" class="form-control" id="srpCost" name="srpCost" value=""/>
-            <input type="hidden" class="form-control" id="srpKillId" name="srpKillId" value=""/>
-            <input type="hidden" class="form-control" id="srpKillToken" name="srpKillToken" value=""/>
-            {{ csrf_field() }}
-            </form>
-        </div>
+            <div class="box-footer">
+                <div class="btn-group pull-right" role="group">
+                    <input type="button" class="btn btn-default" id="readUrl" name="readUrl" value="Verify Killmail"/>
+                    <input type="submit" class="btn btn-primary" id="saveKillMail" value="Submit Killmail"/>
+                </div>
+                <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value=""/>
+                <input type="hidden" class="form-control" id="srpTypeId" name="srpTypeId" value="" />
+                <input type="hidden" class="form-control" id="srpShipType" name="srpShipType" value=""/>
+                <input type="hidden" class="form-control" id="srpCost" name="srpCost" value=""/>
+                <input type="hidden" class="form-control" id="srpKillId" name="srpKillId" value=""/>
+                <input type="hidden" class="form-control" id="srpKillToken" name="srpKillToken" value=""/>
+                {{ csrf_field() }}
+            </div>
+        </form>
         <div class="overlay">
             <i class="fa fa-refresh fa-spin"></i>
         </div>
@@ -52,7 +60,13 @@
                 @foreach ($kills as $kill)
                     <tr>
                         <td><a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/"
-                               target="_blank">{{ $kill->kill_id }}</a></td>
+                               target="_blank">{{ $kill->kill_id }}</a>
+                            @if(!is_null($kill->ping()))
+                            <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-ping" data-kill-id="{{ $kill->kill_id }}">
+                                <i class="fa fa-comment"></i>
+                            </button>
+                            @endif
+                        </td>
                         <td>{{ $kill->character_name }}</td>
                         <td>{{ $kill->ship_type }}</td>
                         <td>
@@ -81,6 +95,7 @@
         </div>
     </div>
     @include('srp::includes.insurances-modal')
+    @include('srp::includes.ping-modal')
 @stop
 
 @section('right')
@@ -165,13 +180,39 @@
     </div>
 @stop
 
+@push('head')
+<link rel="stylesheet" type="text/css" href="{{ asset('web/css/denngarr-srp-hook.css') }}" />
+@endpush
+
 @push('javascript')
     <script type="application/javascript">
         $(function () {
             $('#srps').DataTable();
 
+            $('#srp-ping').on('show.bs.modal', function(e){
+                var link = '{{ route('srp.ping', 0) }}';
+
+                $(this).find('.overlay').show();
+                $(this).find('.modal-body>p').text('');
+
+                $.ajax({
+                    url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+                    dataType: 'json',
+                    method: 'GET'
+                }).done(function(response){
+                    $('#srp-ping').find('.modal-body>p').text(response.note).removeClass('text-danger');
+                }).fail(function(jqXHR, status){
+                    $('#srp-ping').find('.modal-body>p').text(status).addClass('text-danger');
+
+                    if (jqXHR.statusCode() !== 500)
+                        $('#srp-ping').find('.modal-body>p').text(jqXHR.responseJSON.msg);
+                });
+
+                $(this).find('.overlay').hide();
+            });
+
             $('#insurances').on('show.bs.modal', function(e){
-                var link = '{{ route('srpadmin.insurances', 0) }}';
+                var link = '{{ route('srp.insurances', 0) }}';
                 var table = $('#insurances').find('table');
 
                 if (!$.fn.DataTable.isDataTable(table)) {
@@ -259,6 +300,9 @@
 
         $('#readUrl').on('click', function () {
             $('.overlay').show();
+            kmFormGroup = $('#killMailUrl').parent('div.form-group');
+            kmFormGroup.find('span.help-block').hide();
+            kmFormGroup.removeClass('has-error');
             $('#highSlots, #midSlots, #lowSlots, #rigs, #cargo, #drones')
                 .find('tbody')
                 .empty();
@@ -316,7 +360,7 @@
                     $('#srpCharacterName').val(result["characterName"]);
                     $('#srpCost').val(result["price"]);
                     $('#srpShipType').val(result["shipType"]);
-                    $('#srpTypeId').val(result["shipTypeID"])
+                    $('#srpTypeId').val(result["typeId"])
                 }
                 else {
                     $('.overlay').hide();
@@ -324,7 +368,8 @@
                 }
             }).fail(function () {
                 $('.overlay').hide();
-                $('#killMailUrl').append("Killmail not Found");
+                kmFormGroup.addClass('has-error');
+                kmFormGroup.find('span.help-block').show();
             });
         });
     </script>

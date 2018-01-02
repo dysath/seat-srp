@@ -11,64 +11,95 @@
         <div class="box-body">
           <table id="srps" class="table table-bordered">
             <thead>
-            <tr>
-              <th>{{ trans('srp::srp.id') }}</th>
-              <th>{{ trans('srp::srp.characterName') }}</th>
-              <th>{{ trans('srp::srp.shipType') }}</th>
-              <th>{{ trans('srp::srp.costs') }}</th>
-              <th>{{ trans('srp::srp.paidout') }}</th>
-              <th>{{ trans('srp::srp.submitted') }}</th>
-              <th>{{ trans('srp::srp.action') }}</th>
-            </tr>
+                <tr>
+                  <th>{{ trans('srp::srp.id') }}</th>
+                  <th>{{ trans('srp::srp.characterName') }}</th>
+                  <th>{{ trans('srp::srp.shipType') }}</th>
+                  <th>{{ trans('srp::srp.costs') }}</th>
+                  <th>{{ trans('srp::srp.paidout') }}</th>
+                  <th>{{ trans('srp::srp.submitted') }}</th>
+                  <th>{{ trans('srp::srp.action') }}</th>
+                </tr>
             </thead>
             <tbody>
-            @foreach ($killmails as $kill)
-            <tr>
-              <td><a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a></td>
-              <td>{{ $kill->character_name }}</td>
-              <td>{{ $kill->ship_type }}</td>
-              <td>
-                  <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
-                      {{ number_format($kill->cost) }} ISK
-                  </button>
-              </td>
-              @if ($kill->approved === 0)
-                <td id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
-              @elseif ($kill->approved === -1)
-                <td id="id-{{ $kill->kill_id }}"><span class="label label-danger">Rejected</span></td>
-              @elseif ($kill->approved === 1)
-                <td id="id-{{ $kill->kill_id }}"><span class="label label-success">Approved</span></td>
-              @elseif ($kill->approved === 2)
-                <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
-              @endif
-              <td>
-                  <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
-              </td>
-              <td>
-                  <input type="button" class="btn btn-xs btn-success" name="{{ $kill->kill_id }}" value="Approve" />
-                  <input type="button" class="btn btn-xs btn-danger" name="{{ $kill->kill_id }}" value="Reject" />
-                  <input type="button" class="btn btn-xs btn-primary" name="{{ $kill->kill_id }}" value="Paid Out" />
-                  <input type="button" class="btn btn-xs btn-warning" name="{{ $kill->kill_id }}" value="Pending" /></td>
-            </tr>
-            @endforeach
+                @foreach ($killmails as $kill)
+                <tr>
+                  <td>
+                      <a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a>
+                      @if(!is_null($kill->ping()))
+                      <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-ping" data-kill-id="{{ $kill->kill_id }}">
+                          <i class="fa fa-comment"></i>
+                      </button>
+                      @endif
+                  </td>
+                  <td>{{ $kill->character_name }}</td>
+                  <td>{{ $kill->ship_type }}</td>
+                  <td>
+                      <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
+                          {{ number_format($kill->cost) }} ISK
+                      </button>
+                  </td>
+                  @if ($kill->approved === 0)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
+                  @elseif ($kill->approved === -1)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-danger">Rejected</span></td>
+                  @elseif ($kill->approved === 1)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-success">Approved</span></td>
+                  @elseif ($kill->approved === 2)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
+                  @endif
+                  <td>
+                      <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
+                  </td>
+                  <td>
+                      <button type="button" class="btn btn-xs btn-warning srp-status" name="{{ $kill->kill_id }}">Pending</button>
+                      <button type="button" class="btn btn-xs btn-danger srp-status" name="{{ $kill->kill_id }}">Reject</button>
+                      <button type="button" class="btn btn-xs btn-success srp-status" name="{{ $kill->kill_id }}">Approve</button>
+                      <button type="button" class="btn btn-xs btn-primary srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
+                  </td>
+                </tr>
+                @endforeach
             </tbody>
           </table>
         </div>
     </div>
     @include('srp::includes.insurances-modal')
+    @include('srp::includes.ping-modal')
 @stop
+
+@push('head')
+<link rel="stylesheet" type="text/css" href="{{ asset('web/css/denngarr-srp-hook.css') }}" />
+@endpush
 
 @push('javascript')
 <script type="application/javascript">
   $(function () {
-    $('#srps').DataTable()
-  })
-</script>
+    $('#srps').DataTable();
 
-<script type="application/javascript">
-$(document).ready( function () {
+    $('#srp-ping').on('show.bs.modal', function(e){
+        var link = '{{ route('srp.ping', 0) }}';
+
+        $(this).find('.overlay').show();
+        $(this).find('.modal-body>p').text('');
+
+        $.ajax({
+            url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+            dataType: 'json',
+            method: 'GET'
+        }).done(function(response){
+            $('#srp-ping').find('.modal-body>p').text(response.note).removeClass('text-danger');
+        }).fail(function(jqXHR, status){
+            $('#srp-ping').find('.modal-body>p').text(status).addClass('text-danger');
+
+            if (jqXHR.statusCode() !== 500)
+                $('#srp-ping').find('.modal-body>p').text(jqXHR.responseJSON.msg);
+        });
+
+        $(this).find('.overlay').hide();
+    });
+
     $('#insurances').on('show.bs.modal', function(e){
-        var link = '{{ route('srpadmin.insurances', 0) }}';
+        var link = '{{ route('srp.insurances', 0) }}';
         var table = $('#insurances').find('table');
 
         if (!$.fn.DataTable.isDataTable(table)) {
@@ -147,12 +178,12 @@ $(document).ready( function () {
         table.destroy();
     });
 
-    $(':button').click(function(data) {
+    $('button.srp-status').click(function(btn) {
         $.ajax({
           headers: function() {},
-          url: "{{ route('srpadmin.list') }}/" + data.target.name + "/" + data.target.value,
+          url: "{{ route('srpadmin.list') }}/" + btn.target.name + "/" + $(btn.target).text(),
           dataType: 'json',
-          timeout: 5000,
+          timeout: 5000
         }).done(function (data) {
           if (data.name === "Approve") {
               $("#id-"+data.value).html('<span class="label label-success">Approved</span>');
