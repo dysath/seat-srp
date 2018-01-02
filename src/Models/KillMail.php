@@ -10,8 +10,12 @@ namespace Denngarr\Seat\SeatSrp\Models;
 
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Illuminate\Database\Eloquent\Model;
+use Seat\Services\Models\Note;
+use Seat\Services\Traits\NotableTrait;
 
 class KillMail extends Model {
+
+	use NotableTrait;
 
     public $timestamps = true;
 
@@ -26,5 +30,21 @@ class KillMail extends Model {
     public function type()
     {
         return $this->hasOne(InvType::class, 'typeID', 'type_id');
+    }
+
+    public function ping()
+    {
+    	return Note::where('object_type', __CLASS__)
+		    ->where('object_id', $this->kill_id)
+		    ->where('title', 'ping')
+		    ->first();
+    }
+
+    public function reason()
+    {
+    	return Note::where('object_type', __CLASS__)
+		    ->where('object_id', $this->kill_id)
+		    ->where('title', 'reason')
+		    ->first();
     }
 }
