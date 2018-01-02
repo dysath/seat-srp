@@ -157,7 +157,7 @@
                             return parseFloat(row.remaining).toLocaleString(undefined, {
                                 "minimumFractionDigits": 2,
                                 "maximumFractionDigits": 2
-                            }) + " ISK";
+                            });
                         },
                         "targets": 4
                     }
