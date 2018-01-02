@@ -125,8 +125,6 @@
                         "className": "text-right",
                         "render": function(data, type, row) {
                             return parseFloat(row.cost).toLocaleString(undefined, {
-                                "style":"currency",
-                                "currency": "ISK",
                                 "minimumFractionDigits": 2,
                                 "maximumFractionDigits": 2
                             });
@@ -137,8 +135,6 @@
                         "className": "text-right",
                         "render": function(data, type, row) {
                             return parseFloat(row.payout).toLocaleString(undefined, {
-                                "style":"currency",
-                                "currency": "ISK",
                                 "minimumFractionDigits": 2,
                                 "maximumFractionDigits": 2
                             });
@@ -149,8 +145,6 @@
                         "className": "text-right",
                         "render": function(data, type, row) {
                             return parseFloat(row.refunded).toLocaleString(undefined, {
-                                "style":"currency",
-                                "currency": "ISK",
                                 "minimumFractionDigits": 2,
                                 "maximumFractionDigits": 2
                             });
@@ -161,11 +155,9 @@
                         "className": "text-right",
                         "render": function(data, type, row) {
                             return parseFloat(row.remaining).toLocaleString(undefined, {
-                                "style":"currency",
-                                "currency": "ISK",
                                 "minimumFractionDigits": 2,
                                 "maximumFractionDigits": 2
-                            });
+                            }) + " ISK";
                         },
                         "targets": 4
                     }
