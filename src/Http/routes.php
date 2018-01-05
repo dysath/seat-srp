@@ -48,7 +48,7 @@ Route::group([
         Route::get('/ping/{kill_id}', [
         	'as' => 'srp.ping',
 	        'uses' => 'SrpController@getPing',
-	        'middleware' => 'bouncer:srp:request',
+	        'middleware' => 'bouncer:srp.request',
         ]);
     });
 });
