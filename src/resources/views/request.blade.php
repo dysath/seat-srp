@@ -71,7 +71,7 @@
                         <td>{{ $kill->ship_type }}</td>
                         <td>
                             <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
-                                {{ number_format($kill->cost) }} ISK
+                                {{ number_format($kill->cost, 2) }} ISK
                             </button>
                         </td>
                         <td>
