@@ -39,7 +39,7 @@ class Insurance extends Model {
 
     public function remaining(KillMail $kill_mail)
     {
-        return ($kill_mail->cost - $this->payout);
+        return ($kill_mail->cost - $this->refunded());
     }
 
     protected function setKeysForSaveQuery( Builder $query ) {
