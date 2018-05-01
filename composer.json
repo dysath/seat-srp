@@ -9,7 +9,8 @@
             "email": "ed.stafford@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "alpha",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Denngarr\\Seat\\SeatSrp\\": "src/"
