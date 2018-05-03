@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Seat\Services\Models\Note;
 use Seat\Web\Http\Controllers\Controller;
-use Seat\Eveapi\Models\Character\CharacterSheet;
+use Seat\Eveapi\Models\Character\CharacterInfo;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 use stdClass;
@@ -157,7 +157,7 @@ class SrpController extends Controller {
         array_push($priceList, $searchedItem->typeName);
         $prices = $this->srpGetPrice($priceList);
 
-        $pilot = CharacterSheet::find($killMail->victim->character_id);
+        $pilot = CharacterInfo::find($killMail->victim->character_id);
 
         $slots['characterName'] = $killMail->victim->character_id;
         if (!is_null($pilot))

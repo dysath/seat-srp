@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use DB;
 use GuzzleHttp\Client;
 use Seat\Web\Http\Controllers\Controller;
-use Seat\Eveapi\Models\Character\CharacterSheet;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 
