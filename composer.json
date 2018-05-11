@@ -19,7 +19,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Denngarr\\Seat\\Fitting\\SrpServiceProvider::class"
+                "Denngarr\\Seat\\Fitting\\SrpServiceProvider"
             ]
         }
      },	     
