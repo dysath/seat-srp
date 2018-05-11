@@ -16,6 +16,13 @@
             "Denngarr\\Seat\\SeatSrp\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Denngarr\\Seat\\Fitting\\SrpServiceProvider::class"
+            ]
+        }
+     },	     
     "require": {
         "eveseat/services": "^3.0",
         "eveseat/eveapi": "^3.0",
