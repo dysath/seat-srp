@@ -18,6 +18,7 @@ php artisan down
 composer require denngarr/seat-srp
 ```
 
+(You can skip this step if you are running 3.x)
 After a successful installation, you can include the actual plugin by editing **config/app.php** and adding the following after:
 
 ```
