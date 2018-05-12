@@ -33,10 +33,8 @@ class UpdateEsiInsurance extends EsiBase {
      */
     protected $tags = ['insurance'];
 
-
     public function handle() {
 
-        $job_start = microtime(true);
         $insurance = $this->retrieve();
 
         foreach ($insurance as $entry) {
