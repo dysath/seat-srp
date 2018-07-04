@@ -19,6 +19,7 @@
                   <th>{{ trans('srp::srp.paidout') }}</th>
                   <th>{{ trans('srp::srp.submitted') }}</th>
                   <th>{{ trans('srp::srp.action') }}</th>
+                  <th>{{ trans('srp::srp.changedby') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,6 +58,7 @@
                       <button type="button" class="btn btn-xs btn-success srp-status" name="{{ $kill->kill_id }}">Approve</button>
                       <button type="button" class="btn btn-xs btn-primary srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
                   </td>
+                  <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -186,6 +188,7 @@
           } else if (data.name === "Pending") {
               $("#id-"+data.value).html('<span class="label label-warning">Pending</span>');
           }
+          $("#approver-"+data.value).html(data.approver);
         });
     });
 });

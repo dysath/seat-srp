@@ -54,6 +54,7 @@
                     <th>{{ trans('srp::srp.costs') }}</th>
                     <th>{{ trans('srp::srp.paidout') }}</th>
                     <th>{{ trans('srp::srp.submitted') }}</th>
+                    <th>{{ trans('srp::srp.approvedby') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -87,6 +88,9 @@
                         </td>
                         <td>
                             <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
+                        </td>
+                        <td>
+                            {{ $kill->approver }}
                         </td>
                     </tr>
                 @endforeach

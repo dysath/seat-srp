@@ -38,9 +38,10 @@ class SrpAdminController extends Controller {
                 break;
         }
 
+        $killmail->approver = auth()->user()->name;
         $killmail->save();
-
-        return json_encode(['name' => $action, 'value' => $kill_id]);
+        
+        return json_encode(['name' => $action, 'value' => $kill_id, 'approver' => auth()->user()->name]);
     }
 }
 

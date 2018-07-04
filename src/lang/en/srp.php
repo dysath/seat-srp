@@ -8,6 +8,8 @@ return [
     'request' => 'Request SRP',
     'id' => 'ID',
     'submitted' => 'Submitted',
+    'changedby' => 'Changed By',
+    'approvedby' => 'Approved By',
 
     'list' => 'SRP List',
     'action' => 'Request Status'

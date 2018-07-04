@@ -20,8 +20,8 @@ class AddKillMail extends FormRequest
             'srpKillToken' => 'required|string',
             'srpCost' => 'numeric',
             'srpShipType' => 'string',
-	        'srpTypeId' => 'required|integer',
-	        'srpPingContent' => 'string'
+            'srpTypeId' => 'required|integer',
+            'srpPingContent' => 'nullable|string'
         ];
     }
 }
