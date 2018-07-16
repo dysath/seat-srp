@@ -49,7 +49,7 @@
                   @elseif ($kill->approved === 2)
                     <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
                   @endif
-                  <td>
+                  <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
                   </td>
                   <td>
