@@ -50,5 +50,40 @@ Route::group([
 	        'uses' => 'SrpController@getPing',
 	        'middleware' => 'bouncer:srp.request',
         ]);
+
+        Route::group([
+            'middleware' => 'bouncer:srp.settle',
+            'prefix' => 'metrics'
+        ], function (){
+
+            Route::get('/', [
+                'as' => 'srp.metrics',
+                'uses' => 'SrpMetricsController@getIndex',
+            ]);
+
+            Route::group([
+                'prefix' => 'api'
+            ], function(){
+                Route::get('/top/ship/{limit?}',[
+                    'as' => 'srp.metrics.api.top.ship',
+                    'uses' => 'SrpMetricsApiController@getTopShip',
+                ]);
+
+                Route::get('/summary/monthly/{limit?}', [
+                    'as' => 'srp.metrics.api.summary.monthly',
+                    'uses' => 'SrpMetricsApiController@getSummaryMonthly',
+                ]);
+
+                Route::get('/summary/user/{group_id?}/{limit?}', [
+                    'as' => 'srp.metrics.api.summary.user',
+                    'uses' => 'SrpMetricsApiController@getSummaryUser',
+                ]);
+
+                Route::get('/top/user/{limit?}',[
+                    'as' => 'srp.metrics.api.top.user',
+                    'uses' => 'SrpMetricsApiController@getTopUser'
+                ]);
+            });
+        });
     });
 });

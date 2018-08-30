@@ -19,6 +19,12 @@ return [
 				'route' => 'srpadmin.list',
 				'permission' => 'srp.settle',
 			],
+            [
+                'name' => 'Metrics',
+                'icon' => 'fa-bar-chart',
+                'route' => 'srp.metrics',
+                'permission' => 'srp.settle',
+            ],
 		],
 	],
 ];
