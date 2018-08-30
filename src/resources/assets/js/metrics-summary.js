@@ -103,9 +103,6 @@ function summaryAll() {
         .fail(err => {
             console.log('summaryAllChart failed')
             console.log(err);
-        })
-        .always((res) => {
-            console.log('summaryAllChart loaded');
         });
 }
 
@@ -115,7 +112,6 @@ function summarySpecificUser() {
     
     ['summarySpecificUserSummaryChart', 'summarySpecificUserShipChart'].forEach( ctx => {
         if(ctx in renderedCharts){
-            console.log('destroying'+ ctx);
             renderedCharts[ctx].destroy();
         }
     });
@@ -242,9 +238,6 @@ function summarySpecificUser() {
         .fail(err => {
             console.log('summarySpecificUserChart failed')
             console.log(err);
-        })
-        .always((res) => {
-            console.log('summarySpecificUserChart executed');
         });
 }
 
@@ -304,9 +297,6 @@ function topShips() {
         .fail(err => {
             console.log('topShipsChart failed')
             console.log(err);
-        })
-        .always((res) => {
-            console.log('topShipsChart executed');
         });
 }
 
@@ -366,9 +356,6 @@ function topPilots() {
         .fail(err => {
             console.log('topPilotsChart failed')
             console.log(err);
-        })
-        .always((res) => {
-            console.log('topPilotsChart executed');
         });
 }
 

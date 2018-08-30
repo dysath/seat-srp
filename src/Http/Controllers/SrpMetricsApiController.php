@@ -47,7 +47,7 @@ class SrpMetricsApiController extends Controller {
         $raw = KillMail::where('approved', true)
             ->selectRaw('date_format(created_at, "%Y-%m-01") dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
-            ->orderBy('dt', 'desc');
+            ->orderByDesc('dt');
 
         if($limit){
             $raw = $raw->take($limit);
@@ -116,7 +116,7 @@ class SrpMetricsApiController extends Controller {
             ->whereIn('user_id', $user_ids)
             ->selectRaw('ship_type, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('ship_type')
-            ->orderBy('payouts', 'desc');
+            ->orderByDesc('payouts');
 
         if($limit){
             $summary = $summary->take($limit);
@@ -229,7 +229,7 @@ class SrpMetricsApiController extends Controller {
             ->join('users as u2', 'us.value', '=', 'u2.id')
             ->selectRaw('u2.name as main, sum(cost) as payouts, count(kill_id) as requests')
             ->groupBy('main')
-            ->orderBy('payouts', 'desc');
+            ->orderByDesc('payouts');
 
         if($limit){
             $raw = $raw->take($limit);
