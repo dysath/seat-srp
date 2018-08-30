@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
@@ -47,24 +47,17 @@ class SrpMetricsApiController extends Controller {
         $raw = KillMail::where('approved', true)
             ->selectRaw('date_format(created_at, "%Y-%m-01") dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
-            ->orderBy('dt', 'desc')
-            ->get();
+            ->orderBy('dt', 'desc');
 
         if($limit){
             $raw = $raw->take($limit);
         }
 
-        $payouts = [
-            'dt' => [],
-            'payouts' => [],
-            'requests' => []
+        return [
+            'dt' => $raw->pluck('dt'),
+            'payouts' => $raw->pluck('payouts'),
+            'requests' => $raw->pluck('requests')
         ];
-        foreach($raw as $month){
-            array_push($payouts['dt'], $month->dt);
-            array_push($payouts['payouts'], $month->payouts);
-            array_push($payouts['requests'], $month->requests);
-        }
-        return $payouts;
     }
 
     /**
@@ -110,61 +103,38 @@ class SrpMetricsApiController extends Controller {
     {
         $group = Group::where('id', $group_id)->first();
         if(!$group){
-            return response()->json([], 404);
+            return response([],404);
         }
 
-        $user_ids = [];
-        foreach ($group->users as $user){
-            array_push($user_ids, $user->id);
-        }
-
-        $payouts = [
-            'summary' => [
-                'dt' => [],
-                'payouts' => [],
-                'requests' => [],
-            ],
-            'ships' => [
-                'ship' => [],
-                'payouts' => [],
-                'requests' => []
-            ]
-        ];
+        $user_ids = $group->users->pluck('id');
         $summary = KillMail::where('approved', true)
             ->whereIn('user_id', $user_ids)
             ->selectRaw('date_format(created_at, "%Y-%m-01") as dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
-            ->orderBy('dt', 'desc')
-            ->get();
-
-        if($limit){
-            $summary = $summary->take($limit);
-        }
-
-        foreach($summary as $month){
-            array_push($payouts['summary']['dt'], $month->dt);
-            array_push($payouts['summary']['payouts'], $month->payouts);
-            array_push($payouts['summary']['requests'], $month->requests);
-        }
-
+            ->orderBy('dt', 'desc');
         $ships = KillMail::where('approved', true)
             ->whereIn('user_id', $user_ids)
             ->selectRaw('ship_type, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('ship_type')
-            ->orderBy('payouts', 'desc')
-            ->get();
+            ->orderBy('payouts', 'desc');
 
         if($limit){
+            $summary = $summary->take($limit);
             $ships = $ships->take($limit);
         }
 
-        foreach($ships as $ship){
-            array_push($payouts['ships']['ship'], $ship->ship_type);
-            array_push($payouts['ships']['payouts'], $ship->payouts);
-            array_push($payouts['ships']['requests'], $ship->requests);
-        }
-
-        return $payouts;
+        return [
+            'summary' => [
+                'dt' => $summary->pluck('dt'),
+                'payouts' => $summary->pluck('payouts'),
+                'requests' => $summary->pluck('requests'),
+            ],
+            'ships' => [
+                'ship' => $ships->pluck('ship'),
+                'payouts' => $ships->pluck('payouts'),
+                'requests' => $ships->pluck('requests')
+            ]
+        ];
     }
 
     /**
@@ -201,27 +171,20 @@ class SrpMetricsApiController extends Controller {
      */
     public function getTopShip($limit=null)
     {
-
         $raw = KillMail::where('approved', true)
-            ->selectRaw('ship_type, count(kill_id) cnt, sum(cost) payouts')
+            ->selectRaw('ship_type, count(kill_id) requests, sum(cost) payouts')
             ->groupBy('ship_type')
-            ->orderBy('payouts', 'desc')
-            ->get();
+            ->orderByDesc('payouts');
+
         if ($limit){
             $raw = $raw->take($limit);
         }
-        $summary = [
-            'ships' => [],
-            'requests' => [],
-            'payouts' => []
-        ];
 
-        foreach($raw as $srp => $rcd){
-            array_push($summary['ships'], $rcd->ship_type);
-            array_push($summary['requests'], $rcd->cnt);
-            array_push($summary['payouts'], $rcd->payouts);
-        }
-        return $summary;
+        return [
+            'ships' => $raw->pluck('ship_type'),
+            'requests' => $raw->pluck('requests'),
+            'payouts' => $raw->pluck('payouts')
+        ];
     }
 
     /**
@@ -266,23 +229,16 @@ class SrpMetricsApiController extends Controller {
             ->join('users as u2', 'us.value', '=', 'u2.id')
             ->selectRaw('u2.name as main, sum(cost) as payouts, count(kill_id) as requests')
             ->groupBy('main')
-            ->orderBy('payouts', 'desc')
-            ->get();
+            ->orderBy('payouts', 'desc');
 
         if($limit){
             $raw = $raw->take($limit);
         }
-        $payouts = [
-            'main' => [],
-            'payouts' => [],
-            'requests' => []
-        ];
-        foreach($raw as $user_agg){
-            array_push($payouts['main'], $user_agg->main);
-            array_push($payouts['payouts'], $user_agg->payouts);
-            array_push($payouts['requests'], $user_agg->requests);
-        }
-        return $payouts;
-    }
 
+        return [
+            'main' => $raw->pluck('main'),
+            'payouts' => $raw->pluck('payouts'),
+            'requests' => $raw->pluck('requests')
+        ];
+    }
 }
