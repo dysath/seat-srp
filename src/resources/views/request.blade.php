@@ -68,7 +68,7 @@
                             </button>
                             @endif
                         </td>
-                        <td>{{ $kill->character_name }}</td>
+                        <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
                         <td>{{ $kill->ship_type }}</td>
                         <td>
                             <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
@@ -189,6 +189,7 @@
 @endpush
 
 @push('javascript')
+@include('web::includes.javascript.id-to-name')
     <script type="application/javascript">
         $(function () {
             $('#srps').DataTable();
@@ -368,6 +369,7 @@
                 kmFormGroup.find('span.help-block').show();
             });
         });
+        id_to_names();
     </script>
 
 @endpush
