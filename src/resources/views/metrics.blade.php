@@ -85,10 +85,10 @@
 @endpush
 @push('javascript')
     <script>
-        let summaryAllDataUrl = '{{ route('srp.metrics.api.summary.monthly') }}/15';
-        let summaryUserDataUrl = '{{ route('srp.metrics.api.summary.user') }}';
-        let topShipsDataUrl = '{{ route('srp.metrics.api.top.ship') }}/50';
-        let topPilotsDataUrl = '{{ route('srp.metrics.api.top.user') }}/50';
+        let summaryAllDataUrl = '{{ route('srp.metrics.api.web.summary.monthly') }}/15';
+        let summaryUserDataUrl = '{{ route('srp.metrics.api.web.summary.user') }}';
+        let topShipsDataUrl = '{{ route('srp.metrics.api.web.top.ship') }}/50';
+        let topPilotsDataUrl = '{{ route('srp.metrics.api.web.top.user') }}/50';
     </script>
 
     <script src="{{ asset('web/js/metrics-colors.js') }}"></script>

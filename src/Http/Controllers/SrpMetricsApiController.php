@@ -2,22 +2,27 @@
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Seat\Web\Http\Controllers\Controller;
+use Seat\Api\Http\Controllers\Api\v2\ApiController;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Seat\Web\Models\User;
 use Seat\Web\Models\Group;
 
 
-class SrpMetricsApiController extends Controller {
+/**
+ * Class SrpMetricsApiController
+ * @package Denngarr\Seat\SeatSrp\Http\Controllers
+ */
+class SrpMetricsApiController extends ApiController {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/api/summary/monthly/{limit}",
+     *      path="/srp/metrics/summary/monthly/{limit}",
      *      tags={"SRP Monthly Summary"},
      *      summary="Get a summary of approved SRP Requests by month",
      *      description="Returns JSON object of counts of requests and sum of payouts by month.",
      *      security={
-     *          {"SeAT Role": "bouncer:srp.settle"}
+     *          {"SeAT Role": "bouncer:srp.settle"},
+     *          {"ApiKeyAuth": {}}
      *      },
      *      @SWG\Parameter(
      *          name="limit",
@@ -30,9 +35,30 @@ class SrpMetricsApiController extends Controller {
      *          @SWG\Schema(
      *              type="object",
      *              @SWG\Property(
-     *                  type="json",
-     *                  property="data",
-     *                  @SWG\Items(ref="#/summary/monthly")
+     *                  type="array",
+     *                  property="dt",
+     *                  description="Date in YYYY-MM-DD format, always reverting to the first day of the month",
+     *                  @SWG\Items(
+     *                      type="string",
+     *                      format="date"
+     *                  )
+     *              ),
+     *              @SWG\Property(
+     *                  type="array",
+     *                  property="payouts",
+     *                  description="ISK Payouts for SRP Requests",
+     *                  @SWG\Items(
+     *                      type="number",
+     *                      format="float"
+     *                  )
+     *              ),
+     *              @SWG\Property(
+     *                  type="array",
+     *                  property="requests",
+     *                  description="Numbner of SRP Requests",
+     *                  @SWG\Items(
+     *                      type="integer"
+     *                  )
      *              )
      *          )
      *      ),
@@ -62,12 +88,13 @@ class SrpMetricsApiController extends Controller {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/api/summary/user/{$group_id}/{limit}",
+     *      path="/srp/metrics/summary/user/{group_id}/{limit}",
      *      tags={"SRP User Summary"},
      *      summary="Get a summary of approved SRP Requests for a specific User",
      *      description="Returns JSON object of counts of requests and sum of payouts by month and by Ship.",
      *      security={
-     *          {"SeAT Role": "bouncer:srp.settle"}
+     *          {"SeAT Role": "bouncer:srp.settle"},
+     *          {"ApiKeyAuth": {}}
      *      },
      *     @SWG\Parameter(
      *          name="group_id",
@@ -87,10 +114,66 @@ class SrpMetricsApiController extends Controller {
      *          @SWG\Schema(
      *              type="object",
      *              @SWG\Property(
-     *                  type="json",
-     *                  property="data",
-     *                  @SWG\Items(ref="#/summary/user")
-     *              )
+     *                  type="object",
+     *                  property="summary",
+     *                  description="Summary of User SRP Requests by Payouts/Requests",
+     *                  @SWG\Property(
+     *                      type="array",
+     *                      property="dt",
+     *                      description="Date in YYYY-MM-DD format, always reverting to the first day of the month",
+     *                      @SWG\Items(
+     *                          type="string",
+     *                          format="date"
+     *                      )
+     *                  ),
+     *                  @SWG\Property(
+     *                      type="array",
+     *                      property="payouts",
+     *                      description="ISK Payouts for SRP Requests",
+     *                      @SWG\Items(
+     *                          type="number",
+     *                          format="float"
+     *                      )
+     *                  ),
+     *                  @SWG\Property(
+     *                      type="array",
+     *                      property="requests",
+     *                      description="Numbner of SRP Requests",
+     *                      @SWG\Items(
+     *                          type="integer"
+     *                      )
+     *                  ),
+     *              ),
+     *              @SWG\Property(
+     *                  type="object",
+     *                  property="ships",
+     *                  description="Summary of User SRP Requests by Ship",
+     *                  @SWG\Property(
+     *                      type="array",
+     *                      property="ship",
+     *                      description="List of Top Ships by SRP Payouts",
+     *                      @SWG\Items(
+     *                          type="string"
+     *                      )
+     *                  ),
+     *                  @SWG\Property(
+     *                      type="array",
+     *                      property="payouts",
+     *                      description="ISK Payouts for SRP Requests",
+     *                      @SWG\Items(
+     *                          type="number",
+     *                          format="float"
+     *                      )
+     *                  ),
+     *                  @SWG\Property(
+     *                      type="array",
+     *                      property="requests",
+     *                      description="Numbner of SRP Requests",
+     *                      @SWG\Items(
+     *                          type="integer"
+     *                      )
+     *                  ),
+     *              ),
      *          )
      *      ),
      *      @SWG\Response(response=400, description="Bad request"),
@@ -130,7 +213,7 @@ class SrpMetricsApiController extends Controller {
                 'requests' => $summary->pluck('requests'),
             ],
             'ships' => [
-                'ship' => $ships->pluck('ship'),
+                'ship' => $ships->pluck('ship_type'),
                 'payouts' => $ships->pluck('payouts'),
                 'requests' => $ships->pluck('requests')
             ]
@@ -139,12 +222,13 @@ class SrpMetricsApiController extends Controller {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/api/top/ship/{limit}",
+     *      path="/srp/metrics/top/ship/{limit}",
      *      tags={"SRP Top Ship"},
      *      summary="Get the top SRP utilizers order by Cost",
      *      description="Returns JSON object of counts of requests and sum of payouts by Ship",
      *      security={
-     *          {"SeAT Role": "bouncer:srp.settle"}
+     *          {"SeAT Role": "bouncer:srp.settle"},
+     *          {"ApiKeyAuth": {}}
      *      },
      *      @SWG\Parameter(
      *          name="limit",
@@ -157,9 +241,29 @@ class SrpMetricsApiController extends Controller {
      *          @SWG\Schema(
      *              type="object",
      *              @SWG\Property(
-     *                  type="json",
-     *                  property="data",
-     *                  @SWG\Items(ref="#/top/ship")
+     *                  type="array",
+     *                  property="ships",
+     *                  description="List of Top Ships by SRP Payouts",
+     *                  @SWG\Items(
+     *                      type="string"
+     *                  )
+     *              ),
+     *              @SWG\Property(
+     *                  type="array",
+     *                  property="payouts",
+     *                  description="ISK Payouts for SRP Requests",
+     *                  @SWG\Items(
+     *                      type="number",
+     *                      format="float"
+     *                  )
+     *              ),
+     *              @SWG\Property(
+     *                  type="array",
+     *                  property="requests",
+     *                  description="Numbner of SRP Requests",
+     *                  @SWG\Items(
+     *                      type="integer"
+     *                  )
      *              )
      *          )
      *      ),
@@ -189,12 +293,13 @@ class SrpMetricsApiController extends Controller {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/api/top/user/{limit}",
+     *      path="/srp/metrics/top/user/{limit}",
      *      tags={"SRP Top User"},
      *      summary="Get the top SRP utilizers order by Cost",
      *      description="Returns JSON object of counts of requests and sum of payouts by User",
      *      security={
-     *          {"SeAT Role": "bouncer:srp.settle"}
+     *          {"SeAT Role": "bouncer:srp.settle"},
+     *          {"ApiKeyAuth": {}}
      *      },
      *      @SWG\Parameter(
      *          name="limit",
@@ -207,9 +312,30 @@ class SrpMetricsApiController extends Controller {
      *          @SWG\Schema(
      *              type="object",
      *              @SWG\Property(
-     *                  type="json",
-     *                  property="data",
-     *                  @SWG\Items(ref="#/top/user")
+     *                  type="array",
+     *                  property="dt",
+     *                  description="Date in YYYY-MM-DD format, always reverting to the first day of the month",
+     *                  @SWG\Items(
+     *                      type="string",
+     *                      format="date"
+     *                  )
+     *              ),
+     *              @SWG\Property(
+     *                  type="array",
+     *                  property="payouts",
+     *                  description="ISK Payouts for SRP Requests",
+     *                  @SWG\Items(
+     *                      type="number",
+     *                      format="float"
+     *                  )
+     *              ),
+     *              @SWG\Property(
+     *                  type="array",
+     *                  property="requests",
+     *                  description="Numbner of SRP Requests",
+     *                  @SWG\Items(
+     *                      type="integer"
+     *                  )
      *              )
      *          )
      *      ),

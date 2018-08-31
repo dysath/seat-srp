@@ -1,8 +1,8 @@
-let theme = getActiveThemeColor();
+const theme = getActiveThemeColor();
 const metricDefaultColor = 'rgba(210, 214, 222, 1)';
 const metricThemeColors = colors[theme];
 let renderedCharts = {};
-let globalChartOptions = {
+const globalChartOptions = {
     maintainAspectRatio: false,
     tooltips: {
         mode: 'index',

@@ -1,4 +1,58 @@
-<?PHP
+<?php
+
+Route::group([
+    'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
+    'middleware' => ['web','auth'],
+    'prefix' => 'api/v2/srp/metrics/web'
+], function(){
+
+    Route::get('/summary/monthly/{limit?}', [
+        'as' => 'srp.metrics.api.web.summary.monthly',
+        'uses' => 'SrpMetricsApiController@getSummaryMonthly',
+    ]);
+
+    Route::get('/summary/user/{group_id?}/{limit?}', [
+        'as' => 'srp.metrics.api.web.summary.user',
+        'uses' => 'SrpMetricsApiController@getSummaryUser',
+    ]);
+
+    Route::get('/top/ship/{limit?}',[
+        'as' => 'srp.metrics.api.web.top.ship',
+        'uses' => 'SrpMetricsApiController@getTopShip',
+    ]);
+
+    Route::get('/top/user/{limit?}',[
+        'as' => 'srp.metrics.api.web.top.user',
+        'uses' => 'SrpMetricsApiController@getTopUser'
+    ]);
+});
+
+Route::group([
+    'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
+    'middleware' => ['api.auth'],
+    'prefix' => 'api/v2/srp/metrics'
+], function(){
+    Route::get('/summary/monthly/{limit?}', [
+        'as' => 'srp.metrics.api.summary.monthly',
+        'uses' => 'SrpMetricsApiController@getSummaryMonthly',
+    ]);
+
+    Route::get('/summary/user/{group_id?}/{limit?}', [
+        'as' => 'srp.metrics.api.summary.user',
+        'uses' => 'SrpMetricsApiController@getSummaryUser',
+    ]);
+
+    Route::get('/top/ship/{limit?}',[
+        'as' => 'srp.metrics.api.top.ship',
+        'uses' => 'SrpMetricsApiController@getTopShip',
+    ]);
+
+    Route::get('/top/user/{limit?}',[
+        'as' => 'srp.metrics.api.top.user',
+        'uses' => 'SrpMetricsApiController@getTopUser'
+    ]);
+});
+
 
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
@@ -60,30 +114,6 @@ Route::group([
                 'as' => 'srp.metrics',
                 'uses' => 'SrpMetricsController@getIndex',
             ]);
-
-            Route::group([
-                'prefix' => 'api'
-            ], function(){
-                Route::get('/top/ship/{limit?}',[
-                    'as' => 'srp.metrics.api.top.ship',
-                    'uses' => 'SrpMetricsApiController@getTopShip',
-                ]);
-
-                Route::get('/summary/monthly/{limit?}', [
-                    'as' => 'srp.metrics.api.summary.monthly',
-                    'uses' => 'SrpMetricsApiController@getSummaryMonthly',
-                ]);
-
-                Route::get('/summary/user/{group_id?}/{limit?}', [
-                    'as' => 'srp.metrics.api.summary.user',
-                    'uses' => 'SrpMetricsApiController@getSummaryUser',
-                ]);
-
-                Route::get('/top/user/{limit?}',[
-                    'as' => 'srp.metrics.api.top.user',
-                    'uses' => 'SrpMetricsApiController@getTopUser'
-                ]);
-            });
         });
     });
 });
