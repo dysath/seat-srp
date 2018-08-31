@@ -12,5 +12,6 @@ return [
     'approvedby' => 'Approved By',
 
     'list' => 'SRP List',
-    'action' => 'Request Status'
+    'action' => 'Request Status',
+    'metrics' => 'SRP Metrics'
 ];
