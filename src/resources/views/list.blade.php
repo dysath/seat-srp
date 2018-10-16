@@ -53,10 +53,10 @@
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
                   </td>
                   <td>
-                      <button type="button" class="btn btn-xs btn-warning srp-status" name="{{ $kill->kill_id }}">Pending</button>
-                      <button type="button" class="btn btn-xs btn-danger srp-status" name="{{ $kill->kill_id }}">Reject</button>
-                      <button type="button" class="btn btn-xs btn-success srp-status" name="{{ $kill->kill_id }}">Approve</button>
-                      <button type="button" class="btn btn-xs btn-primary srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
+                      <button type="button" class="btn btn-xs btn-warning srp-status" id="srp-status" name="{{ $kill->kill_id }}">Pending</button>
+                      <button type="button" class="btn btn-xs btn-danger srp-status" id="srp-status" name="{{ $kill->kill_id }}">Reject</button>
+                      <button type="button" class="btn btn-xs btn-success srp-status" id="srp-status" name="{{ $kill->kill_id }}">Approve</button>
+                      <button type="button" class="btn btn-xs btn-primary srp-status" id="srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
                   </td>
                   <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                 </tr>
@@ -76,6 +76,7 @@
 @push('javascript')
 @include('web::includes.javascript.id-to-name')
 <script type="application/javascript">
+
   $(function () {
     $('#srps').DataTable();
 
@@ -173,7 +174,7 @@
         table.destroy();
     });
 
-    $('button.srp-status').click(function(btn) {
+    $('#srps tbody').on('click', 'button', function(btn) {
         $.ajax({
           headers: function() {},
           url: "{{ route('srpadmin.list') }}/" + btn.target.name + "/" + $(btn.target).text(),
