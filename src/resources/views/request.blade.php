@@ -10,22 +10,21 @@
         </div>
         <form role="form" action="{{ route('srp.saveKillMail') }}" method="post">
             <div class="box-body">
-                <p>Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External
-                   URL into the box below.</p>
+                <p>{{ trans('srp::srp.request_inst') }}</p>
                 <div class="form-group">
                     <label for="killMailUrl" class="control-label">External Url</label>
                     <input type="text" class="form-control" id="killMailUrl" name="killMailUrl" placeholder="https://esi.tech.ccp.is/v1/killmails/9999999/sidufhus6f4654fdsdf4/?datasource=tranquility" />
                     <span class="help-block" style="display: none;">Invalid killmail address</span>
                 </div>
                 <div class="form-group">
-                    <label for="srpPingContent">Ping</label>
-                    <textarea class="form-control" name="srpPingContent" rows="3" placeholder="Put the ping content related to the fleet where you loose this ship."></textarea>
+                    <label for="srpPingContent">{{ trans('srp::srp.ping') }}</label>
+                    <textarea class="form-control" name="srpPingContent" rows="3" placeholder="{{ trans('srp::srp.ping_info') }}"></textarea>
                 </div>
             </div>
             <div class="box-footer">
                 <div class="btn-group pull-right" role="group">
-                    <input type="button" class="btn btn-default" id="readUrl" name="readUrl" value="Verify Killmail"/>
-                    <input type="submit" class="btn btn-primary" id="saveKillMail" value="Submit Killmail"/>
+                    <input type="button" class="btn btn-default" id="readUrl" name="readUrl" value="{{ trans('srp::srp.verify_killmail') }}"/>
+                    <input type="submit" class="btn btn-primary" id="saveKillMail" value="{{ trans('srp::srp.submit_killmail') }}"/>
                 </div>
                 <input type="hidden" class="form-control" id="srpCharacterName" name="srpCharacterName" value=""/>
                 <input type="hidden" class="form-control" id="srpTypeId" name="srpTypeId" value="" />
@@ -42,7 +41,7 @@
     </div>
     <div class="box box-success box-solid">
         <div class="box-header">
-            <h3 class="box-title">My SRP Requests</h3>
+            <h3 class="box-title">{{ trans('srp::srp.mysrp') }}</h3>
         </div>
         <div class="box-body">
             <table id="srps" class="table table table-bordered table-striped">
@@ -62,7 +61,7 @@
                     <tr>
                         <td><a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/"
                                target="_blank">{{ $kill->kill_id }}</a>
-                            @if(!is_null($kill->ping()))
+                            @if(!is_null($kill->ping())) 
                             <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-ping" data-kill-id="{{ $kill->kill_id }}">
                                 <i class="fa fa-comment"></i>
                             </button>
@@ -105,7 +104,7 @@
 @section('right')
     <div class="box box-primary box-solid">
         <div class="box-header">
-            <h3 class="box-title">Killmail Details</h3>
+            <h3 class="box-title">{{ trans('srp::srp.killmail_details') }}</h3>
         </div>
         <div class="box-body">
             <div id="kill-report">
@@ -131,7 +130,7 @@
                     <table class="table table-condensed table-striped" id="lowSlots">
                         <thead>
                             <tr>
-                                <th>Low Slot Module</th>
+                                <th>{{ trans('srp::srp.low_slot_mod') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -139,7 +138,7 @@
                     <table class="table table-condensed table-striped" id="midSlots">
                         <thead>
                             <tr>
-                                <th>Mid Slot Module</th>
+                                <th>{{ trans('srp::srp.mid_slot_mod') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -147,7 +146,7 @@
                     <table class="table table-condensed table-striped" id="highSlots">
                         <thead>
                             <tr>
-                                <th>High Slot Module</th>
+                                <th>{{ trans('srp::srp.hi_slot_mod') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -155,7 +154,7 @@
                     <table class="table table-condensed table-striped" id="rigs">
                         <thead>
                             <tr>
-                                <th>Rigs</th>
+                                <th>{{ trans('srp::srp.rigs') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -163,8 +162,8 @@
                     <table id="drones" class="table table-condensed table-striped">
                         <thead>
                             <tr>
-                                <th class="col-md-10">Drone Bay</th>
-                                <th class="col-md-2">Number</th>
+                                <th class="col-md-10">{{ trans('srp::srp.drone_bay') }}</th>
+                                <th class="col-md-2">{{ trans('srp::srp.number') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -172,8 +171,8 @@
                     <table id="cargo" class="table table-condensed table-striped">
                         <thead>
                             <tr>
-                                <th class="col-md-10">Cargo Bay Contents</th>
-                                <th class="col-md-2">Number</th>
+                                <th class="col-md-10">{{ trans('srp::srp.cargo_bay') }}</th>
+                                <th class="col-md-2">{{ trans('srp::srp.number') }}</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

@@ -9,6 +9,14 @@
             <h3 class="box-title">SRP Requests</h3>
         </div>
         <div class="box-body">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab">Pending Requests</a></li>
+              <li><a href="#tab_2" data-toggle="tab">Completed Requests</a></li>
+            </ul>
+
+          <div class="tab-content">
+          <div class="tab-pane active" id="tab_1">
           <table id="srps" class="table table-bordered">
             <thead>
                 <tr>
@@ -24,6 +32,7 @@
             </thead>
             <tbody>
                 @foreach ($killmails as $kill)
+                @if(($kill->approved === 0) || ($kill->approved === 1))
                 <tr>
                   <td>
                       <a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a>
@@ -60,10 +69,64 @@
                   </td>
                   <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                 </tr>
+                @endif
                 @endforeach
             </tbody>
           </table>
         </div>
+          <div class="tab-pane" id="tab_2">
+          <table id="srps-arch" class="table table-bordered">
+            <thead>
+                <tr>
+                  <th>{{ trans('srp::srp.id') }}</th>
+                  <th>{{ trans('srp::srp.characterName') }}</th>
+                  <th>{{ trans('srp::srp.shipType') }}</th>
+                  <th>{{ trans('srp::srp.costs') }}</th>
+                  <th>{{ trans('srp::srp.paidout') }}</th>
+                  <th>{{ trans('srp::srp.submitted') }}</th>
+                  <th>{{ trans('srp::srp.changedby') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($killmails as $kill)
+                @if(($kill->approved === -1) || ($kill->approved === 2))
+                <tr>
+                  <td>
+                      <a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a>
+                      @if(!is_null($kill->ping()))
+                      <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-ping" data-kill-id="{{ $kill->kill_id }}">
+                          <i class="fa fa-comment"></i>
+                      </button>
+                      @endif
+                  </td>
+                  <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
+                  <td>{{ $kill->ship_type }}</td>
+                  <td>
+                      <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
+                          {{ number_format($kill->cost, 2) }} ISK
+                      </button>
+                  </td>
+                  @if ($kill->approved === 0)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
+                  @elseif ($kill->approved === -1)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-danger">Rejected</span></td>
+                  @elseif ($kill->approved === 1)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-success">Approved</span></td>
+                  @elseif ($kill->approved === 2)
+                    <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
+                  @endif
+                  <td data-order="{{ strtotime($kill->created_at) }}>
+                      <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
+                  </td>
+                  <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
+                </tr>
+                @endif
+                @endforeach
+            </tbody>
+          </table>
+        </div>
+        </div>
+          </div>
     </div>
     @include('srp::includes.insurances-modal')
     @include('srp::includes.ping-modal')
@@ -79,6 +142,7 @@
 
   $(function () {
     $('#srps').DataTable();
+    $('#srps-arch').DataTable();
 
     $('#srp-ping').on('show.bs.modal', function(e){
         var link = '{{ route('srp.ping', 0) }}';
