@@ -1,7 +1,18 @@
 @extends('web::layouts.grids.12')
 
 @section('title', trans('srp::srp.metrics'))
-@section('page_header', trans('srp::srp.metrics'))
+
+@section('page_header')
+    @lang('srp::srp.metrics')
+    <div class="pull-right">
+        <div id="srpFilterToggle" class="btn btn-default" title="Toggle SRP Filters"
+             data-toggle="control-sidebar"
+             data-slide="false"
+        >
+            <i class="fa fa-filter" aria-hidden="true"></i>
+        </div>
+    </div>
+@stop
 
 @section('full')
 
@@ -76,6 +87,55 @@
     </div>
 @stop
 
+@section('right-sidebar')
+    <ul class="sidebar-menu tree" data-widget="tree">
+        <li class="header">
+            SRP Filters
+        </li>
+        <li class="treeview active">
+            <a href="#">
+                <i class="fa fa-cogs"></i>
+                <span>SRP Status: {{ title_case($srp_status) }}</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class=treeview-menu>
+                <li class="
+                    @if(
+                        url()->current() == route('srp.metrics', ['srp_status' => 'all']) ||
+                        url()->current() == route('srp.metrics')
+                        )
+                        active
+                    @endif"
+                >
+                    <a href="{{ route('srp.metrics', ['srp_status' => 'all']) }}">
+                        All
+                    </a>
+                </li>
+                <li class="@if(url()->current() == route('srp.metrics', ['srp_statu' => 'approved'])) active @endif">
+                    <a href="{{ route('srp.metrics', ['srp_status' => 'approved']) }}">
+                        Approved
+                    </a>
+                </li>
+                <li class="@if(url()->current() == route('srp.metrics', ['srp_statu' => 'paid'])) active @endif">
+                    <a href="{{ route('srp.metrics', ['srp_status' => 'paid']) }}">
+                        Paid
+                    </a>
+                </li>
+                <li class="@if(url()->current() == route('srp.metrics', ['srp_statu' => 'rejected'])) active @endif">
+                    <a href="{{ route('srp.metrics', ['srp_status' => 'rejected']) }}">
+                        Rejected
+                    </a>
+                </li>
+                <li class="@if(url()->current() == route('srp.metrics', ['srp_statu' => 'unprocessed'])) active @endif">
+                    <a href="{{ route('srp.metrics', ['srp_status' => 'unprocessed']) }}">
+                        Unprocessed
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+@stop
+
 @push('head')
     <style>
         .srpChart{
@@ -85,10 +145,19 @@
 @endpush
 @push('javascript')
     <script>
-        let summaryAllDataUrl = '{{ route('srp.metrics.api.web.summary.monthly') }}/15';
-        let summaryUserDataUrl = '{{ route('srp.metrics.api.web.summary.user') }}';
-        let topShipsDataUrl = '{{ route('srp.metrics.api.web.top.ship') }}/50';
-        let topPilotsDataUrl = '{{ route('srp.metrics.api.web.top.user') }}/50';
+        let summaryAllDataUrl = '{{ route('srp.metrics.api.web.summary.monthly', [
+            'srp_status' => $srp_status,
+            'limit' => 15,
+        ]) }}';
+        let summaryUserDataUrl = '{{ route('srp.metrics.api.web.summary.user', ['srp_status' => $srp_status,]) }}';
+        let topShipsDataUrl = '{{ route('srp.metrics.api.web.top.ship', [
+            'srp_status' => $srp_status,
+            'limit' => 50,
+        ]) }}';
+        let topPilotsDataUrl = '{{ route('srp.metrics.api.web.top.user', [
+            'srp_status' => $srp_status,
+            'limit' => 50,
+        ]) }}';
     </script>
 
     <script src="{{ asset('web/js/metrics-colors.js') }}"></script>

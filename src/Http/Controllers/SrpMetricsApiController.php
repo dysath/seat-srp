@@ -14,9 +14,17 @@ use Seat\Web\Models\Group;
  */
 class SrpMetricsApiController extends ApiController {
 
+    private $srp_statuses = [
+        'unprocessed' => [0],
+        'rejected' => [-1],
+        'approved' => [1],
+        'paid' => [2],
+        'all' => [-1,0,1,2]
+    ];
+
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/summary/monthly/{limit}",
+     *      path="/srp/metrics/summary/monthly/{status}/{limit}",
      *      tags={"SRP Monthly Summary"},
      *      summary="Get a summary of approved SRP Requests by month",
      *      description="Returns JSON object of counts of requests and sum of payouts by month.",
@@ -25,6 +33,13 @@ class SrpMetricsApiController extends ApiController {
      *          {"ApiKeyAuth": {}}
      *      },
      *      @SWG\Parameter(
+     *          name="status",
+     *          description="SRP Processing Status",
+     *          required=true,
+     *          type="string",
+     *          in="path"
+     *      ),
+     *     @SWG\Parameter(
      *          name="limit",
      *          description="record limit",
      *          required=false,
@@ -68,9 +83,14 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getSummaryMonthly($limit=null)
+    public function getSummaryMonthly($status=null,$limit=null)
     {
-        $raw = KillMail::where('approved', true)
+        // return 404 if status is not recognized
+        if(!array_key_exists($status, $this->srp_statuses)){
+            return response([],404);
+        }
+
+        $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
             ->selectRaw('date_format(created_at, "%Y-%m-01") dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
             ->orderByDesc('dt');
@@ -88,7 +108,7 @@ class SrpMetricsApiController extends ApiController {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/summary/user/{group_id}/{limit}",
+     *      path="/srp/metrics/summary/user/{status}/{group_id}/{limit}",
      *      tags={"SRP User Summary"},
      *      summary="Get a summary of approved SRP Requests for a specific User",
      *      description="Returns JSON object of counts of requests and sum of payouts by month and by Ship.",
@@ -96,6 +116,13 @@ class SrpMetricsApiController extends ApiController {
      *          {"SeAT Role": "bouncer:srp.settle"},
      *          {"ApiKeyAuth": {}}
      *      },
+     *     @SWG\Parameter(
+     *          name="status",
+     *          description="SRP Processing Status",
+     *          required=true,
+     *          type="string",
+     *          in="path"
+     *      ),
      *     @SWG\Parameter(
      *          name="group_id",
      *          description="SeAT User Group Id",
@@ -178,19 +205,25 @@ class SrpMetricsApiController extends ApiController {
      *      ),
      *      @SWG\Response(response=400, description="Bad request"),
      *      @SWG\Response(response=401, description="Unauthorized"),
+     *      @SWG\Response(response=404, description="Group Id not found"),
      *     )
      *
      * @param int $limit
      */
-    public function getSummaryUser($group_id, $limit=null)
+    public function getSummaryUser($status=null,$group_id, $limit=null)
     {
+        // return 404 if status is not recognized
+        if(!array_key_exists($status, $this->srp_statuses)){
+            return response([],404);
+        }
+
         $group = Group::where('id', $group_id)->first();
         if(!$group){
             return response([],404);
         }
 
         $user_ids = $group->users->pluck('id');
-        $summary = KillMail::where('approved', true)
+        $summary = KillMail::whereIn('approved', $this->srp_statuses[$status])
             ->whereIn('user_id', $user_ids)
             ->selectRaw('date_format(created_at, "%Y-%m-01") as dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
@@ -222,7 +255,7 @@ class SrpMetricsApiController extends ApiController {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/top/ship/{limit}",
+     *      path="/srp/metrics/top/ship/{status}/{limit}",
      *      tags={"SRP Top Ship"},
      *      summary="Get the top SRP utilizers order by Cost",
      *      description="Returns JSON object of counts of requests and sum of payouts by Ship",
@@ -230,6 +263,13 @@ class SrpMetricsApiController extends ApiController {
      *          {"SeAT Role": "bouncer:srp.settle"},
      *          {"ApiKeyAuth": {}}
      *      },
+     *      @SWG\Parameter(
+     *          name="status",
+     *          description="SRP Processing Status",
+     *          required=true,
+     *          type="string",
+     *          in="path"
+     *      ),
      *      @SWG\Parameter(
      *          name="limit",
      *          description="record limit",
@@ -273,9 +313,14 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getTopShip($limit=null)
+    public function getTopShip($status=null,$limit=null)
     {
-        $raw = KillMail::where('approved', true)
+        // return 404 if status is not recognized
+        if(!array_key_exists($status, $this->srp_statuses)){
+            return response([],404);
+        }
+
+        $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
             ->selectRaw('ship_type, count(kill_id) requests, sum(cost) payouts')
             ->groupBy('ship_type')
             ->orderByDesc('payouts');
@@ -293,7 +338,7 @@ class SrpMetricsApiController extends ApiController {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/top/user/{limit}",
+     *      path="/srp/metrics/top/user/{status}/{limit}",
      *      tags={"SRP Top User"},
      *      summary="Get the top SRP utilizers order by Cost",
      *      description="Returns JSON object of counts of requests and sum of payouts by User",
@@ -301,6 +346,13 @@ class SrpMetricsApiController extends ApiController {
      *          {"SeAT Role": "bouncer:srp.settle"},
      *          {"ApiKeyAuth": {}}
      *      },
+     *      @SWG\Parameter(
+     *          name="status",
+     *          description="SRP Processing Status",
+     *          required=true,
+     *          type="string",
+     *          in="path"
+     *      ),
      *      @SWG\Parameter(
      *          name="limit",
      *          description="record limit",
@@ -345,9 +397,15 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getTopUser($limit=null)
+    public function getTopUser($status=null,$limit=null)
     {
-        $raw = KillMail::join('users as u', 'user_id', 'u.id')
+        // return 404 if status is not recognized
+        if(!array_key_exists($status, $this->srp_statuses)){
+            return response([],404);
+        }
+
+        $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
+            ->join('users as u', 'user_id', 'u.id')
             ->join('user_settings as us', function($join){
                 $join->on('u.group_id', '=', 'us.group_id')
                     ->where('us.name', 'main_character_id');

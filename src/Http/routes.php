@@ -6,22 +6,22 @@ Route::group([
     'prefix' => 'api/v2/srp/metrics/web'
 ], function(){
 
-    Route::get('/summary/monthly/{limit?}', [
+    Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.web.summary.monthly',
         'uses' => 'SrpMetricsApiController@getSummaryMonthly',
     ]);
 
-    Route::get('/summary/user/{group_id?}/{limit?}', [
+    Route::get('/summary/user/{status}/{group_id?}/{limit?}', [
         'as' => 'srp.metrics.api.web.summary.user',
         'uses' => 'SrpMetricsApiController@getSummaryUser',
     ]);
 
-    Route::get('/top/ship/{limit?}',[
+    Route::get('/top/ship/{status}/{limit?}',[
         'as' => 'srp.metrics.api.web.top.ship',
         'uses' => 'SrpMetricsApiController@getTopShip',
     ]);
 
-    Route::get('/top/user/{limit?}',[
+    Route::get('/top/user/{status}/{limit?}',[
         'as' => 'srp.metrics.api.web.top.user',
         'uses' => 'SrpMetricsApiController@getTopUser'
     ]);
@@ -32,22 +32,22 @@ Route::group([
     'middleware' => ['api.auth'],
     'prefix' => 'api/v2/srp/metrics'
 ], function(){
-    Route::get('/summary/monthly/{limit?}', [
+    Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.summary.monthly',
         'uses' => 'SrpMetricsApiController@getSummaryMonthly',
     ]);
 
-    Route::get('/summary/user/{group_id?}/{limit?}', [
+    Route::get('/summary/user/{status}/{group_id?}/{limit?}', [
         'as' => 'srp.metrics.api.summary.user',
         'uses' => 'SrpMetricsApiController@getSummaryUser',
     ]);
 
-    Route::get('/top/ship/{limit?}',[
+    Route::get('/top/ship/{status}/{limit?}',[
         'as' => 'srp.metrics.api.top.ship',
         'uses' => 'SrpMetricsApiController@getTopShip',
     ]);
 
-    Route::get('/top/user/{limit?}',[
+    Route::get('/top/user/{status}/{limit?}',[
         'as' => 'srp.metrics.api.top.user',
         'uses' => 'SrpMetricsApiController@getTopUser'
     ]);
@@ -110,7 +110,7 @@ Route::group([
             'prefix' => 'metrics'
         ], function (){
 
-            Route::get('/', [
+            Route::get('/{srp_status?}', [
                 'as' => 'srp.metrics',
                 'uses' => 'SrpMetricsController@getIndex',
             ]);
