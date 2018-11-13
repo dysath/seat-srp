@@ -10,11 +10,11 @@ use Seat\Web\Http\Controllers\Controller;
 class SrpMetricsController extends Controller {
 
     private $srp_statuses = [
-        'unprocessed',
-        'rejected',
-        'approved',
-        'paid',
-        'all'
+        'unprocessed' => [0],
+        'rejected' => [-1],
+        'approved' => [1],
+        'paid' => [2],
+        'all' => [-1,0,1,2]
     ];
 
     /**
@@ -24,13 +24,13 @@ class SrpMetricsController extends Controller {
      */
     public function getIndex($srp_status='all')
     {
-        if(!$srp_status || !in_array($srp_status, $this->srp_statuses)){
+        if(!$srp_status || !array_key_exists($srp_status, $this->srp_statuses)){
             return back()->withErrors(
                 'SRP Status of `'.$srp_status.'` is invalid.'
             );
         }
 
-        $users = KillMail::where('approved', true)
+        $users = KillMail::where('approved', $this->srp_statuses[$srp_status])
             ->join('users as u', 'user_id', 'u.id')
             ->join('user_settings as us', function($join){
                 $join->on('u.group_id', '=', 'us.group_id')

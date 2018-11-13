@@ -228,7 +228,7 @@ class SrpMetricsApiController extends ApiController {
             ->selectRaw('date_format(created_at, "%Y-%m-01") as dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
             ->orderBy('dt', 'desc');
-        $ships = KillMail::where('approved', true)
+        $ships = KillMail::where('approved', $this->srp_statuses[$status])
             ->whereIn('user_id', $user_ids)
             ->selectRaw('ship_type, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('ship_type')
