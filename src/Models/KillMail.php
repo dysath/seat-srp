@@ -9,13 +9,16 @@ namespace Denngarr\Seat\SeatSrp\Models;
 
 
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
+use Denngarr\Seat\SeatSrp\Notifications\SrpRequestSubmitted;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Seat\Services\Models\Note;
 use Seat\Services\Traits\NotableTrait;
 
 class KillMail extends Model {
 
 	use NotableTrait;
+	use Notifiable;
 
     public $timestamps = true;
 
@@ -26,6 +29,15 @@ class KillMail extends Model {
     protected $fillable = [
             'user_id', 'kill_id', 'character_name', 'kill_token', 'approved', 'cost', 'type_id', 'ship_type', 'approver'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::created(function($model){
+            $model->notify(new SrpRequestSubmitted());
+        });
+    }
 
     public function type()
     {
