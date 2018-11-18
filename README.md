@@ -42,6 +42,36 @@ php artisan up
 
 And now, when you log into 'Seat', you should see a 'Ship Replacement Program' link on the left.
 
+## Discord Webhook (optional)
+
+Automated notifications of new SRP Requests submitted in Discord
+
+***In Discord application:***
+
+1. On a channel of your choice, click the cog icon to open the channel settings
+2. In the channel settings, navigate to the Webhooks tab
+3. Click `Create Webhook`
+4. Fill in name for the webhook and (optional) image
+5. Copy the Webhook URL
+6. Click `Save` to finish creating the webhook
+
+***In SeAT .env file:***
+
+The SeAT .env file accepts two variables for the webhook:
+
+1. (required) `SRP_DISCORD_WEBHOOK_URL`: this is the url you copied when creating the webhook in Discord
+2. (optional) `SRP_DISCORD_MENTION_ROLE`: this can be a room mention (e.g. `@here`), a Discord role ID, or a specific user ID
+        - Role ID and User ID can be obtained by typing `/@rolename` into a channel (e.g. `/@srp_manager`) 
+
+
+Example of .env entries:
+
+```
+SRP_DISCORD_WEBHOOK_URL=https://discordapp.com/api/webhooks/513619798362554369/Px9VQwiE5lhhBqOjW7rFBuLmLzMimwcklC2kIDJhQ9hLcDzCRPCkbI0LgWq6YwIbFtuk
+SRP_DISCORD_MENTION_ROLE='<@&198725153385873409>'
+```
+
+
 Good luck, and Happy Hunting!!  o7
 
 
