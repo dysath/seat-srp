@@ -30,7 +30,7 @@ class SrpMetricsController extends Controller {
             );
         }
 
-        $users = KillMail::where('approved', $this->srp_statuses[$srp_status])
+        $users = KillMail::whereIn('approved', $this->srp_statuses[$srp_status])
             ->join('users as u', 'user_id', 'u.id')
             ->join('user_settings as us', function($join){
                 $join->on('u.group_id', '=', 'us.group_id')
