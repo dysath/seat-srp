@@ -113,41 +113,43 @@ class SrpController extends Controller {
         foreach ($killMail->victim->items as $item) {
             $searchedItem = InvType::find($item->item_type_id);
             $slotName = InvFlag::find($item->flag);
+			if (!is_object($searchedItem)) {
+			} else {
+	            array_push($priceList, $searchedItem->typeName);
 
-            array_push($priceList, $searchedItem->typeName);
-
-            switch ($slotName->flagName)
-            {
-                case 'Cargo':
-                    $slots['cargo'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-                    if (!isset($slots['cargo'][$searchedItem->typeID]['qty']))
-                        $slots['cargo'][$searchedItem->typeID]['qty'] = 0;
-                    if (property_exists($item, 'quantity_destroyed'))
-                        $slots['cargo'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
-                    if (property_exists($item, 'quantity_dropped'))
-                        $slots['cargo'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
-                    break;
-                case 'DroneBay':
-                    $slots['dronebay'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-                    if (!isset($slots['dronebay'][$searchedItem->typeID]['qty']))
-                        $slots['dronebay'][$searchedItem->typeID]['qty'] = 0;
-                    if (property_exists($item, 'quantity_destroyed'))
-                        $slots['dronebay'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
-                    if (property_exists($item, 'quantity_dropped'))
-                        $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
-                    break;
-                default:
-                    if (!(preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
-                        $slots[$slotName->flagName]['id'] = $searchedItem->typeID;
-                        $slots[$slotName->flagName]['name'] = $searchedItem->typeName;
-                        if (!isset($slots[$slotName->flagName]['qty']))
-                            $slots[$slotName->flagName]['qty'] = 0;
-                        if (property_exists($item, 'quantity_destroyed'))
-                            $slots[$slotName->flagName]['qty'] = $item->quantity_destroyed;
-                        if (property_exists($item, 'quantity_dropped'))
-                            $slots[$slotName->flagName]['qty'] += $item->quantity_dropped;
-                    }
-                    break;
+            	switch ($slotName->flagName)
+            	{
+        	        case 'Cargo':
+    	                $slots['cargo'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
+	                    if (!isset($slots['cargo'][$searchedItem->typeID]['qty']))
+                	        $slots['cargo'][$searchedItem->typeID]['qty'] = 0;
+            	        if (property_exists($item, 'quantity_destroyed'))
+        	                $slots['cargo'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
+    	                if (property_exists($item, 'quantity_dropped'))
+	                        $slots['cargo'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
+                	    break;
+            	    case 'DroneBay':
+        	            $slots['dronebay'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
+    	                if (!isset($slots['dronebay'][$searchedItem->typeID]['qty']))
+	                        $slots['dronebay'][$searchedItem->typeID]['qty'] = 0;
+                    	if (property_exists($item, 'quantity_destroyed'))
+                	        $slots['dronebay'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
+            	        if (property_exists($item, 'quantity_dropped'))
+        	                $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
+    	                break;
+	                default:
+                	    if (!(preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
+            	            $slots[$slotName->flagName]['id'] = $searchedItem->typeID;
+        	                $slots[$slotName->flagName]['name'] = $searchedItem->typeName;
+    	                    if (!isset($slots[$slotName->flagName]['qty']))
+	                            $slots[$slotName->flagName]['qty'] = 0;
+                        	if (property_exists($item, 'quantity_destroyed'))
+                    	        $slots[$slotName->flagName]['qty'] = $item->quantity_destroyed;
+                	        if (property_exists($item, 'quantity_dropped'))
+            	                $slots[$slotName->flagName]['qty'] += $item->quantity_dropped;
+        	            }
+   	                break;
+	            }
             }
         }
 
