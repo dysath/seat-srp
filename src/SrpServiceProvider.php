@@ -3,9 +3,9 @@
 namespace Denngarr\Seat\SeatSrp;
 
 use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
-use Illuminate\Support\ServiceProvider;
+use App\Providers\AbstractSeatPlugin;
 
-class SrpServiceProvider extends ServiceProvider
+class SrpServiceProvider extends AbstractSeatPlugin
 {
     /**
      * Bootstrap the application services.
@@ -59,8 +59,8 @@ class SrpServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/Config/srp.sidebar.php', 'package.sidebar');
 
-        $this->mergeConfigFrom(
-            __DIR__ . '/Config/srp.permissions.php', 'web.permissions');
+        $this->registerPermissions(
+            __DIR__ . '/Config/Permissions/srp.permissions.php', 'srp');
     }
 
     public function add_publications()
@@ -101,5 +101,64 @@ class SrpServiceProvider extends ServiceProvider
                 __DIR__ . '/Http/Controllers',
             ])),
         ]);
+    }
+
+    /**
+     * Return the plugin public name as it should be displayed into settings.
+     *
+     * @example SeAT Web
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'SRP';
+    }
+
+
+    /**
+     * Return the plugin repository address.
+     *
+     * @example https://github.com/eveseat/web
+     *
+     * @return string
+     */
+    public function getPackageRepositoryUrl(): string
+    {
+        return 'https://github.com/dysath/seat-srp';
+    }
+
+    /**
+     * Return the plugin technical name as published on package manager.
+     *
+     * @example web
+     *
+     * @return string
+     */
+    public function getPackagistPackageName(): string
+    {
+        return 'seat-srp';
+    }
+
+    /**
+     * Return the plugin vendor tag as published on package manager.
+     *
+     * @example eveseat
+     *
+     * @return string
+     */
+    public function getPackagistVendorName(): string
+    {
+        return 'denngarr';
+    }
+
+    /**
+     * Return the plugin installed version.
+     *
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return config('srp.config.version');
     }
 }

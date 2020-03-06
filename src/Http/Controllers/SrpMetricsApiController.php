@@ -5,7 +5,6 @@ namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 use Seat\Api\Http\Controllers\Api\v2\ApiController;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Seat\Web\Models\User;
-use Seat\Web\Models\Group;
 
 
 /**
@@ -108,7 +107,7 @@ class SrpMetricsApiController extends ApiController {
 
     /**
      * @SWG\Get(
-     *      path="/srp/metrics/summary/user/{status}/{group_id}/{limit}",
+     *      path="/srp/metrics/summary/user/{status}/{user_id}/{limit}",
      *      tags={"SRP User Summary"},
      *      summary="Get a summary of approved SRP Requests for a specific User",
      *      description="Returns JSON object of counts of requests and sum of payouts by month and by Ship.",
@@ -125,7 +124,7 @@ class SrpMetricsApiController extends ApiController {
      *      ),
      *     @SWG\Parameter(
      *          name="group_id",
-     *          description="SeAT User Group Id",
+     *          description="SeAT User Id",
      *          required=true,
      *          type="integer",
      *          in="path"
@@ -205,7 +204,7 @@ class SrpMetricsApiController extends ApiController {
      *      ),
      *      @SWG\Response(response=400, description="Bad request"),
      *      @SWG\Response(response=401, description="Unauthorized"),
-     *      @SWG\Response(response=404, description="Group Id not found"),
+     *      @SWG\Response(response=404, description="User Id not found"),
      *     )
      *
      * @param int $limit
@@ -217,12 +216,12 @@ class SrpMetricsApiController extends ApiController {
             return response([],404);
         }
 
-        $group = Group::where('id', $group_id)->first();
-        if(!$group){
+        $user = User::where('id', $user_id)->first();
+        if(!$user){
             return response([],404);
         }
 
-        $user_ids = $group->users->pluck('id');
+        $user_ids = $user->characters->pluck('id');
         $summary = KillMail::whereIn('approved', $this->srp_statuses[$status])
             ->whereIn('user_id', $user_ids)
             ->selectRaw('date_format(created_at, "%Y-%m-01") as dt, sum(cost) payouts, count(kill_id) requests')
@@ -405,15 +404,25 @@ class SrpMetricsApiController extends ApiController {
         }
 
         $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
+            // ->join('users as u', 'user_id', 'u.id')
+            // ->join('user_settings as us', function($join){
+            //     $join->on('u.group_id', '=', 'us.group_id')
+            //         ->where('us.name', 'main_character_id');
+            // })
+            // ->join('users as u2', 'us.value', '=', 'u2.id')
+            // ->selectRaw('u2.name as main, sum(cost) as payouts, count(kill_id) as requests')
+            // ->groupBy('main')
+            // ->orderByDesc('payouts');
+
             ->join('users as u', 'user_id', 'u.id')
-            ->join('user_settings as us', function($join){
-                $join->on('u.group_id', '=', 'us.group_id')
-                    ->where('us.name', 'main_character_id');
+            ->join('refresh_tokens as us', function($join){
+                $join->on('u.id', '=', 'us.user_id');
             })
-            ->join('users as u2', 'us.value', '=', 'u2.id')
+            ->join('users as u2', 'us.user_id', 'u2.id')
             ->selectRaw('u2.name as main, sum(cost) as payouts, count(kill_id) as requests')
             ->groupBy('main')
             ->orderByDesc('payouts');
+
 
         if($limit){
             $raw = $raw->take($limit);

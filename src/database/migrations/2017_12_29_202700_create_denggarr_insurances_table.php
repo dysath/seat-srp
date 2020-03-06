@@ -6,21 +6,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInsurancesTable extends Migration
+class CreateDenggarrInsurancesTable extends Migration
 {
 
     public function up()
     {
-        Schema::create('denngarr_srp_insurances', function(Blueprint $table){
+        if (Schema::hasTable('denngarr_srp_insurances')){
+            Schema::create('denngarr_srp_insurances', function(Blueprint $table){
 
-            $table->bigInteger('type_id');
-            $table->string('name');
-            $table->decimal('cost', 30, 2)->default(0.0);
-            $table->decimal('payout', 30, 2)->default(0.0);
+                $table->bigInteger('type_id');
+                $table->string('name');
+                $table->decimal('cost', 30, 2)->default(0.0);
+                $table->decimal('payout', 30, 2)->default(0.0);
 
-            $table->primary(['type_id', 'name']);
+                $table->primary(['type_id', 'name']);
 
-        });
+            });
+        }
 
         if (Schema::hasTable('seat_srp_srp')) {
             Schema::table('seat_srp_srp', function(Blueprint $table){
@@ -30,8 +32,8 @@ class CreateInsurancesTable extends Migration
             });
 
             $killmails = KillMail::whereNull('type_id')
-                                 ->orWhere('type_id', 0)
-                                 ->get();
+                                ->orWhere('type_id', 0)
+                                ->get();
 
             foreach ($killmails as $killmail) {
 
