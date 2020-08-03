@@ -3,7 +3,7 @@
 namespace Denngarr\Seat\SeatSrp;
 
 use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
-use App\Providers\AbstractSeatPlugin;
+use Seat\Services\AbstractSeatPlugin;
 
 class SrpServiceProvider extends AbstractSeatPlugin
 {
@@ -19,6 +19,7 @@ class SrpServiceProvider extends AbstractSeatPlugin
         // $this->add_middleware($router);
         $this->add_views();
         $this->add_publications();
+        $this->add_migrations();
         $this->add_translations();
         $this->apply_custom_configuration();
     }
@@ -67,8 +68,12 @@ class SrpServiceProvider extends AbstractSeatPlugin
     {
         $this->publishes([
             __DIR__ . '/resources/assets'     => public_path('web'),
-            __DIR__ . '/database/migrations/' => database_path('migrations')
         ]);
+    }
+
+    private function add_migrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations/');
     }
 
     private function addCommands()
