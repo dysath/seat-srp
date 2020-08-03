@@ -11,7 +11,7 @@ class CreateDenggarrInsurancesTable extends Migration
 
     public function up()
     {
-        if (Schema::hasTable('denngarr_srp_insurances')){
+        if (!Schema::hasTable('denngarr_srp_insurances')){
             Schema::create('denngarr_srp_insurances', function(Blueprint $table){
 
                 $table->bigInteger('type_id');
@@ -24,7 +24,7 @@ class CreateDenggarrInsurancesTable extends Migration
             });
         }
 
-        if (Schema::hasTable('seat_srp_srp')) {
+        if (Schema::hasTable('seat_srp_srp') && !Schema::hasColumn('seat_srp_srp', 'type_id')) {
             Schema::table('seat_srp_srp', function(Blueprint $table){
                 $table->bigInteger('type_id')->after('cost');
 
