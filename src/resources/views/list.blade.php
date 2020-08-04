@@ -11,7 +11,7 @@
         <div class="card-body">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active nav-item"><a class="nav-link" href="#tab_1" data-toggle="tab">Pending Requests</a></li>
+              <li class="active nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Pending Requests</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Completed Requests</a></li>
             </ul>
 

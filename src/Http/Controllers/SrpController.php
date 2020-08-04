@@ -58,7 +58,7 @@ class SrpController extends Controller {
         	KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
 
         return redirect()->back()
-                         ->with('success', trans('srp::seat.submitted'));
+                         ->with('success', trans('srp::srp.submitted'));
     }
 
 	public function getInsurances($kill_id)

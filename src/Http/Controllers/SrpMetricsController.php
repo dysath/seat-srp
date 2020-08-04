@@ -32,22 +32,9 @@ class SrpMetricsController extends Controller {
         }
 
         $users = KillMail::whereIn('approved', $this->srp_statuses[$srp_status])
-            // ->join('users as u', 'user_id', 'u.id')
-            // ->join('user_settings as us', function($join){
-            //     $join->on('u.group_id', '=', 'us.group_id')
-            //         ->where('us.name', '=', 'main_character_id');
-            // })
-            // ->join('users as u2', 'us.value', '=', 'u2.id')
-            // ->orderBy('u2.name')
-            // ->pluck('u2.name', 'u2.group_id');
-
             ->join('users as u', 'user_id', 'u.id')
-            ->join('refresh_tokens as us', function($join){
-                $join->on('u.id', '=', 'us.user_id');
-            })
-            ->join('users as u2', 'us.user_id', 'u2.id')
-            ->orderBy('u2.name')
-            ->pluck('u2.name', 'u.id');
+            ->orderBy('u.name')
+            ->pluck('u.name', 'u.id');
 
         return view('srp::metrics', compact(
             'users',
