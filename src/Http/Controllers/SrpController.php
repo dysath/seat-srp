@@ -19,8 +19,7 @@ class SrpController extends Controller {
     public function srpGetRequests()
     {
         $kills = KillMail::where('user_id', auth()->user()->id)
-                         ->orderby('seat_srp_srp.created_at', 'desc')
-                         ->join('users as u', 'user_id', 'u.id')
+                         ->orderby('created_at', 'desc')
                          ->take(20)
                          ->get();
 
@@ -38,8 +37,6 @@ class SrpController extends Controller {
         preg_match('/([a-z0-9]{35,42})/', $request->km, $tokens);
         $totalKill['killToken'] = $tokens[0];
 
-        dd($totalKill);
-
         return response()->json($totalKill);
     }
 
@@ -48,7 +45,7 @@ class SrpController extends Controller {
 
         KillMail::create([
             'user_id'        => auth()->user()->id,
-            'character_id'   => $request->input('srpCharacterID'),
+            'character_name' => $request->input('srpCharacterName'),
             'kill_id'        => $request->input('srpKillId'),
             'kill_token'     => $request->input('srpKillToken'),
             'approved'       => 0,
@@ -61,7 +58,7 @@ class SrpController extends Controller {
         	KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
 
         return redirect()->back()
-                         ->with('success', trans('srp::srp.submitted'));
+                         ->with('success', trans('srp::seat.submitted'));
     }
 
 	public function getInsurances($kill_id)

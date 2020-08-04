@@ -14,10 +14,8 @@ class SrpAdminController extends Controller {
 
     public function srpGetKillMails()
     {
-        $killmails = KillMail::where('approved','>','-2')->orderby('seat_srp_srp.created_at', 'desc')
-        // ->join('users as u', 'user_id', 'u.id')
-        // ->leftJoin('character_infos as ci', 'character_name', 'ci.character_id')
-        ->get();
+        $killmails = KillMail::where('approved','>','-2')->orderby('created_at', 'desc')->get();
+
         return view('srp::list', compact('killmails'));
     }
 

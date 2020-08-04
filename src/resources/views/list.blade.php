@@ -11,7 +11,7 @@
         <div class="card-body">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Pending Requests</a></li>
+              <li class="active nav-item"><a class="nav-link" href="#tab_1" data-toggle="tab">Pending Requests</a></li>
               <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Completed Requests</a></li>
             </ul>
 
@@ -42,7 +42,7 @@
                       </button>
                       @endif
                   </td>
-                  <td><span class='id-to-name' data-id="{{ $kill->character_id }}"> {{ $kill->character_id }}</span></td>
+                  <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
                       <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
@@ -99,7 +99,7 @@
                       </button>
                       @endif
                   </td>
-                  <td><span class='id-to-name' data-id="{{ $kill->character_id }}"> {{ $kill->character_id }}</span></td>
+                  <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
                       <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
