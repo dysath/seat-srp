@@ -3,14 +3,16 @@
 @section('title', trans('srp::srp.metrics'))
 
 @section('page_header')
-    @lang('srp::srp.metrics')
-    <div class="float-right">
-        <div id="srpFilterToggle" class="btn btn-default" title="Toggle SRP Filters"
-             data-toggle="control-sidebar"
-             data-slide="false"
-        >
-            <i class="fa fa-filter" aria-hidden="true"></i>
-        </div>
+    <div class="container-fluid">
+        @lang('srp::srp.metrics')
+        <span class="float-right">
+            <div id="srpFilterToggle" class="btn btn-default" title="Toggle SRP Filters"
+                data-toggle="control-sidebar"
+                data-controlsidebar-slide="false"
+            >
+                <i class="fa fa-filter" aria-hidden="true"></i>
+            </div>
+        </span>
     </div>
 @stop
 
@@ -86,7 +88,8 @@
     </div>
 @stop
 
-@section('float-sidebar')
+@section('right-sidebar')
+    <div class="right-sidebar sidebar sidebar-animate">
     <ul class="sidebar-menu tree" data-widget="tree">
         <li class="header">
             SRP Filters
@@ -133,6 +136,7 @@
             </ul>
         </li>
     </ul>
+    </div>
 @stop
 
 @push('head')

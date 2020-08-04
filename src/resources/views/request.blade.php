@@ -3,6 +3,8 @@
 @section('title', trans('srp::srp.request'))
 @section('page_header', trans('srp::srp.request'))
 
+@inject('CharacterInfo', 'Seat\Eveapi\Models\Character\CharacterInfo')
+
 @section('left')
     <div class="card card-success">
         <div class="card-header">
@@ -67,7 +69,7 @@
                             </button>
                             @endif
                         </td>
-                        <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
+                        <td><span class='id-to-name' data-id="{{ $kill->character_id }}"> {{ $kill->character_id }}</span></td>
                         <td>{{ $kill->ship_type }}</td>
                         <td>
                             <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">

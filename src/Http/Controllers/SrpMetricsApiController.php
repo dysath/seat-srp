@@ -204,7 +204,7 @@ class SrpMetricsApiController extends ApiController {
      *                  @OA\Property(
      *                      type="array",
      *                      property="requests",
-     *                      description="Numbner of SRP Requests",
+     *                      description="Number of SRP Requests",
      *                      @OA\Items(
      *                          type="integer"
      *                      )
@@ -219,7 +219,7 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getSummaryUser($status=null,$group_id, $limit=null)
+    public function getSummaryUser($status=null,$user_id, $limit=null)
     {
         // return 404 if status is not recognized
         if(!array_key_exists($status, $this->srp_statuses)){
@@ -231,14 +231,14 @@ class SrpMetricsApiController extends ApiController {
             return response([],404);
         }
 
-        $user_ids = $user->characters->pluck('id');
+        // $user_ids = $user->characters->pluck('id');
         $summary = KillMail::whereIn('approved', $this->srp_statuses[$status])
-            ->whereIn('user_id', $user_ids)
+            ->where('user_id', $user_id)
             ->selectRaw('date_format(created_at, "%Y-%m-01") as dt, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('dt')
             ->orderBy('dt', 'desc');
         $ships = KillMail::whereIn('approved', $this->srp_statuses[$status])
-            ->whereIn('user_id', $user_ids)
+            ->where('user_id', $user_id)
             ->selectRaw('ship_type, sum(cost) payouts, count(kill_id) requests')
             ->groupBy('ship_type')
             ->orderByDesc('payouts');
@@ -422,22 +422,8 @@ class SrpMetricsApiController extends ApiController {
         }
 
         $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
-            // ->join('users as u', 'user_id', 'u.id')
-            // ->join('user_settings as us', function($join){
-            //     $join->on('u.group_id', '=', 'us.group_id')
-            //         ->where('us.name', 'main_character_id');
-            // })
-            // ->join('users as u2', 'us.value', '=', 'u2.id')
-            // ->selectRaw('u2.name as main, sum(cost) as payouts, count(kill_id) as requests')
-            // ->groupBy('main')
-            // ->orderByDesc('payouts');
-
             ->join('users as u', 'user_id', 'u.id')
-            ->join('refresh_tokens as us', function($join){
-                $join->on('u.id', '=', 'us.user_id');
-            })
-            ->join('users as u2', 'us.user_id', 'u2.id')
-            ->selectRaw('u2.name as main, sum(cost) as payouts, count(kill_id) as requests')
+            ->selectRaw('u.name as main, sum(cost) as payouts, count(kill_id) as requests')
             ->groupBy('main')
             ->orderByDesc('payouts');
 
