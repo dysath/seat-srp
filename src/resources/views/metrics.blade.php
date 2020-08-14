@@ -6,7 +6,7 @@
     @lang('srp::srp.metrics')
     <div class="float-right">
         <div id="srpFilterToggle" class="btn btn-default" title="Toggle SRP Filters"
-             data-toggle="control-sidebar"
+             data-widget="control-sidebar"
              data-slide="false"
         >
             <i class="fa fa-filter" aria-hidden="true"></i>
@@ -86,53 +86,53 @@
     </div>
 @stop
 
-@section('float-sidebar')
-    <ul class="sidebar-menu tree" data-widget="tree">
-        <li class="header">
-            SRP Filters
-        </li>
-        <li class="treeview active">
-            <a href="#">
-                <i class="fa fa-cogs"></i>
-                <span>SRP Status: {{ Str::title($srp_status) }}</span>
-                <i class="fa fa-angle-left float-right"></i>
-            </a>
-            <ul class=treeview-menu>
-                <li class="
-                    @if(
-                        url()->current() == route('srp.metrics', ['srp_status' => 'all']) ||
-                        url()->current() == route('srp.metrics')
-                        )
-                        active
-                    @endif"
-                >
-                    <a href="{{ route('srp.metrics', ['srp_status' => 'all']) }}">
-                        All
-                    </a>
-                </li>
-                <li class="@if(url()->current() == route('srp.metrics', ['srp_status' => 'approved'])) active @endif">
-                    <a href="{{ route('srp.metrics', ['srp_status' => 'approved']) }}">
-                        Approved
-                    </a>
-                </li>
-                <li class="@if(url()->current() == route('srp.metrics', ['srp_status' => 'paid'])) active @endif">
-                    <a href="{{ route('srp.metrics', ['srp_status' => 'paid']) }}">
-                        Paid
-                    </a>
-                </li>
-                <li class="@if(url()->current() == route('srp.metrics', ['srp_status' => 'rejected'])) active @endif">
-                    <a href="{{ route('srp.metrics', ['srp_status' => 'rejected']) }}">
-                        Rejected
-                    </a>
-                </li>
-                <li class="@if(url()->current() == route('srp.metrics', ['srp_status' => 'unprocessed'])) active @endif">
-                    <a href="{{ route('srp.metrics', ['srp_status' => 'unprocessed']) }}">
-                        Unprocessed
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
+@section('right-sidebar')
+<nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+            <h4 class="header">SRP Filters</h4>
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-cogs"></i>
+                    <p>
+                        SRP Status: {{ Str::title($srp_status) }}
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('srp.metrics', ['srp_status' => 'all']) }}" class="nav-link @if(
+                            url()->current() == route('srp.metrics', ['srp_status' => 'all']) ||
+                            url()->current() == route('srp.metrics')
+                            )
+                            active
+                        @endif">
+                            <p>All</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('srp.metrics', ['srp_status' => 'approved']) }}" class="nav-link @if(url()->current() == route('srp.metrics', ['srp_status' => 'approved'])) active @endif">
+                            <p>Approved</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('srp.metrics', ['srp_status' => 'paid']) }}" class="nav-link @if(url()->current() == route('srp.metrics', ['srp_status' => 'paid'])) active @endif">
+                            <p>Paid</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('srp.metrics', ['srp_status' => 'rejected']) }}" class="nav-link @if(url()->current() == route('srp.metrics', ['srp_status' => 'rejected'])) active @endif">
+                            <p>Rejected</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('srp.metrics', ['srp_status' => 'unprocessed']) }}" class="nav-link @if(url()->current() == route('srp.metrics', ['srp_status' => 'unprocessed'])) active @endif">
+                            <p>Unprocessed</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
 @stop
 
 @push('head')
