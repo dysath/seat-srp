@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <p></p>
                 <div class="overlay">
-                    <i class="fa fa-refresh fa-spin"></i>
+                    <i class="fas fa-refresh fa-spin"></i>
                 </div>
             </div>
         </div>

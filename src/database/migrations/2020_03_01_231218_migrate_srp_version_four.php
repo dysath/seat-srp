@@ -24,7 +24,7 @@ class MigrateSrpVersionFour extends Migration
             $new_id = DB::table('mig_groups')
                 ->where('old_user_id', $entry->user_id)
                 ->first();
-            if (is_null($new_id->new_user_id)){
+            if (is_null($new_id) || is_null($new_id->new_user_id)){
                 DB::table('seat_srp_srp')
                     ->where('id', $entry->id)
                     ->delete();
