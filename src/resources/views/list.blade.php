@@ -4,15 +4,15 @@
 @section('page_header', trans('srp::srp.list'))
 
 @section('full')
-    <div class="box box-primary box-solid">
-        <div class="box-header">
-            <h3 class="box-title">SRP Requests</h3>
+    <div class="card card-primary card-solid">
+        <div class="card-header">
+            <h3 class="card-title">SRP Requests</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#tab_1" data-toggle="tab">Pending Requests</a></li>
-              <li><a href="#tab_2" data-toggle="tab">Completed Requests</a></li>
+              <li class="active nav-item"><a class="nav-link" href="#tab_1" data-toggle="tab">Pending Requests</a></li>
+              <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Completed Requests</a></li>
             </ul>
 
           <div class="tab-content">
