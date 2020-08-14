@@ -24,6 +24,18 @@ return [
                 'icon' => 'fas fa-chart-bar',
                 'route' => 'srp.metrics',
                 'permission' => 'srp.settle',
+			],
+			[
+                'name' => 'Instructions',
+                'icon' => 'fas fa-book-open',
+                'route' => 'srp.instructions',
+                'permission' => 'srp.request',
+			],
+			[
+                'name' => 'About',
+                'icon' => 'fas fa-info',
+                'route' => 'srp.about',
+                'permission' => 'srp.request',
             ],
 		],
 	],

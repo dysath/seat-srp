@@ -192,4 +192,14 @@ class SrpController extends Controller {
 
         return json_decode($response->getBody()->getContents());
     }
+
+    public function getAboutView()
+    {
+        return view("srp::about");
+    }
+
+    public function getInstructionsView()
+    {
+        return view("srp::instructions");
+    }
 }

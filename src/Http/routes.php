@@ -105,6 +105,18 @@ Route::group([
 	        'middleware' => 'can:srp.request',
         ]);
 
+        Route::get('/about', [
+            'as'   => 'srp.about',
+            'uses' => 'SrpController@getAboutView',
+            'middleware' => 'can:srp.request'
+        ]);
+    
+        Route::get('/instructions', [
+            'as'   => 'srp.instructions',
+            'uses' => 'SrpController@getInstructionsView',
+            'middleware' => 'can:srp.request'
+        ]);
+
         Route::group([
             'middleware' => 'can:srp.settle',
             'prefix' => 'metrics'
