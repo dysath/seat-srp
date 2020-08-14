@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'srp' => 'SRP',
     'shipType' => 'Ship Type',
     'costs' => 'Ship Cost',
     'paidout' => 'Paid Out',
@@ -14,6 +15,8 @@ return [
     'list' => 'SRP List',
     'action' => 'Request Status',
     'metrics' => 'SRP Metrics',
+    'instructions' => 'Instructions',
+    'about' => 'About',
 
     'request_inst'      =>  'Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.',
     'request_new'       =>  'Request New SRP',
