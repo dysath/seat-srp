@@ -37,12 +37,7 @@ class SrpRequestSubmitted extends Notification
         return (new Discord)->post("```New SRP Request Received:```" .
             "\t**Requested On:** $notifiable->created_at" .
             "\n\t**Requested By:** " . $notifiable::join('users as u', 'user_id', 'u.id')
-                ->join('user_settings as us', function($join){
-                    $join->on('u.group_id', '=', 'us.group_id')
-                        ->where('us.name', 'main_character_id');
-                })
-                ->join('users as u2', 'us.value', '=', 'u2.id')
-                ->select('u2.name')
+                ->select('u.name')
                 ->first()->name .
             "\n\t**Kill Mail for:** $notifiable->character_name" .
             "\n\t**Ship Type:** $notifiable->ship_type" .
