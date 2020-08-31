@@ -387,10 +387,10 @@ function numberToAbbreviation(num, digits=2) {
 }
 
 function getActiveThemeColor() {
-    var bodyClass = new RegExp(/skin-([a-z0-9_]+)(-light)?/, 'gi').exec($('body').attr('class'));
-    if (bodyClass.length > 0)
-        return bodyClass[1];
-    return '';
+    // var bodyClass = new RegExp(/skin-([a-z0-9_]+)(-light)?/, 'gi').exec($('body').attr('class'));
+    // if (bodyClass.length > 0)
+    //     return bodyClass[1];
+    return 'blue';
 }
 
 function convertHex(hex, opacity) {

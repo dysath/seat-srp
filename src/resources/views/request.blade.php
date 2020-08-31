@@ -4,12 +4,12 @@
 @section('page_header', trans('srp::srp.request'))
 
 @section('left')
-    <div class="box box-success box-solid">
-        <div class="box-header">
-            <h3 class="box-title">Request New SRP</h3>
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title">Request New SRP</h3>
         </div>
         <form role="form" action="{{ route('srp.saveKillMail') }}" method="post">
-            <div class="box-body">
+            <div class="card-body">
                 <p>{{ trans('srp::srp.request_inst') }}</p>
                 <div class="form-group">
                     <label for="killMailUrl" class="control-label">External Url</label>
@@ -21,7 +21,7 @@
                     <textarea class="form-control" name="srpPingContent" rows="3" placeholder="{{ trans('srp::srp.ping_info') }}"></textarea>
                 </div>
             </div>
-            <div class="box-footer">
+            <div class="card-footer">
                 <div class="btn-group pull-right" role="group">
                     <input type="button" class="btn btn-default" id="readUrl" name="readUrl" value="{{ trans('srp::srp.verify_killmail') }}"/>
                     <input type="submit" class="btn btn-primary" id="saveKillMail" value="{{ trans('srp::srp.submit_killmail') }}"/>
@@ -39,11 +39,11 @@
             <i class="fa fa-refresh fa-spin"></i>
         </div>
     </div>
-    <div class="box box-success box-solid">
-        <div class="box-header">
-            <h3 class="box-title">{{ trans('srp::srp.mysrp') }}</h3>
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title">{{ trans('srp::srp.mysrp') }}</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
             <table id="srps" class="table table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -102,11 +102,11 @@
 @stop
 
 @section('right')
-    <div class="box box-primary box-solid">
-        <div class="box-header">
-            <h3 class="box-title">{{ trans('srp::srp.killmail_details') }}</h3>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">{{ trans('srp::srp.killmail_details') }}</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
             <div id="kill-report">
                 <div>
                     <table class="table table-condensed">

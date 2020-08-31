@@ -4,15 +4,15 @@
 @section('page_header', trans('srp::srp.list'))
 
 @section('full')
-    <div class="box box-primary box-solid">
-        <div class="box-header">
-            <h3 class="box-title">SRP Requests</h3>
+    <div class="card card-primary card-solid">
+        <div class="card-header">
+            <h3 class="card-title">SRP Requests</h3>
         </div>
-        <div class="box-body">
+        <div class="card-body">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#tab_1" data-toggle="tab">Pending Requests</a></li>
-              <li><a href="#tab_2" data-toggle="tab">Completed Requests</a></li>
+              <li class="active nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Pending Requests</a></li>
+              <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Completed Requests</a></li>
             </ul>
 
           <div class="tab-content">
@@ -42,7 +42,7 @@
                       </button>
                       @endif
                   </td>
-                  <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
+                  <td><a class='id-to-name' data-id="{{ $kill->character_name }}">{{ $kill->character_name }}</a></td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
                       <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
@@ -137,7 +137,7 @@
 @endpush
 
 @push('javascript')
-@include('web::includes.javascript.id-to-name')
+
 <script type="application/javascript">
 
   $(function () {
@@ -146,7 +146,6 @@
 
     $('#srp-ping').on('show.bs.modal', function(e){
         var link = '{{ route('srp.ping', 0) }}';
-
         $(this).find('.overlay').show();
         $(this).find('.modal-body>p').text('');
 
@@ -181,7 +180,7 @@
                 "info": false,
                 "paging": false,
                 "processing": true,
-                "order": [[0, "asc"]],
+                "order": [[2, "asc"]],
                 "columnDefs": [
                     {
                         "render": function(data, type, row) {
@@ -257,7 +256,6 @@
           $("#approver-"+data.value).html(data.approver);
         });
     });
-    ids_to_names();
 
 });
 </script>

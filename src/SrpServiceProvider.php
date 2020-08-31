@@ -3,9 +3,9 @@
 namespace Denngarr\Seat\SeatSrp;
 
 use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
-use Illuminate\Support\ServiceProvider;
+use Seat\Services\AbstractSeatPlugin;
 
-class SrpServiceProvider extends ServiceProvider
+class SrpServiceProvider extends AbstractSeatPlugin
 {
     /**
      * Bootstrap the application services.
@@ -19,6 +19,7 @@ class SrpServiceProvider extends ServiceProvider
         // $this->add_middleware($router);
         $this->add_views();
         $this->add_publications();
+        $this->add_migrations();
         $this->add_translations();
         $this->apply_custom_configuration();
     }
@@ -59,16 +60,20 @@ class SrpServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/Config/srp.sidebar.php', 'package.sidebar');
 
-        $this->mergeConfigFrom(
-            __DIR__ . '/Config/srp.permissions.php', 'web.permissions');
+        $this->registerPermissions(
+            __DIR__ . '/Config/Permissions/srp.permissions.php', 'srp');
     }
 
     public function add_publications()
     {
         $this->publishes([
             __DIR__ . '/resources/assets'     => public_path('web'),
-            __DIR__ . '/database/migrations/' => database_path('migrations')
         ]);
+    }
+
+    private function add_migrations()
+    {
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations/');
     }
 
     private function addCommands()
@@ -101,5 +106,64 @@ class SrpServiceProvider extends ServiceProvider
                 __DIR__ . '/Http/Controllers',
             ])),
         ]);
+    }
+
+    /**
+     * Return the plugin public name as it should be displayed into settings.
+     *
+     * @example SeAT Web
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return 'SRP';
+    }
+
+
+    /**
+     * Return the plugin repository address.
+     *
+     * @example https://github.com/eveseat/web
+     *
+     * @return string
+     */
+    public function getPackageRepositoryUrl(): string
+    {
+        return 'https://github.com/dysath/seat-srp';
+    }
+
+    /**
+     * Return the plugin technical name as published on package manager.
+     *
+     * @example web
+     *
+     * @return string
+     */
+    public function getPackagistPackageName(): string
+    {
+        return 'seat-srp';
+    }
+
+    /**
+     * Return the plugin vendor tag as published on package manager.
+     *
+     * @example eveseat
+     *
+     * @return string
+     */
+    public function getPackagistVendorName(): string
+    {
+        return 'denngarr';
+    }
+
+    /**
+     * Return the plugin installed version.
+     *
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return config('srp.config.version');
     }
 }
