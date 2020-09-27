@@ -20,7 +20,7 @@ return [
 
     'request_inst'      =>  'Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.',
     'request_new'       =>  'Request New SRP',
-    'ping_info'         =>  'Put the ping content related to the fleet where you loose this ship.',
+    'ping_info'         =>  'Paste in any related fleet pings.',
     'ping'              =>  'Ping',
     'mysrp'             =>  'My SRP Requests',
     'verify_killmail'   =>  'Verify Killmail',
