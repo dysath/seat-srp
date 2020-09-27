@@ -4,6 +4,7 @@ namespace Denngarr\Seat\SeatSrp;
 
 use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
 use Illuminate\Support\ServiceProvider;
+use Denngarr\Seat\SeatSrp\Commands\FlagShim;
 
 class SrpServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,7 @@ class SrpServiceProvider extends ServiceProvider
     {
         $this->commands([
             InsuranceUpdate::class,
+            FlagShim::class,
         ]);
     }
 
