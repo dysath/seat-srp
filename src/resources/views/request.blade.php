@@ -76,13 +76,13 @@
                         </td>
                         <td>
                             @if ($kill->approved === 0)
-                                <span class="label label-warning">Pending</span>
+                                <span class="badge badge-warning">Pending</span>
                             @elseif ($kill->approved === -1)
-                                <span class="label label-danger">Rejected</span>
+                                <span class="badge badge-danger">Rejected</span>
                             @elseif ($kill->approved === 1)
-                                <span class="label label-success">Approved</span>
+                                <span class="badge badge-success">Approved</span>
                             @elseif ($kill->approved === 2)
-                                <span class="label label-primary">Paid Out</span>
+                                <span class="badge badge-primary">Paid Out</span>
                             @endif
                         </td>
                         <td>

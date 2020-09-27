@@ -50,13 +50,13 @@
                       </button>
                   </td>
                   @if ($kill->approved === 0)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-warning">Pending</span></td>
                   @elseif ($kill->approved === -1)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-danger">Rejected</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-danger">Rejected</span></td>
                   @elseif ($kill->approved === 1)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-success">Approved</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-success">Approved</span></td>
                   @elseif ($kill->approved === 2)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Paid Out</span></td>
                   @endif
                   <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
@@ -107,13 +107,13 @@
                       </button>
                   </td>
                   @if ($kill->approved === 0)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-warning">Pending</span></td>
                   @elseif ($kill->approved === -1)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-danger">Rejected</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-danger">Rejected</span></td>
                   @elseif ($kill->approved === 1)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-success">Approved</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-success">Approved</span></td>
                   @elseif ($kill->approved === 2)
-                    <td id="id-{{ $kill->kill_id }}"><span class="label label-primary">Paid Out</span></td>
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Paid Out</span></td>
                   @endif
                   <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
@@ -245,13 +245,13 @@
           timeout: 5000
         }).done(function (data) {
           if (data.name === "Approve") {
-              $("#id-"+data.value).html('<span class="label label-success">Approved</span>');
+              $("#id-"+data.value).html('<span class="badge badge-success">Approved</span>');
           } else if (data.name === "Reject") {
-              $("#id-"+data.value).html('<span class="label label-danger">Rejected</span>');
+              $("#id-"+data.value).html('<span class="badge badge-danger">Rejected</span>');
           } else if (data.name === "Paid Out") {
-              $("#id-"+data.value).html('<span class="label label-primary">Paid Out</span>');
+              $("#id-"+data.value).html('<span class="badge badge-primary">Paid Out</span>');
           } else if (data.name === "Pending") {
-              $("#id-"+data.value).html('<span class="label label-warning">Pending</span>');
+              $("#id-"+data.value).html('<span class="badge badge-warning">Pending</span>');
           }
           $("#approver-"+data.value).html(data.approver);
         });
