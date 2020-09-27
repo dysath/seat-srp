@@ -3,6 +3,7 @@
 namespace Denngarr\Seat\SeatSrp;
 
 use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
+use Denngarr\Seat\SeatSrp\Commands\FlagShim;
 use Seat\Services\AbstractSeatPlugin;
 
 class SrpServiceProvider extends AbstractSeatPlugin
@@ -80,6 +81,7 @@ class SrpServiceProvider extends AbstractSeatPlugin
     {
         $this->commands([
             InsuranceUpdate::class,
+            FlagShim::class,
         ]);
     }
 

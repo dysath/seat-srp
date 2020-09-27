@@ -16,6 +16,8 @@ class InvFlag extends Model {
 
     public $incrementing = false;
 
+    protected $fillable = ['flagID', 'flagName', 'flagText', 'orderID'];
+
     protected $table = 'invFlags';
 
     protected $primaryKey = 'flagID';
