@@ -87,6 +87,12 @@ Route::group([
             'middleware' => 'can:srp.settle'
         ]);
 
+        Route::post('/admin/addreason', [
+            'as'   => 'srp.addReason',
+            'uses' => 'SrpAdminController@srpAddReason',
+            'middleware' => 'can:srp.settle'
+        ]);
+
         Route::get('/admin/{kill_id}/{action}', [
             'as'   => 'srpadmin.settle',
             'uses' => 'SrpAdminController@srpApprove',
@@ -102,6 +108,12 @@ Route::group([
         Route::get('/ping/{kill_id}', [
         	'as' => 'srp.ping',
 	        'uses' => 'SrpController@getPing',
+	        'middleware' => 'can:srp.request',
+        ]);
+
+        Route::get('/reason/{kill_id}', [
+        	'as' => 'srp.reason',
+	        'uses' => 'SrpController@getReason',
 	        'middleware' => 'can:srp.request',
         ]);
 

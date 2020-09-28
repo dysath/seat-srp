@@ -67,7 +67,7 @@
                             </button>
                             @endif
                         </td>
-                        <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
+                        <td><span class='id-to-name' data-id="{{ $kill->character_name }}">{{ $kill->character_name }}</span></td>
                         <td>{{ $kill->ship_type }}</td>
                         <td>
                             <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
@@ -76,13 +76,18 @@
                         </td>
                         <td>
                             @if ($kill->approved === 0)
-                                <span class="label label-warning">Pending</span>
+                                <span class="badge badge-warning">Pending</span>
                             @elseif ($kill->approved === -1)
-                                <span class="label label-danger">Rejected</span>
+                                <span class="badge badge-danger">Rejected</span>
                             @elseif ($kill->approved === 1)
-                                <span class="label label-success">Approved</span>
+                                <span class="badge badge-success">Approved</span>
                             @elseif ($kill->approved === 2)
-                                <span class="label label-primary">Paid Out</span>
+                                <span class="badge badge-primary">Paid Out</span>
+                            @endif
+                            @if(!is_null($kill->reason())) 
+                            <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">
+                                <i class="fa fa-comment"></i>
+                            </button>
                             @endif
                         </td>
                         <td>
@@ -99,6 +104,7 @@
     </div>
     @include('srp::includes.insurances-modal')
     @include('srp::includes.ping-modal')
+    @include('srp::includes.reason-modal')
 @stop
 
 @section('right')
@@ -210,6 +216,28 @@
 
                     if (jqXHR.statusCode() !== 500)
                         $('#srp-ping').find('.modal-body>p').text(jqXHR.responseJSON.msg);
+                });
+
+                $(this).find('.overlay').hide();
+            });
+
+            $('#srp-reason').on('show.bs.modal', function(e){
+                var link = '{{ route('srp.reason', 0) }}';
+
+                $(this).find('.overlay').show();
+                $(this).find('.modal-body>p').text('');
+
+                $.ajax({
+                    url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+                    dataType: 'json',
+                    method: 'GET'
+                }).done(function(response){
+                    $('#srp-reason').find('.modal-body>p').text(response.note).removeClass('text-danger');
+                }).fail(function(jqXHR, status){
+                    $('#srp-reason').find('.modal-body>p').text(status).addClass('text-danger');
+
+                    if (jqXHR.statusCode() !== 500)
+                        $('#srp-reason').find('.modal-body>p').text(jqXHR.responseJSON.msg);
                 });
 
                 $(this).find('.overlay').hide();
