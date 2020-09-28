@@ -3,6 +3,10 @@
 @section('title', trans('srp::srp.list'))
 @section('page_header', trans('srp::srp.list'))
 
+@push('head')
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+@end
+
 @section('full')
     <div class="card card-primary card-solid">
         <div class="card-header">
@@ -27,6 +31,7 @@
                   <th>{{ trans('srp::srp.paidout') }}</th>
                   <th>{{ trans('srp::srp.submitted') }}</th>
                   <th>{{ trans('srp::srp.action') }}</th>
+                  <th>{{ trans('srp::srp.notes') }}</th>
                   <th>{{ trans('srp::srp.changedby') }}</th>
                 </tr>
             </thead>
@@ -66,6 +71,14 @@
                       <button type="button" class="btn btn-xs btn-danger srp-status" id="srp-status" name="{{ $kill->kill_id }}">Reject</button>
                       <button type="button" class="btn btn-xs btn-success srp-status" id="srp-status" name="{{ $kill->kill_id }}">Approve</button>
                       <button type="button" class="btn btn-xs btn-primary srp-status" id="srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
+                  </td>                 
+                  <td>
+                      <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">
+                          <i class="fa fa-comment"></i>
+                      </button>
+                      <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason-edit" data-kill-id="{{ $kill->kill_id }}">
+                          <i class="fas fa-pencil-alt"></i>
+                      </button>
                   </td>
                   <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                 </tr>
@@ -84,6 +97,7 @@
                   <th>{{ trans('srp::srp.costs') }}</th>
                   <th>{{ trans('srp::srp.paidout') }}</th>
                   <th>{{ trans('srp::srp.submitted') }}</th>
+                  <th>{{ trans('srp::srp.notes') }}</th>
                   <th>{{ trans('srp::srp.changedby') }}</th>
                 </tr>
             </thead>
@@ -118,6 +132,11 @@
                   <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
                   </td>
+                  <td>
+                      <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">
+                          <i class="fa fa-comment"></i>
+                      </button>
+                  </td>
                   <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                 </tr>
                 @endif
@@ -130,6 +149,8 @@
     </div>
     @include('srp::includes.insurances-modal')
     @include('srp::includes.ping-modal')
+    @include('srp::includes.reason-edit-modal')
+    @include('srp::includes.reason-modal')
 @stop
 
 @push('head')
@@ -138,6 +159,12 @@
 
 @push('javascript')
 @include('web::includes.javascript.id-to-name')
+
+<script>
+    $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
 <script type="application/javascript">
 
@@ -164,6 +191,36 @@
         });
 
         $(this).find('.overlay').hide();
+    });
+
+    $('#srp-reason').on('show.bs.modal', function(e){
+                var link = '{{ route('srp.reason', 0) }}';
+
+                $(this).find('.overlay').show();
+                $(this).find('.modal-body>p').text('');
+
+                $.ajax({
+                    url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+                    dataType: 'json',
+                    method: 'GET'
+                }).done(function(response){
+                    $('#srp-reason').find('.modal-body>p').text(response.note).removeClass('text-danger');
+                }).fail(function(jqXHR, status){
+                    $('#srp-reason').find('.modal-body>p').text(status).addClass('text-danger');
+
+                    if (jqXHR.statusCode() !== 500)
+                        $('#srp-reason').find('.modal-body>p').text(jqXHR.responseJSON.msg);
+                });
+
+                $(this).find('.overlay').hide();
+            });
+
+
+    $('#srp-reason-edit').on('show.bs.modal', function(e){
+        var link = '{{ route('srp.reason', 0) }}';
+
+        $(this).find('#reasonContent').text('');
+        $(this).find('#srpKillId').val($(e.relatedTarget).attr('data-kill-id'));
     });
 
     $('#insurances').on('show.bs.modal', function(e){

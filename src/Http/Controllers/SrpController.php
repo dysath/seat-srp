@@ -96,6 +96,19 @@ class SrpController extends Controller {
 			return response()->json($killmail->ping());
 
 		return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
+    }
+    
+    public function getReason($kill_id)
+	{
+		$killmail = KillMail::find($kill_id);
+
+		if (is_null($killmail))
+			return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
+
+		if (!is_null($killmail->reason()))
+			return response()->json($killmail->reason());
+
+		return response()->json(['msg' => sprintf('There are no reason information related to kill %s', $kill_id)], 204);
 	}
 
     private function srpPopulateSlots(stdClass $killMail) : array

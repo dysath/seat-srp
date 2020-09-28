@@ -84,6 +84,11 @@
                             @elseif ($kill->approved === 2)
                                 <span class="badge badge-primary">Paid Out</span>
                             @endif
+                            @if(!is_null($kill->reason())) 
+                            <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">
+                                <i class="fa fa-comment"></i>
+                            </button>
+                            @endif
                         </td>
                         <td>
                             <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
@@ -99,6 +104,7 @@
     </div>
     @include('srp::includes.insurances-modal')
     @include('srp::includes.ping-modal')
+    @include('srp::includes.reason-modal')
 @stop
 
 @section('right')
@@ -210,6 +216,28 @@
 
                     if (jqXHR.statusCode() !== 500)
                         $('#srp-ping').find('.modal-body>p').text(jqXHR.responseJSON.msg);
+                });
+
+                $(this).find('.overlay').hide();
+            });
+
+            $('#srp-reason').on('show.bs.modal', function(e){
+                var link = '{{ route('srp.reason', 0) }}';
+
+                $(this).find('.overlay').show();
+                $(this).find('.modal-body>p').text('');
+
+                $.ajax({
+                    url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+                    dataType: 'json',
+                    method: 'GET'
+                }).done(function(response){
+                    $('#srp-reason').find('.modal-body>p').text(response.note).removeClass('text-danger');
+                }).fail(function(jqXHR, status){
+                    $('#srp-reason').find('.modal-body>p').text(status).addClass('text-danger');
+
+                    if (jqXHR.statusCode() !== 500)
+                        $('#srp-reason').find('.modal-body>p').text(jqXHR.responseJSON.msg);
                 });
 
                 $(this).find('.overlay').hide();
