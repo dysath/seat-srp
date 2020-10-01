@@ -5,7 +5,7 @@
 
 @push('head')
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
-@end
+@endpush
 
 @section('full')
     <div class="card card-primary card-solid">
