@@ -11,6 +11,8 @@ return [
     'submitted' => 'Submitted',
     'changedby' => 'Changed By',
     'approvedby' => 'Approved By',
+    'notes' => 'Notes',
+    'note_updated' => 'Note Updated',
 
     'list' => 'SRP List',
     'action' => 'Request Status',
