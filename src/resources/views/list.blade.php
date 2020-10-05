@@ -69,9 +69,11 @@
                       <button type="button" class="btn btn-xs btn-primary srp-status" id="srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
                   </td>                 
                   <td>
+                  @if(!is_null($kill->reason()))
                       <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">
                           <i class="fa fa-comment"></i>
                       </button>
+                  @endif
                       <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason-edit" data-kill-id="{{ $kill->kill_id }}">
                           <i class="fas fa-pencil-alt"></i>
                       </button>
@@ -129,9 +131,13 @@
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
                   </td>
                   <td>
+                  @if(!is_null($kill->reason()))
                       <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">
                           <i class="fa fa-comment"></i>
                       </button>
+                  @else
+                      -
+                  @endif
                   </td>
                   <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                 </tr>
