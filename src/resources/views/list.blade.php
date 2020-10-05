@@ -3,10 +3,6 @@
 @section('title', trans('srp::srp.list'))
 @section('page_header', trans('srp::srp.list'))
 
-@push('head')
-<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
-@end
-
 @section('full')
     <div class="card card-primary card-solid">
         <div class="card-header">
