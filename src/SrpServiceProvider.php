@@ -158,14 +158,4 @@ class SrpServiceProvider extends AbstractSeatPlugin
     {
         return 'denngarr';
     }
-
-    /**
-     * Return the plugin installed version.
-     *
-     * @return string
-     */
-    public function getVersion(): string
-    {
-        return config('srp.config.version');
-    }
 }
