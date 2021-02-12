@@ -2,6 +2,12 @@
 
 @section('title', trans('srp::srp.metrics'))
 
+@push('head')
+<link rel = "stylesheet"
+   type = "text/css"
+   href = "https://snoopy.crypta.tech/snoopy/seat-srp-metrics.css" />
+@endpush
+
 @section('page_header')
     @lang('srp::srp.metrics')
     <div class="float-right">
@@ -82,6 +88,9 @@
             <div class="chart tab-pane srpChart" id="specificUserShips">
                 <canvas id="specificUserShipsChart"></canvas>
             </div>
+        </div>
+        <div class="card-footer text-muted">
+            Plugin maintained by <a href="{{ route('srp.about') }}"> {!! img('characters', 'portrait', 96057938, 64, ['class' => 'img-circle eve-icon small-icon']) !!} Crypta Electrica</a>. <span class="float-right snoopy" style="color: #fa3333;"><i class="fas fa-signal"></i></span>
         </div>
     </div>
 @stop

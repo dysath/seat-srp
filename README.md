@@ -75,3 +75,8 @@ SRP_DISCORD_MENTION_ROLE='<@&198725153385873409>'
 Good luck, and Happy Hunting!!  o7
 
 
+## Usage Tracking
+
+In order to get an idea of the usage of this plugin, a very simplistic form of anonymous usage tracking has been implemented.
+
+Read more about the system in use [here](https://github.com/Crypta-Eve/snoopy)
