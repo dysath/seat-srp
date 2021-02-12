@@ -4,6 +4,12 @@
 @section('page_header', trans('srp::srp.srp'))
 @section('page_description', trans('srp::srp.instructions'))
 
+@push('head')
+<link rel = "stylesheet"
+   type = "text/css"
+   href = "https://snoopy.crypta.tech/snoopy/seat-srp-instructions.css" />
+@endpush
+
 @section('full')
 
 <!-- TOP BANNER -->
@@ -15,6 +21,9 @@
             </div>
             <div class="card-body">
                 <p>The following instruction page will explain how to request SRP from the SRP program</p>
+            </div>
+            <div class="card-footer text-muted">
+                Plugin maintained by <a href="{{ route('srp.about') }}"> {!! img('characters', 'portrait', 96057938, 64, ['class' => 'img-circle eve-icon small-icon']) !!} Crypta Electrica</a>. <span class="float-right snoopy" style="color: #fa3333;"><i class="fas fa-signal"></i></span>
             </div>
         </div>
     </div>
