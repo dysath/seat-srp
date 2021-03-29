@@ -15,6 +15,11 @@ return [
         'label' => 'Settle',
         'description' => 'Allows accepting and rejecting SRP Requests',
         'division' => 'financial'
+    ],
+    'settings' => [
+        'label' => 'Settings',
+        'description' => 'Allows configuring the global SRP settings',
+        'division' => 'financial'
     ]
 ];
 

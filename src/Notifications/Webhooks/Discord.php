@@ -9,11 +9,11 @@ class Discord
 {
     public function post($content)
     {
-        $url = env('SRP_DISCORD_WEBHOOK_URL');
+        $url = setting('webhook_url', true);
         if(!$url){
-            return [500, 'SRP_DISCORD_WEBHOOK_URL is not defined in .env'];
+            return [500, 'SRP DISCORD WEBHOOK URL is not defined in SRP Settings'];
         }
-        $srp_role_mention = env('SRP_DISCORD_MENTION_ROLE');
+        $srp_role_mention = setting('mention_role', true);
         $headers = [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [

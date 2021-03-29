@@ -129,6 +129,18 @@ Route::group([
             'middleware' => 'can:srp.request'
         ]);
 
+        Route::get('/settings', [
+            'as'   => 'srp.settings',
+            'uses' => 'SrpAdminController@getSrpSettings',
+            'middleware' => 'can:srp.settings'
+        ]);
+
+        Route::post('/settings', [
+            'as'   => 'srp.savesettings',
+            'uses' => 'SrpAdminController@saveSrpSettings',
+            'middleware' => 'can:srp.settings'
+        ]);
+
         Route::group([
             'middleware' => 'can:srp.settle',
             'prefix' => 'metrics'
