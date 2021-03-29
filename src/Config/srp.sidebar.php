@@ -26,6 +26,12 @@ return [
                 'permission' => 'srp.settle',
 			],
 			[
+                'name' => 'Settings',
+                'icon' => 'fas fa-cogs',
+                'route' => 'srp.settings',
+                'permission' => 'srp.settings',
+			],
+			[
                 'name' => 'Instructions',
                 'icon' => 'fas fa-book-open',
                 'route' => 'srp.instructions',

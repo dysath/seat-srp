@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use Seat\Web\Http\Controllers\Controller;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddReason;
+use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
 
 
 class SrpAdminController extends Controller
@@ -66,5 +67,18 @@ class SrpAdminController extends Controller
         
         return redirect()->back()
                          ->with('success', trans('srp::srp.note_updated'));
+    }
+
+    public function getSrpSettings()
+    {
+        return view('srp::settings');
+    }
+
+    public function saveSrpSettings(ValidateSettings $request)
+    {
+        setting(["webhook_url", $request->webhook_url], true);
+        setting(["mention_role", $request->mention_role], true);
+
+        return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
     }
 }

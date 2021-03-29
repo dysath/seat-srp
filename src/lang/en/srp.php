@@ -19,6 +19,7 @@ return [
     'metrics' => 'SRP Metrics',
     'instructions' => 'Instructions',
     'about' => 'About',
+    'settings' => 'Settings',
 
     'request_inst'      =>  'Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.',
     'request_new'       =>  'Request New SRP',
