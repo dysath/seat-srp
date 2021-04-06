@@ -55,20 +55,20 @@ Automated notifications of new SRP Requests submitted in Discord
 5. Copy the Webhook URL
 6. Click `Save` to finish creating the webhook
 
-***In SeAT .env file:***
+***In SeAT file:***
 
-The SeAT .env file accepts two variables for the webhook:
+The Ship Replacement Program Settings page accepts two variables for the webhook:
 
-1. (required) `SRP_DISCORD_WEBHOOK_URL`: this is the url you copied when creating the webhook in Discord
-2. (optional) `SRP_DISCORD_MENTION_ROLE`: this can be a room mention (e.g. `@here`), a Discord role ID, or a specific user ID
+1. (required) `Webhook URL`: this is the url you copied when creating the webhook in Discord
+2. (optional) `Discord Mention Role`: this can be a room mention (e.g. `@here`), a Discord role ID, or a specific user ID
         - Role ID and User ID can be obtained by typing `/@rolename` into a channel (e.g. `/@srp_manager`) 
 
 
-Example of .env entries:
+Example of entries:
 
 ```
-SRP_DISCORD_WEBHOOK_URL=https://discordapp.com/api/webhooks/513619798362554369/Px9VQwiE5lhhBqOjW7rFBuLmLzMimwcklC2kIDJhQ9hLcDzCRPCkbI0LgWq6YwIbFtuk
-SRP_DISCORD_MENTION_ROLE='<@&198725153385873409>'
+Webhook URL = https://discordapp.com/api/webhooks/513619798362554369/Px9VQwiE5lhhBqOjW7rFBuLmLzMimwcklC2kIDJhQ9hLcDzCRPCkbI0LgWq6YwIbFtuk
+Discord Mention Role = <@&198725153385873409>
 ```
 
 
