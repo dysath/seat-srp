@@ -2,9 +2,9 @@
 
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
-    'middleware' => ['web','auth'],
+    'middleware' => ['web', 'auth'],
     'prefix' => 'api/v2/srp/metrics/web'
-], function(){
+], function () {
 
     Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.web.summary.monthly',
@@ -16,12 +16,12 @@ Route::group([
         'uses' => 'SrpMetricsApiController@getSummaryUser',
     ]);
 
-    Route::get('/top/ship/{status}/{limit?}',[
+    Route::get('/top/ship/{status}/{limit?}', [
         'as' => 'srp.metrics.api.web.top.ship',
         'uses' => 'SrpMetricsApiController@getTopShip',
     ]);
 
-    Route::get('/top/user/{status}/{limit?}',[
+    Route::get('/top/user/{status}/{limit?}', [
         'as' => 'srp.metrics.api.web.top.user',
         'uses' => 'SrpMetricsApiController@getTopUser'
     ]);
@@ -31,7 +31,7 @@ Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
     'middleware' => ['api.auth'],
     'prefix' => 'api/v2/srp/metrics'
-], function(){
+], function () {
     Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.summary.monthly',
         'uses' => 'SrpMetricsApiController@getSummaryMonthly',
@@ -42,12 +42,12 @@ Route::group([
         'uses' => 'SrpMetricsApiController@getSummaryUser',
     ]);
 
-    Route::get('/top/ship/{status}/{limit?}',[
+    Route::get('/top/ship/{status}/{limit?}', [
         'as' => 'srp.metrics.api.top.ship',
         'uses' => 'SrpMetricsApiController@getTopShip',
     ]);
 
-    Route::get('/top/user/{status}/{limit?}',[
+    Route::get('/top/user/{status}/{limit?}', [
         'as' => 'srp.metrics.api.top.user',
         'uses' => 'SrpMetricsApiController@getTopUser'
     ]);
@@ -106,15 +106,15 @@ Route::group([
         ]);
 
         Route::get('/ping/{kill_id}', [
-        	'as' => 'srp.ping',
-	        'uses' => 'SrpController@getPing',
-	        'middleware' => 'can:srp.request',
+            'as' => 'srp.ping',
+            'uses' => 'SrpController@getPing',
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/reason/{kill_id}', [
-        	'as' => 'srp.reason',
-	        'uses' => 'SrpController@getReason',
-	        'middleware' => 'can:srp.request',
+            'as' => 'srp.reason',
+            'uses' => 'SrpController@getReason',
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/about', [
@@ -122,7 +122,7 @@ Route::group([
             'uses' => 'SrpController@getAboutView',
             'middleware' => 'can:srp.request'
         ]);
-    
+
         Route::get('/instructions', [
             'as'   => 'srp.instructions',
             'uses' => 'SrpController@getInstructionsView',
@@ -142,9 +142,37 @@ Route::group([
         ]);
 
         Route::group([
+            'middleware' => 'can:srp.settings',
+            'prefix' => 'advanced-settings'
+        ], function () {
+
+            Route::post('/add-type', [
+                'as' => 'srp.adv.type.add',
+                'uses' => 'SrpAdminController@saveSrpRule',
+            ]);
+
+            Route::delete('/remove/{rule}', [
+                'as' => 'srp.adv.remove',
+                'uses' => 'SrpAdminController@removeSrpRule',
+            ]);
+
+            Route::get('/types', [
+                'as' =>'srp.adv.type.get',
+                'uses' => 'SrpAdminController@typesData',
+            ]);
+
+            Route::get('/groups', [
+                'as' =>'srp.adv.group.get',
+                'uses' => 'SrpAdminController@groupsData',
+            ]);
+
+
+        });
+
+        Route::group([
             'middleware' => 'can:srp.settle',
             'prefix' => 'metrics'
-        ], function (){
+        ], function () {
 
             Route::get('/{srp_status?}', [
                 'as' => 'srp.metrics',

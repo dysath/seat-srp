@@ -7,8 +7,14 @@ use DB;
 use GuzzleHttp\Client;
 use Seat\Web\Http\Controllers\Controller;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
+use Denngarr\Seat\SeatSrp\Models\AdvRule;
 use Denngarr\Seat\SeatSrp\Validation\AddReason;
 use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
+use Denngarr\Seat\SeatSrp\Validation\ValidateRule;
+use Denngarr\Seat\SeatSrp\Http\DataTables\TypeRulesDataTable;
+use Denngarr\Seat\SeatSrp\Http\DataTables\GroupRulesDataTable;
+use Seat\Eveapi\Models\Sde\InvType;
+use Seat\Eveapi\Models\Sde\InvGroup;
 
 
 class SrpAdminController extends Controller
@@ -71,14 +77,67 @@ class SrpAdminController extends Controller
 
     public function getSrpSettings()
     {
-        return view('srp::settings');
+        $rules = AdvRule::all();
+
+        $groups = InvGroup::where('categoryID', 6)->get();
+        $types = InvType::whereIn('groupID', $groups->pluck('groupID')->all())->get();
+        
+        $type_rules = $rules->where('rule_type', 'type');
+        $group_rules = $rules->where('rule_type', 'group');
+
+        return view('srp::settings', compact(['groups', 'types', 'type_rules', 'group_rules']));
     }
 
     public function saveSrpSettings(ValidateSettings $request)
     {
         setting(["webhook_url", $request->webhook_url], true);
         setting(["mention_role", $request->mention_role], true);
+        setting(["advanced_srp", $request->srp_method], true);
 
         return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
+    }
+
+    public function saveSrpRule(ValidateRule $request)
+    {
+
+        // logger()->error($request->rule_type);
+
+        $e = AdvRule::where('type_id', $request->type_id)
+            ->where('rule_type', $request->rule_type)
+            ->get();
+        if ($e->count() > 0) { // Only an issue for now. In future want to update existing
+            // We are updating an exisiting row
+            return response()->json(["message" => "Entry already exists for this type"],400);
+        }
+
+        $rule = AdvRule::updateOrCreate([
+            'rule_type' => $request->rule_type,
+            'type_id' => $request->type_id,
+            'group_id' => $request->group_id,
+            'price_source' => $request->source,
+            'base_value' => $request->base_value,
+            'hull_percent' => $request->hull_percent,
+            'fit_percent' => $request->fit_percent,
+            'deduct_insurance' => $request->deduct_insurance
+        ]);
+
+        return response('Added/Updated Type Rule', 200);
+    }
+
+    public function removeSrpRule(AdvRule $rule)
+    {
+        $rule->delete();
+
+        return redirect()->back()->with('success', 'Rule successfully removed');
+    }
+
+    public function typesData(TypeRulesDataTable $datatable)
+    {
+        return $datatable->render('srp::settings');
+    }
+
+    public function groupsData(GroupRulesDataTable $datatable)
+    {
+        return $datatable->render('srp::settings');
     }
 }
