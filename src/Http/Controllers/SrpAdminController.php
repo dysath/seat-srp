@@ -9,6 +9,7 @@ use Seat\Web\Http\Controllers\Controller;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Models\AdvRule;
 use Denngarr\Seat\SeatSrp\Validation\AddReason;
+use Denngarr\Seat\SeatSrp\Validation\ValidateAdvancedSettings;
 use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
 use Denngarr\Seat\SeatSrp\Validation\ValidateRule;
 use Denngarr\Seat\SeatSrp\Http\DataTables\TypeRulesDataTable;
@@ -139,5 +140,24 @@ class SrpAdminController extends Controller
     public function groupsData(GroupRulesDataTable $datatable)
     {
         return $datatable->render('srp::settings');
+    }
+
+    public function saveAdvDefaultSettings(ValidateAdvancedSettings $request)
+    {
+
+        setting(["advrule_def_source", $request->default_source], true);
+        setting(["advrule_def_base", $request->default_base], true);
+        setting(["advrule_def_hull", $request->default_hull_pc], true);
+        setting(["advrule_def_fit", $request->default_fit_pc], true);
+        setting(["advrule_def_cargo", $request->default_cargo_pc], true);
+
+        $insurance = 1;
+        if (is_null($request->default_ins)) {
+            $insurance = 0;
+        }
+
+        setting(["advrule_def_ins", $insurance], true);
+
+        return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
     }
 }

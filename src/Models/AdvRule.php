@@ -21,7 +21,7 @@ class AdvRule extends Model {
 
     public $timestamps = false;
 
-    protected $primaryKey = 'type_id';
+    protected $primaryKey = 'id';
 
     protected $table = 'denggarr_seat_srp_advrule';
 

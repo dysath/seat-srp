@@ -44,7 +44,7 @@ class TypeRulesDataTable extends DataTable
                 return view('web::partials.type', ['type_id' => $row->type_id, 'type_name' => $row->type->typeName])->render();
             })
             ->editColumn('action', function ($row) {
-                
+                // dd($row);
                 return view('srp::buttons.ruleremove', compact('row'))->render();
             })
             ->editColumn('deduct_insurance', function ($row) {

@@ -23,6 +23,7 @@
 namespace Denngarr\Seat\SeatSrp\Http\DataTables;
 
 use Denngarr\Seat\SeatSrp\Models\AdvRule;
+use Seat\Eveapi\Models\Sde\InvType;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -40,7 +41,9 @@ class GroupRulesDataTable extends DataTable
         return datatables()
             ->eloquent($this->query())
             ->addColumn('group', function ($row) {
-                return $row->group->groupName;
+                // Performance penalty here for an aesthetic most will likely never notice
+                $type = InvType::where('groupID', $row->group->groupID)->inRandomOrder()->first();
+                return view('web::partials.type', ['type_id' => $type->typeID, 'type_name' => $row->group->groupName])->render();
             })
             ->editColumn('action', function ($row) {
                 return view('srp::buttons.ruleremove', compact('row'))->render();

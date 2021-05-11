@@ -310,42 +310,13 @@
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#rulesets">
                     <div class="card-body">
-                        <form>
+                    <form method="POST" action="{{ route('srp.saveadvdefault') }}" class="needs-validation" id="group_rule_maker" novalidate>
+                        {{ csrf_field() }}
                             <div class="form-row">
 
-                                <div class="form-group col-md-3">
-                                    <label for="def_base">Base Value</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="def_base">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">ISK</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <label for="def_hull_pc">Hull %</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="def_hull_pc">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-md-2">
-                                    <label for="def_fit_pc">Fit %</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" id="def_fit_pc">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label for="def_source">Price Source</label>
-                                    <select class="form-control" id="def_source">
+                                <div class="form-group col-md">
+                                    <label for="default_source">Price Source</label>
+                                    <select class="form-control" name="default_source" id="default_source" required>
                                         <option value="seat">internal</option>
                                         <option value="zkill" disabled="disabled">zkill</option>
                                         <option value="zkillh" disabled="disabled">zkill historical</option>
@@ -353,14 +324,65 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-2">
-                                    <label for="def_ins">Deduct Insurance?</label>
+                                <div class="form-group col-md">
+                                    <label for="default_base">Base Value</label>
                                     <div class="input-group mb-3">
-                                        <input type="checkbox" class="" value="" id="def_ins">
+                                        <input type="number" name="default_base" class="form-control" id="default_base" value="{{ setting('advrule_def_base', true) }}" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">ISK</span>
+                                        </div>
                                     </div>
                                 </div>
 
+                                <div class="form-group col-md">
+                                    <label for="default_hull_pc">Hull %</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="default_hull_pc" class="form-control" id="default_hull_pc" value="{{ setting('advrule_def_hull', true) }}" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
+                                    <label for="default_fit_pc">Fit %</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="default_fit_pc" class="form-control" id="default_fit_pc" value="{{ setting('advrule_def_fit', true) }}" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
+                                    <label for="default_cargo_pc">Cargo %</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="default_cargo_pc" class="form-control" id="default_cargo_pc" value="{{ setting('advrule_def_cargo', true) }}" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
+                                    <label for="default_ins">Deduct Insurance?</label>
+                                    <div class="input-group mt-2 ml-3">
+                                        @if (setting('advrule_def_ins', true) == "1")
+                                        <input type="checkbox" class="" name="default_ins" id="default_ins" checked>
+                                        @else
+                                        <input type="checkbox" class="" name="default_ins" id="default_ins">
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
+                                    <label for="default_add">Submit</label>
+                                    <button type="submit" data-placement="top" class="btn btn-primary form-control" id="default_add">Save Defaults</button>
+                                </div>
+
+
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -467,6 +489,15 @@
             width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
             minimumResultsForSearch: 10,
         });
+
+        $('#default_source').select2({
+            sorter: data => data.sort((a, b) => a.text.localeCompare(b.text)),
+            theme: 'bootstrap4',
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            minimumResultsForSearch: 10,
+        });
+
+        $('#default_source').value = "{{ setting('advrule_def_source', true) }}";
 
     });
 

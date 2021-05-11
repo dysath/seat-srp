@@ -166,6 +166,12 @@ Route::group([
                 'uses' => 'SrpAdminController@groupsData',
             ]);
 
+            Route::post('/defaults', [
+                'as'   => 'srp.saveadvdefault',
+                'uses' => 'SrpAdminController@saveAdvDefaultSettings',
+                'middleware' => 'can:srp.settings'
+            ]);
+
 
         });
 
