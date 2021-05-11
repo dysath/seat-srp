@@ -23,7 +23,7 @@ class AdvRule extends Model {
 
     protected $primaryKey = 'id';
 
-    protected $table = 'denggarr_seat_srp_advrule';
+    protected $table = 'denngarr_seat_srp_advrule';
 
     protected $fillable = [
         'rule_type', 'type_id', 'group_id', 'price_source', 'base_value', 'hull_percent', 'fit_percent', 'cargo_percent', 'deduct_insurance'

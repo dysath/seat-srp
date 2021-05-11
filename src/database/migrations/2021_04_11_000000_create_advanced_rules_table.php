@@ -14,7 +14,7 @@ class CreateAdvancedRulesTable extends Migration
      */
     public function up()
     {
-        Schema::create('denggarr_seat_srp_advrule', function (Blueprint $table) {
+        Schema::create('denngarr_seat_srp_advrule', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('rule_type');
             $table->integer('type_id')->nullable()->unique();
