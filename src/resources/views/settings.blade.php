@@ -9,54 +9,61 @@
 @endpush
 
 @section('full')
-<div class="card card-success border-success">
-    <div class="card-header">
-        <h3 class="card-title">{{ trans('srp::srp.settings') }}</h3>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-success border-success">
+                <div class="card-header">
+                    <h3 class="card-title">{{ trans('srp::srp.settings') }}</h3>
+                </div>
+                <form method="POST" action="{{ route('srp.savesettings')  }}" class="form-horizontal">
+                    <div class="card-body">
+                        {{ csrf_field() }}
+                        <h4>Webhook Config</h4>
+                        <div class="form-group row">
+                            <label for="webhook_url" class="col-sm-3 col-form-label">Webhook URL</label>
+                            <div class="col-sm-8">
+                                <div class="input-group col-sm">
+                                    <input class="form-control" type="text" name="webhook_url" id="webhook_url" size="32" value="{{ setting('denngarr_seat_srp_webhook_url', true) }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="mention_role" class="col-sm-3 col-form-label">Discord Mention Role</label>
+                            <div class="col-sm-8">
+                                <div class="input-group col-sm">
+                                    <input class="form-control" type="text" name="mention_role" id="mention_role" size="32" value="{{ setting('denngarr_seat_srp_mention_role', true) }}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="srp_method" class="col-sm-3 col-form-label">SRP Method</label>
+                            <div class="form-check form-check-inline">
+                                @if (setting('denngarr_seat_srp_advanced_srp', true) == "0")
+                                <input class="form-check-input" type="radio" name="srp_method" id="method1" value="0" checked>
+                                @else
+                                <input class="form-check-input" type="radio" name="srp_method" id="method1" value="0">
+                                @endif
+                                <label class="form-check-label" for="method1">Simple</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                @if (setting('denngarr_seat_srp_advanced_srp', true) == "1")
+                                <input class="form-check-input" type="radio" name="srp_method" id="method2" value="1" checked>
+                                @else
+                                <input class="form-check-input" type="radio" name="srp_method" id="method2" value="1">
+                                @endif
+                                <label class="form-check-label" for="method2">Advanced</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <input class="btn btn-success float-right" type="submit" value="Update">
+                    </div>
+                </form>
+            </div>
+        </div>
+        
     </div>
-    <form method="POST" action="{{ route('srp.savesettings')  }}" class="form-horizontal">
-        <div class="card-body">
-            {{ csrf_field() }}
-            <h4>Webhook Config</h4>
-            <div class="form-group row">
-                <label for="webhook_url" class="col-sm-3 col-form-label">Webhook URL</label>
-                <div class="col-sm-8">
-                    <div class="input-group col-sm">
-                        <input class="form-control" type="text" name="webhook_url" id="webhook_url" size="32" value="{{ setting('webhook_url', true) }}" />
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="mention_role" class="col-sm-3 col-form-label">Discord Mention Role</label>
-                <div class="col-sm-8">
-                    <div class="input-group col-sm">
-                        <input class="form-control" type="text" name="mention_role" id="mention_role" size="32" value="{{ setting('mention_role', true) }}" />
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="srp_method" class="col-sm-3 col-form-label">SRP Method</label>
-                <div class="form-check form-check-inline">
-                    @if (setting('advanced_srp', true) == "0")
-                    <input class="form-check-input" type="radio" name="srp_method" id="method1" value="0" checked>
-                    @else
-                    <input class="form-check-input" type="radio" name="srp_method" id="method1" value="0">
-                    @endif
-                    <label class="form-check-label" for="method1">Simple</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    @if (setting('advanced_srp', true) == "1")
-                    <input class="form-check-input" type="radio" name="srp_method" id="method2" value="1" checked>
-                    @else
-                    <input class="form-check-input" type="radio" name="srp_method" id="method2" value="1">
-                    @endif
-                    <label class="form-check-label" for="method2">Advanced</label>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <input class="btn btn-success float-right" type="submit" value="Update">
-        </div>
-    </form>
 </div>
 
 
@@ -70,7 +77,6 @@
 
         <p>
             This section allows for the configuration of an advanced buyback system. Rules are evaluated from top to bottom of the below list, stopping on the first match (will always match the default rule at the bottom).
-            The Hull and Fit values can be configured where they pull from as either zkill, zkill_historical, evepraisal, or internal (seat). All pricing is calculated at time of submission, except zkill_historical which is from the day of the killmail.
         </p>
         <p>
             Once a match is found the formula used is BaseValue + ( HullValue * Hull% ) + ( FitValue * Fit% ).
@@ -105,10 +111,7 @@
                                 <div class="form-group col-md">
                                     <label for="type_source">Price Source</label>
                                     <select class="form-control" id="type_source" required>
-                                    <option value="seat">internal</option>
-                                        <option value="zkill" disabled="disabled">zkill</option>
-                                        <option value="zkillh" disabled="disabled">zkill historical</option>
-                                        <option value="evepraisal" disabled="disabled">evepraisal</option>
+                                        <option value="evepraisal">evepraisal</option>
                                     </select>
                                 </div>
 
@@ -198,7 +201,7 @@
                     </h2>
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#rulesets">
-                <div class="card-body">
+                    <div class="card-body">
                         These rules are made for a specific group, eg Battleships or Cruisers.
 
                         <form class="needs-validation" id="group_rule_maker" novalidate>
@@ -216,10 +219,7 @@
                                 <div class="form-group col-md">
                                     <label for="group_source">Price Source</label>
                                     <select class="form-control" id="group_source" required>
-                                    <option value="seat">internal</option>
-                                        <option value="zkill" disabled="disabled">zkill</option>
-                                        <option value="zkillh" disabled="disabled">zkill historical</option>
-                                        <option value="evepraisal" disabled="disabled">evepraisal</option>
+                                        <option value="evepraisal">evepraisal</option>
                                     </select>
                                 </div>
 
@@ -310,24 +310,21 @@
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#rulesets">
                     <div class="card-body">
-                    <form method="POST" action="{{ route('srp.saveadvdefault') }}" class="needs-validation" id="group_rule_maker" novalidate>
-                        {{ csrf_field() }}
+                        <form method="POST" action="{{ route('srp.saveadvdefault') }}" class="needs-validation" id="group_rule_maker" novalidate>
+                            {{ csrf_field() }}
                             <div class="form-row">
 
                                 <div class="form-group col-md">
                                     <label for="default_source">Price Source</label>
                                     <select class="form-control" name="default_source" id="default_source" required>
-                                        <option value="seat">internal</option>
-                                        <option value="zkill" disabled="disabled">zkill</option>
-                                        <option value="zkillh" disabled="disabled">zkill historical</option>
-                                        <option value="evepraisal" disabled="disabled">evepraisal</option>
+                                        <option value="evepraisal" >evepraisal</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md">
                                     <label for="default_base">Base Value</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" name="default_base" class="form-control" id="default_base" value="{{ setting('advrule_def_base', true) }}" required>
+                                        <input type="number" name="default_base" class="form-control" id="default_base" value="{{ setting('denngarr_seat_srp_advrule_def_base', true) }}" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text">ISK</span>
                                         </div>
@@ -337,7 +334,7 @@
                                 <div class="form-group col-md">
                                     <label for="default_hull_pc">Hull %</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" name="default_hull_pc" class="form-control" id="default_hull_pc" value="{{ setting('advrule_def_hull', true) }}" required>
+                                        <input type="number" name="default_hull_pc" class="form-control" id="default_hull_pc" value="{{ setting('denngarr_seat_srp_advrule_def_hull', true) }}" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -347,7 +344,7 @@
                                 <div class="form-group col-md">
                                     <label for="default_fit_pc">Fit %</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" name="default_fit_pc" class="form-control" id="default_fit_pc" value="{{ setting('advrule_def_fit', true) }}" required>
+                                        <input type="number" name="default_fit_pc" class="form-control" id="default_fit_pc" value="{{ setting('denngarr_seat_srp_advrule_def_fit', true) }}" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -357,7 +354,7 @@
                                 <div class="form-group col-md">
                                     <label for="default_cargo_pc">Cargo %</label>
                                     <div class="input-group mb-3">
-                                        <input type="number" name="default_cargo_pc" class="form-control" id="default_cargo_pc" value="{{ setting('advrule_def_cargo', true) }}" required>
+                                        <input type="number" name="default_cargo_pc" class="form-control" id="default_cargo_pc" value="{{ setting('denngarr_seat_srp_advrule_def_cargo', true) }}" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -399,15 +396,16 @@
 
 @push('javascript')
 <script type="application/javascript">
-
     window.LaravelDataTables = window.LaravelDataTables || {};
 
-    if (! $.fn.dataTable.isDataTable('#type_table')) {
+    if (!$.fn.dataTable.isDataTable('#type_table')) {
         window.LaravelDataTables["typeTableBuilder"] = $('#type_table').DataTable({
             dom: 'Bfrtip',
             processing: true,
             serverSide: true,
-            order: [[0, 'desc']],
+            order: [
+                [0, 'desc']
+            ],
             ajax: {
                 url: "{{ route('srp.adv.type.get') }}",
                 type: 'POST',
@@ -415,15 +413,63 @@
                     'X-HTTP-Method-Override': 'GET'
                 }
             },
-            columns: [
-                {data: "type", name: "type", title: "Type", "orderable": true, "searchable": true},
-                {data: "price_source", name: "price_source", title: "Price Source", "orderable": false, "searchable": false},
-                {data: "base_value", name: "base_value", title: "Base Value", "orderable": true, "searchable": false},
-                {data: "hull_percent", name: "hull_percent", title: "Hull Percent", "orderable": true, "searchable": false},
-                {data: "fit_percent", name: "fit_percent", title: "Fit Percent", "orderable": true, "searchable": false},
-                {data: "cargo_percent", name: "cargo_percent", title: "Cargo Percent", "orderable": true, "searchable": false},
-                {data: "deduct_insurance", name: "deduct_insurance", title: "Insurance Deducted", "orderable": true, "searchable": false},
-                {defaultContent: "", data: "action", name: "action", title: "Action", "orderable": false, "searchable": false}
+            columns: [{
+                    data: "type",
+                    name: "type",
+                    title: "Type",
+                    "orderable": true,
+                    "searchable": true
+                },
+                {
+                    data: "price_source",
+                    name: "price_source",
+                    title: "Price Source",
+                    "orderable": false,
+                    "searchable": false
+                },
+                {
+                    data: "base_value",
+                    name: "base_value",
+                    title: "Base Value",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "hull_percent",
+                    name: "hull_percent",
+                    title: "Hull Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "fit_percent",
+                    name: "fit_percent",
+                    title: "Fit Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "cargo_percent",
+                    name: "cargo_percent",
+                    title: "Cargo Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "deduct_insurance",
+                    name: "deduct_insurance",
+                    title: "Insurance Deducted",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    defaultContent: "",
+                    data: "action",
+                    name: "action",
+                    title: "Action",
+                    "orderable": false,
+                    "searchable": false
+                }
             ],
             "drawCallback": function() {
                 $("[data-toggle=tooltip]").tooltip();
@@ -431,12 +477,14 @@
         });
     }
 
-    if (! $.fn.dataTable.isDataTable('#group_table')) {
+    if (!$.fn.dataTable.isDataTable('#group_table')) {
         window.LaravelDataTables["typeTableBuilder"] = $('#group_table').DataTable({
             dom: 'Bfrtip',
             processing: true,
             serverSide: true,
-            order: [[0, 'desc']],
+            order: [
+                [0, 'desc']
+            ],
             ajax: {
                 url: "{{ route('srp.adv.group.get') }}",
                 type: 'POST',
@@ -444,15 +492,63 @@
                     'X-HTTP-Method-Override': 'GET'
                 }
             },
-            columns: [
-                {data: "group", name: "group", title: "Group", "orderable": true, "searchable": true},
-                {data: "price_source", name: "price_source", title: "Price Source", "orderable": false, "searchable": false},
-                {data: "base_value", name: "base_value", title: "Base Value", "orderable": true, "searchable": false},
-                {data: "hull_percent", name: "hull_percent", title: "Hull Percent", "orderable": true, "searchable": false},
-                {data: "fit_percent", name: "fit_percent", title: "Fit Percent", "orderable": true, "searchable": false},
-                {data: "cargo_percent", name: "cargo_percent", title: "Cargo Percent", "orderable": true, "searchable": false},
-                {data: "deduct_insurance", name: "deduct_insurance", title: "Insurance Deducted", "orderable": true, "searchable": false},
-                {defaultContent: "", data: "action", name: "action", title: "Action", "orderable": false, "searchable": false}
+            columns: [{
+                    data: "group",
+                    name: "group",
+                    title: "Group",
+                    "orderable": true,
+                    "searchable": true
+                },
+                {
+                    data: "price_source",
+                    name: "price_source",
+                    title: "Price Source",
+                    "orderable": false,
+                    "searchable": false
+                },
+                {
+                    data: "base_value",
+                    name: "base_value",
+                    title: "Base Value",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "hull_percent",
+                    name: "hull_percent",
+                    title: "Hull Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "fit_percent",
+                    name: "fit_percent",
+                    title: "Fit Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "cargo_percent",
+                    name: "cargo_percent",
+                    title: "Cargo Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "deduct_insurance",
+                    name: "deduct_insurance",
+                    title: "Insurance Deducted",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    defaultContent: "",
+                    data: "action",
+                    name: "action",
+                    title: "Action",
+                    "orderable": false,
+                    "searchable": false
+                }
             ],
             "drawCallback": function() {
                 $("[data-toggle=tooltip]").tooltip();
@@ -497,7 +593,7 @@
             minimumResultsForSearch: 10,
         });
 
-        $('#default_source').value = "{{ setting('advrule_def_source', true) }}";
+        $('#default_source').value = "{{ setting('denngarr_seat_srp_advrule_def_source', true) }}";
 
     });
 

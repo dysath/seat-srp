@@ -2,6 +2,7 @@
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
+use Denngarr\Seat\SeatSrp\Helpers\SrpManager;
 use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Illuminate\Http\Request;
@@ -9,12 +10,17 @@ use GuzzleHttp\Client;
 use Seat\Services\Models\Note;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterInfo;
+use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
+use Seat\Eveapi\Models\Killmails\KillmailDetail;
+use Seat\Eveapi\Jobs\Killmails\Detail;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 use stdClass;
 
 
 class SrpController extends Controller {
+
+    use SrpManager;
 
     public function srpGetRequests()
     {
@@ -28,12 +34,29 @@ class SrpController extends Controller {
 
     public function srpGetKillMail(Request $request)
     {
+
+        // The submitted url is available at $request->km;
+        $url_parts = explode("/", rtrim($request->km, "/ \t\n\r\0\x0B"));
+
+        $token = $url_parts[5];
+        $hash = $url_parts[6];
+
+        $killmail = EveKillmail::firstOrCreate([
+            'killmail_id' => $token,
+        ], [
+            'killmail_hash' => $hash,
+        ]);
+
+        if (! KillmailDetail::find($killmail->killmail_id))
+                    Detail::dispatchNow($killmail->killmail_id, $killmail->killmail_hash);
+
+
         $totalKill = [];
 
-        $response = (new Client())->request('GET', $request->km);
+        // $response = (new Client())->request('GET', $request->km);
 
-        $killMail = json_decode($response->getBody());
-        $totalKill = array_merge($totalKill, $this->srpPopulateSlots($killMail));
+        // $killMail = json_decode($response->getBody());
+        $totalKill = array_merge($totalKill, $this->srpPopulateSlots($killmail));
         preg_match('/([a-z0-9]{35,42})/', $request->km, $tokens);
         $totalKill['killToken'] = $tokens[0];
 
@@ -108,103 +131,9 @@ class SrpController extends Controller {
 		if (!is_null($killmail->reason()))
 			return response()->json($killmail->reason());
 
-		return response()->json(['msg' => sprintf('There are no reason information related to kill %s', $kill_id)], 204);
+		return response()->json(['msg' => sprintf('There is no reason information related to kill %s', $kill_id)], 204);
 	}
 
-    private function srpPopulateSlots(stdClass $killMail) : array
-    {
-        $priceList = [];
-        $slots = [
-            'killId' => 0,
-            'price' => 0.0,
-            'shipType' => null,
-            'characterName' => null,
-            'cargo' => [],
-            'dronebay' => [],
-        ];
-
-        foreach ($killMail->victim->items as $item) {
-            $searchedItem = InvType::find($item->item_type_id);
-            $slotName = InvFlag::find($item->flag);
-			if (!is_object($searchedItem)) {
-			} else {
-	            array_push($priceList, $searchedItem->typeName);
-
-            	switch ($slotName->flagName)
-            	{
-        	        case 'Cargo':
-    	                $slots['cargo'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-	                    if (!isset($slots['cargo'][$searchedItem->typeID]['qty']))
-                	        $slots['cargo'][$searchedItem->typeID]['qty'] = 0;
-            	        if (property_exists($item, 'quantity_destroyed'))
-        	                $slots['cargo'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
-    	                if (property_exists($item, 'quantity_dropped'))
-	                        $slots['cargo'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
-                	    break;
-            	    case 'DroneBay':
-        	            $slots['dronebay'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-    	                if (!isset($slots['dronebay'][$searchedItem->typeID]['qty']))
-	                        $slots['dronebay'][$searchedItem->typeID]['qty'] = 0;
-                    	if (property_exists($item, 'quantity_destroyed'))
-                	        $slots['dronebay'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
-            	        if (property_exists($item, 'quantity_dropped'))
-        	                $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
-    	                break;
-	                default:
-                	    if (!(preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
-            	            $slots[$slotName->flagName]['id'] = $searchedItem->typeID;
-        	                $slots[$slotName->flagName]['name'] = $searchedItem->typeName;
-    	                    if (!isset($slots[$slotName->flagName]['qty']))
-	                            $slots[$slotName->flagName]['qty'] = 0;
-                        	if (property_exists($item, 'quantity_destroyed'))
-                    	        $slots[$slotName->flagName]['qty'] = $item->quantity_destroyed;
-                	        if (property_exists($item, 'quantity_dropped'))
-            	                $slots[$slotName->flagName]['qty'] += $item->quantity_dropped;
-        	            }
-   	                break;
-	            }
-            }
-        }
-
-        $searchedItem = InvType::find($killMail->victim->ship_type_id);
-        $slots['typeId'] = $killMail->victim->ship_type_id;
-        $slots['shipType'] = $searchedItem->typeName;
-        array_push($priceList, $searchedItem->typeName);
-        $prices = $this->srpGetPrice($priceList);
-
-        $pilot = CharacterInfo::find($killMail->victim->character_id);
-
-        $slots['characterName'] = $killMail->victim->character_id;
-        if (!is_null($pilot))
-            $slots['characterName'] = $pilot->name;
-
-        $slots['killId'] = $killMail->killmail_id;
-        $slots['price'] = $prices->appraisal->totals->sell;
-
-        return $slots;
-    }
-
-    private function srpGetPrice(array $priceList) : stdClass
-    {
-
-        $partsList = implode("\n", $priceList);
-        
-        $response = (new Client())
-            ->request('POST', 'http://evepraisal.com/appraisal.json?market=jita', [
-                'multipart' => [
-                    [
-                        'name' => 'uploadappraisal',
-                        'contents' => $partsList,
-                        'filename' => 'notme',
-                        'headers' => [
-                            'Content-Type' => 'text/plain'
-                        ]
-                    ],
-                ]
-            ]);
-
-        return json_decode($response->getBody()->getContents());
-    }
 
     public function getAboutView()
     {

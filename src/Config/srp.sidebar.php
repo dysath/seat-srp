@@ -32,6 +32,12 @@ return [
                 'permission' => 'srp.settings',
 			],
 			[
+                'name' => 'SRP Test Page',
+                'icon' => 'fas fa-vial',
+                'route' => 'srp.testsrp',
+                'permission' => 'srp.settings',
+			],
+			[
                 'name' => 'Instructions',
                 'icon' => 'fas fa-book-open',
                 'route' => 'srp.instructions',

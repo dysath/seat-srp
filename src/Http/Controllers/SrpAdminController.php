@@ -91,9 +91,9 @@ class SrpAdminController extends Controller
 
     public function saveSrpSettings(ValidateSettings $request)
     {
-        setting(["webhook_url", $request->webhook_url], true);
-        setting(["mention_role", $request->mention_role], true);
-        setting(["advanced_srp", $request->srp_method], true);
+        setting(["denngarr_seat_srp_webhook_url", $request->webhook_url], true);
+        setting(["denngarr_seat_srp_mention_role", $request->mention_role], true);
+        setting(["denngarr_seat_srp_advanced_srp", $request->srp_method], true);
 
         return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
     }
@@ -118,6 +118,7 @@ class SrpAdminController extends Controller
             'price_source' => $request->source,
             'base_value' => $request->base_value,
             'hull_percent' => $request->hull_percent,
+            'cargo_percent' => $request->cargo_percent,
             'fit_percent' => $request->fit_percent,
             'deduct_insurance' => $request->deduct_insurance
         ]);
@@ -145,19 +146,24 @@ class SrpAdminController extends Controller
     public function saveAdvDefaultSettings(ValidateAdvancedSettings $request)
     {
 
-        setting(["advrule_def_source", $request->default_source], true);
-        setting(["advrule_def_base", $request->default_base], true);
-        setting(["advrule_def_hull", $request->default_hull_pc], true);
-        setting(["advrule_def_fit", $request->default_fit_pc], true);
-        setting(["advrule_def_cargo", $request->default_cargo_pc], true);
+        setting(["denngarr_seat_srp_advrule_def_source", $request->default_source], true);
+        setting(["denngarr_seat_srp_advrule_def_base", $request->default_base], true);
+        setting(["denngarr_seat_srp_advrule_def_hull", $request->default_hull_pc], true);
+        setting(["denngarr_seat_srp_advrule_def_fit", $request->default_fit_pc], true);
+        setting(["denngarr_seat_srp_advrule_def_cargo", $request->default_cargo_pc], true);
 
         $insurance = 1;
         if (is_null($request->default_ins)) {
             $insurance = 0;
         }
 
-        setting(["advrule_def_ins", $insurance], true);
+        setting(["denngarr_seat_srp_advrule_def_ins", $insurance], true);
 
         return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
+    }
+
+    public function getTestView()
+    {
+        return view("srp::srptest");
     }
 }

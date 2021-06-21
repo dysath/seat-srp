@@ -129,6 +129,12 @@ Route::group([
             'middleware' => 'can:srp.request'
         ]);
 
+        Route::get('/test', [
+            'as'   => 'srp.testsrp',
+            'uses' => 'SrpAdminController@getTestView',
+            'middleware' => 'can:srp.settings'
+        ]);
+
         Route::get('/settings', [
             'as'   => 'srp.settings',
             'uses' => 'SrpAdminController@getSrpSettings',

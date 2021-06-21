@@ -13,10 +13,18 @@ use Seat\Eveapi\Models\Sde\InvGroup;
 use Denngarr\Seat\SeatSrp\Notifications\SrpRequestSubmitted;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Seat\Eveapi\Models\Killmails\Killmail;
 use Seat\Services\Models\Note;
 use Seat\Services\Traits\NotableTrait;
+use Seat\Web\Models\User;
 
-class AdvRule extends Model {
+class Quote extends Model {
+
+    // $table->bigIncrements('id');
+    // $table->bigInteger('killmail_id')->unique();
+    // $table->integer('user')->unsigned();
+    // $table->float('value');
+    // $table->timestamps();
 
 
     public $timestamps = true;
@@ -26,16 +34,16 @@ class AdvRule extends Model {
     protected $table = 'denngarr_seat_srp_advrule';
 
     protected $fillable = [
-        'rule_type', 'type_id', 'group_id', 'price_source', 'base_value', 'hull_percent', 'fit_percent', 'cargo_percent', 'deduct_insurance'
+        'killmail_id', 'user', 'value'
     ];
 
-    public function type()
+    public function killmail()
     {
-        return $this->hasOne(InvType::class, 'typeID', 'type_id');
+        return $this->hasOne(Killmail::class, 'killmail_id', 'killmail_id');
     }
 
-    public function group()
+    public function user()
     {
-        return $this->hasOne(InvGroup::class, 'groupID', 'group_id');
+        return $this->hasOne(User::class, 'groupID', 'group_id');
     }
 }

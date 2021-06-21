@@ -25,6 +25,7 @@ class CreateAdvancedRulesTable extends Migration
             $table->integer('fit_percent')->default(0);
             $table->integer('cargo_percent')->default(0);
             $table->boolean('deduct_insurance')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -35,6 +36,6 @@ class CreateAdvancedRulesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('denggarr_seat_srp_advrule');
+        Schema::drop('denngarr_seat_srp_advrule');
     }
 }
