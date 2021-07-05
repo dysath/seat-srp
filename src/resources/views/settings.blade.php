@@ -55,6 +55,10 @@
                                 <label class="form-check-label" for="method2">Advanced</label>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="srp_delete" class="col-sm-3 col-form-label">Process Pending Deletions</label>
+                            <input id="srp_delete" class="btn btn-danger float-right" value="DELETE!">
+                        </div>
                     </div>
                     <div class="card-footer">
                         <input class="btn btn-success float-right" type="submit" value="Update">
@@ -599,6 +603,26 @@
 
     const tform = document.getElementById('type_rule_maker');
     const gform = document.getElementById('group_rule_maker');
+
+    $('#srp_delete').on('click', function() {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('srp.deletions') }}",
+            success: function(data) {
+                $('#srp_delete').removeClass("btn-danger");
+                $('#srp_delete').removeClass("btn-warning");
+                $('#srp_delete').addClass("btn-success");
+                $('#srp_delete').prop('value', 'Deleted ' + JSON.parse(data).deleted + ' items');
+                console.log(data);
+            },
+            error: function() {
+                $('#srp_delete').removeClass("btn-success");
+                $('#srp_delete').removeClass("btn-warning");
+                $('#srp_delete').addClass("btn-danger");
+                $('#srp_delete').prop('value', "Failed Deletion, check your logs");
+            }
+        })
+    });
 
     $('#type_add').on('click', function() {
 

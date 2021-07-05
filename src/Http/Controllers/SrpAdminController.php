@@ -45,6 +45,8 @@ class SrpAdminController extends Controller
             case 'Pending':
                 $killmail->approved = '0';
                 break;
+            case 'Delete':
+                $killmail->approved = '99';
         }
 
         $killmail->approver = auth()->user()->name;
@@ -165,5 +167,12 @@ class SrpAdminController extends Controller
     public function getTestView()
     {
         return view("srp::srptest");
+    }
+
+    public function runDeletions()
+    {
+        $deleted = KillMail::where('approved', 99)->delete();
+        logger()->info('Deleted ' . $deleted . ' killmails from SRP table');
+        return json_encode(['deleted' => $deleted]);
     }
 }

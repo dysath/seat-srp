@@ -97,7 +97,7 @@ Route::group([
             'as'   => 'srpadmin.settle',
             'uses' => 'SrpAdminController@srpApprove',
             'middleware' => 'can:srp.settle'
-        ])->where(['action' => 'Approve|Reject|Paid Out|Pending']);
+        ])->where(['action' => 'Approve|Reject|Paid Out|Pending|Delete']);
 
         Route::get('/insurances/{kill_id}', [
             'as' => 'srp.insurances',
@@ -138,6 +138,12 @@ Route::group([
         Route::get('/settings', [
             'as'   => 'srp.settings',
             'uses' => 'SrpAdminController@getSrpSettings',
+            'middleware' => 'can:srp.settings'
+        ]);
+
+        Route::get('/settings/processdeletion', [
+            'as'   => 'srp.deletions',
+            'uses' => 'SrpAdminController@runDeletions',
             'middleware' => 'can:srp.settings'
         ]);
 

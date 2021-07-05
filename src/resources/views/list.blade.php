@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 @foreach ($killmails as $kill)
-                @if(($kill->approved === 0) || ($kill->approved === 1))
+                @if(($kill->approved === 0) || ($kill->approved === 1) || ($kill->approved === 99))
                 <tr>
                   <td>
                       <a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a>
@@ -66,6 +66,8 @@
                     <td id="id-{{ $kill->kill_id }}"><span class="badge badge-success">Approved</span></td>
                   @elseif ($kill->approved === 2)
                     <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Paid Out</span></td>
+                  @elseif ($kill->approved === 99)
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-info">Pending Deletion</span></td>
                   @endif
                   <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
@@ -75,6 +77,9 @@
                       <button type="button" class="btn btn-xs btn-danger srp-status" id="srp-status" name="{{ $kill->kill_id }}">Reject</button>
                       <button type="button" class="btn btn-xs btn-success srp-status" id="srp-status" name="{{ $kill->kill_id }}">Approve</button>
                       <button type="button" class="btn btn-xs btn-primary srp-status" id="srp-status" name="{{ $kill->kill_id }}">Paid Out</button>
+                      @can('srp.delete')
+                      <button type="button" class="btn btn-xs btn-danger srp-status" id="srp-status" name="{{ $kill->kill_id }}">Delete</button>
+                      @endcan
                   </td>                 
                   <td>
                   @if(!is_null($kill->reason()))
@@ -134,6 +139,8 @@
                     <td id="id-{{ $kill->kill_id }}"><span class="badge badge-success">Approved</span></td>
                   @elseif ($kill->approved === 2)
                     <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Paid Out</span></td>
+                  @elseif ($kill->approved === 99)
+                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Pending Deletion</span></td>
                   @endif
                   <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
@@ -183,7 +190,7 @@
     $('#srps-arch').DataTable();
 
     $('#srp-ping').on('show.bs.modal', function(e){
-        var link = '{{ route('srp.ping', 0) }}';
+        var link = "{{ route('srp.ping', 0) }}";
         $(this).find('.overlay').show();
         $(this).find('.modal-body>p').text('');
 
@@ -204,7 +211,7 @@
     });
 
     $('#srp-reason').on('show.bs.modal', function(e){
-                var link = '{{ route('srp.reason', 0) }}';
+                var link = "{{ route('srp.reason', 0) }}";
 
                 $(this).find('.overlay').show();
                 $(this).find('.modal-body>p').text('');
@@ -320,6 +327,8 @@
               $("#id-"+data.value).html('<span class="badge badge-primary">Paid Out</span>');
           } else if (data.name === "Pending") {
               $("#id-"+data.value).html('<span class="badge badge-warning">Pending</span>');
+          } else if (data.name === "Delete") {
+            $("#id-"+data.value).html('<span class="badge badge-info">Pending Deletion</span>');
           }
           $("#approver-"+data.value).html(data.approver);
         });

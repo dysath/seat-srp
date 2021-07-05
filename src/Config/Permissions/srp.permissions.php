@@ -16,6 +16,11 @@ return [
         'description' => 'Allows accepting and rejecting SRP Requests',
         'division' => 'financial'
     ],
+    'delete' => [
+        'label' => 'Delete',
+        'description' => 'Allows deleting SRP requests that have been lodged. Note this does not replace rejection of requests',
+        'division' => 'financial'
+    ],
     'settings' => [
         'label' => 'Settings',
         'description' => 'Allows configuring the global SRP settings',

@@ -90,6 +90,8 @@
                         <span class="badge badge-success">Approved</span>
                         @elseif ($kill->approved === 2)
                         <span class="badge badge-primary">Paid Out</span>
+                        @elseif ($kill->approved === 99)
+                        <span class="badge badge-info">Pending Deletion</span>
                         @endif
                         @if(!is_null($kill->reason()))
                         <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-reason" data-kill-id="{{ $kill->kill_id }}">

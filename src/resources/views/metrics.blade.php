@@ -153,21 +153,10 @@
 @endpush
 @push('javascript')
     <script>
-        let summaryAllDataUrl = '{{ route('srp.metrics.api.web.summary.monthly', [
-            'status' => $srp_status,
-            'limit' => 15,
-        ]) }}';
-        let summaryUserDataUrl = '{{ route('srp.metrics.api.web.summary.user', [
-            'status' => $srp_status,
-        ]) }}';
-        let topShipsDataUrl = '{{ route('srp.metrics.api.web.top.ship', [
-            'status' => $srp_status,
-            'limit' => 50,
-        ]) }}';
-        let topPilotsDataUrl = '{{ route('srp.metrics.api.web.top.user', [
-            'status' => $srp_status,
-            'limit' => 50,
-        ]) }}';
+        let summaryAllDataUrl = "{{ route('srp.metrics.api.web.summary.monthly', ['status' => $srp_status,'limit' => 15,]) }}";
+        let summaryUserDataUrl = "{{ route('srp.metrics.api.web.summary.user', ['status' => $srp_status,]) }}";
+        let topShipsDataUrl = "{{ route('srp.metrics.api.web.top.ship', ['status' => $srp_status,'limit' => 50,]) }}";
+        let topPilotsDataUrl = "{{ route('srp.metrics.api.web.top.user', ['status' => $srp_status,'limit' => 50,]) }}";
     </script>
 
     <script src="{{ asset('web/js/metrics-colors.js') }}"></script>
