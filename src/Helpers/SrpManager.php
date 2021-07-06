@@ -236,8 +236,14 @@ trait SrpManager
         $fp = $fp * $fit_percent;
         $cp = $cp * $cargo_percent;
 
-
         $total = round($hp + $fp + $cp + $base_value, 2);
+
+        if($deduct_insurance) {
+            $ins = Insurance::where('type_id', $killmail->victim->ship_type_id)->where('Name', 'Platinum')->first();
+            if(!is_null($ins)){
+                $total = $total + $ins->cost - $ins->payout;
+            }
+        }
 
         return [
             "price" => $total,

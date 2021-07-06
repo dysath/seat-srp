@@ -70,7 +70,7 @@
                                 <thead>
                                     <tr>
                                         <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Pilot:</label></th>
-                                        <th class="bg-white"><label class='id-to-name' data-id="" id="characterName"></label></th>
+                                        <th class="bg-white"><span class='id-to-name' data-id="" id="characterName"></span></th>
                                     </tr>
                                     <tr>
                                         <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Ship:</label></th>
@@ -147,7 +147,7 @@
                 $('#price').html(formattedPrice.toLocaleString() + " ISK");
                 $('#shipType').text(result["shipType"]);
                 $('#characterName').text(result["characterName"]);
-                $('#characterName').data('id', result["characterName"]);
+                $('#characterName').attr('data-id', result["characterName"]);
                 // id_to_names();
 
                 $('#type').text(result["price"]["rule"]);
@@ -157,7 +157,7 @@
                 $('#cargo').text((result["price"]["cargo_percent"] * 100).toLocaleString() + " %");
                 $('#insurance').text(result["price"]["deduct_insurance"]);
 
-                id_to_names();
+                ids_to_names();
             } else {
                 $('.overlay').hide();
                 $('#killMailUrl').append("Killmail not Found");
@@ -168,7 +168,7 @@
             kmFormGroup.find('span.help-block').show();
         });
     });
-    // id_to_names();
+    ids_to_names();
 </script>
 
 

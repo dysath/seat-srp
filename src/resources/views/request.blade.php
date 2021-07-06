@@ -131,7 +131,7 @@
                     <thead>
                         <tr>
                             <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Pilot:</label></th>
-                            <th class="bg-white"><label class='id-to-name' data-id="" id="characterName"></label></th>
+                            <th class="bg-white"><span class='id-to-name' data-id="" id="characterName"></span></th>
                         </tr>
                         <tr>
                             <th class="bg-primary"><label class="label pull-right" style="font-size: 100%">Ship:</label></th>
@@ -390,8 +390,8 @@
                 $('#price').html(formattedPrice.toLocaleString() + " ISK");
                 $('#shipType').text(result["shipType"]);
                 $('#characterName').text(result["characterName"]);
-                $('#characterName').data('id', result["characterName"]);
-                // id_to_names();
+                $('#characterName').attr('data-id', result["characterName"]);
+                ids_to_names();
 
                 $('#srpKillId').val(result["killId"]);
                 $('#srpKillToken').val(result["killToken"]);
@@ -409,7 +409,7 @@
             kmFormGroup.find('span.help-block').show();
         });
     });
-    id_to_names();
+    ids_to_names();
 </script>
 
 @endpush
