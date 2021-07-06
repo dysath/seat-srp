@@ -83,7 +83,7 @@
             This section allows for the configuration of an advanced buyback system. Rules are evaluated from top to bottom of the below list, stopping on the first match (will always match the default rule at the bottom).
         </p>
         <p>
-            Once a match is found the formula used is BaseValue + ( HullValue * Hull% ) + ( FitValue * Fit% ).
+            Once a match is found the formula used is BaseValue + ( HullValue * Hull% ) + ( FitValue * Fit% ) + ( CargoValue * Cargo% ) - [if insurance is deducted](insurance payout - insurance cost).
         </p>
 
         <div class="accordion" id="rulesets">
