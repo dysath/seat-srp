@@ -1,24 +1,19 @@
-<?PHP
+<?php
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
 use Denngarr\Seat\SeatSrp\Helpers\SrpManager;
-use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
-use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
-use Illuminate\Http\Request;
-use GuzzleHttp\Client;
-use Seat\Services\Models\Note;
-use Seat\Web\Http\Controllers\Controller;
-use Seat\Eveapi\Models\Character\CharacterInfo;
-use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
-use Seat\Eveapi\Models\Killmails\KillmailDetail;
-use Seat\Eveapi\Jobs\Killmails\Detail;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
-use stdClass;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Seat\Eveapi\Jobs\Killmails\Detail;
+use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
+use Seat\Eveapi\Models\Killmails\KillmailDetail;
+use Seat\Web\Http\Controllers\Controller;
 
-
-class SrpController extends Controller {
+class SrpController extends Controller
+{
 
     use SrpManager;
 
@@ -36,7 +31,7 @@ class SrpController extends Controller {
     {
 
         // The submitted url is available at $request->km;
-        $url_parts = explode("/", rtrim($request->km, "/ \t\n\r\0\x0B"));
+        $url_parts = explode('/', rtrim($request->km, "/ \t\n\r\0\x0B"));
 
         $token = $url_parts[5];
         $hash = $url_parts[6];
@@ -49,7 +44,6 @@ class SrpController extends Controller {
 
         if (! KillmailDetail::find($killmail->killmail_id))
                     Detail::dispatchNow($killmail->killmail_id, $killmail->killmail_hash);
-
 
         $totalKill = [];
 
@@ -74,74 +68,73 @@ class SrpController extends Controller {
             'approved'       => 0,
             'cost'           => $request->input('srpCost'),
             'type_id'        => $request->input('srpTypeId'),
-            'ship_type'      => $request->input('srpShipType')
+            'ship_type'      => $request->input('srpShipType'),
         ]);
 
-        if (!is_null($request->input('srpPingContent')) && $request->input('srpPingContent') != '')
-        	KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
+        if (! is_null($request->input('srpPingContent')) && $request->input('srpPingContent') != '')
+            KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
 
         return redirect()->back()
                          ->with('success', trans('srp::srp.submitted'));
     }
 
-	public function getInsurances($kill_id)
-	{
-		$killmail = KillMail::where('kill_id', $kill_id)->first();
+    public function getInsurances($kill_id)
+    {
+        $killmail = KillMail::where('kill_id', $kill_id)->first();
 
-		if (is_null($killmail))
-			return response()->json(['msg' => sprintf('Unable to retried killmail %s', $kill_id)], 404);
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retried killmail %s', $kill_id)], 404);
 
-		$data = [];
+        $data = [];
 
-		foreach ($killmail->type->insurances as $insurance) {
+        foreach ($killmail->type->insurances as $insurance) {
 
-			array_push($data, [
-				'name' => $insurance->name,
-				'cost' => $insurance->cost,
-				'payout' => $insurance->payout,
-				'refunded' => $insurance->refunded(),
-				'remaining' => $insurance->remaining($killmail),
-			]);
+            array_push($data, [
+                'name' => $insurance->name,
+                'cost' => $insurance->cost,
+                'payout' => $insurance->payout,
+                'refunded' => $insurance->refunded(),
+                'remaining' => $insurance->remaining($killmail),
+            ]);
 
-		}
+        }
 
-		return response()->json($data);
-	}
-
-	public function getPing($kill_id)
-	{
-		$killmail = KillMail::find($kill_id);
-
-		if (is_null($killmail))
-			return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
-
-		if (!is_null($killmail->ping()))
-			return response()->json($killmail->ping());
-
-		return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
+        return response()->json($data);
     }
-    
+
+    public function getPing($kill_id)
+    {
+        $killmail = KillMail::find($kill_id);
+
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
+
+        if (! is_null($killmail->ping()))
+            return response()->json($killmail->ping());
+
+        return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
+    }
+
     public function getReason($kill_id)
-	{
-		$killmail = KillMail::find($kill_id);
+    {
+        $killmail = KillMail::find($kill_id);
 
-		if (is_null($killmail))
-			return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
 
-		if (!is_null($killmail->reason()))
-			return response()->json($killmail->reason());
+        if (! is_null($killmail->reason()))
+            return response()->json($killmail->reason());
 
-		return response()->json(['msg' => sprintf('There is no reason information related to kill %s', $kill_id)], 204);
-	}
-
+        return response()->json(['msg' => sprintf('There is no reason information related to kill %s', $kill_id)], 204);
+    }
 
     public function getAboutView()
     {
-        return view("srp::about");
+        return view('srp::about');
     }
 
     public function getInstructionsView()
     {
-        return view("srp::instructions");
+        return view('srp::instructions');
     }
 }

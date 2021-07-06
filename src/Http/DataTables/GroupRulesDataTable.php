@@ -43,6 +43,7 @@ class GroupRulesDataTable extends DataTable
             ->addColumn('group', function ($row) {
                 // Performance penalty here for an aesthetic most will likely never notice
                 $type = InvType::where('groupID', $row->group->groupID)->inRandomOrder()->first();
+
                 return view('web::partials.type', ['type_id' => $type->typeID, 'type_name' => $row->group->groupName])->render();
             })
             ->editColumn('action', function ($row) {

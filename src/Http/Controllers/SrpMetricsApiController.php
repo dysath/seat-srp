@@ -2,23 +2,23 @@
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Seat\Api\Http\Controllers\Api\v2\ApiController;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
+use Seat\Api\Http\Controllers\Api\v2\ApiController;
 use Seat\Web\Models\User;
 
-
 /**
- * Class SrpMetricsApiController
+ * Class SrpMetricsApiController.
  * @package Denngarr\Seat\SeatSrp\Http\Controllers
  */
-class SrpMetricsApiController extends ApiController {
+class SrpMetricsApiController extends ApiController
+{
 
     private $srp_statuses = [
         'unprocessed' => [0],
         'rejected' => [-1],
         'approved' => [1],
         'paid' => [2],
-        'all' => [-1,0,1,2]
+        'all' => [-1, 0, 1, 2],
     ];
 
     /**
@@ -86,11 +86,11 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getSummaryMonthly($status=null,$limit=null)
+    public function getSummaryMonthly($status = null, $limit = null)
     {
         // return 404 if status is not recognized
-        if(!array_key_exists($status, $this->srp_statuses)){
-            return response([],404);
+        if(! array_key_exists($status, $this->srp_statuses)){
+            return response([], 404);
         }
 
         $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
@@ -105,7 +105,7 @@ class SrpMetricsApiController extends ApiController {
         return [
             'dt' => $raw->pluck('dt'),
             'payouts' => $raw->pluck('payouts'),
-            'requests' => $raw->pluck('requests')
+            'requests' => $raw->pluck('requests'),
         ];
     }
 
@@ -219,16 +219,16 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getSummaryUser($status=null,$user_id, $limit=null)
+    public function getSummaryUser($status = null, $user_id, $limit = null)
     {
         // return 404 if status is not recognized
-        if(!array_key_exists($status, $this->srp_statuses)){
-            return response([],404);
+        if(! array_key_exists($status, $this->srp_statuses)){
+            return response([], 404);
         }
 
         $user = User::where('id', $user_id)->first();
-        if(!$user){
-            return response([],404);
+        if(! $user){
+            return response([], 404);
         }
 
         $summary = KillMail::whereIn('approved', $this->srp_statuses[$status])
@@ -256,8 +256,8 @@ class SrpMetricsApiController extends ApiController {
             'ships' => [
                 'ship' => $ships->pluck('ship_type'),
                 'payouts' => $ships->pluck('payouts'),
-                'requests' => $ships->pluck('requests')
-            ]
+                'requests' => $ships->pluck('requests'),
+            ],
         ];
     }
 
@@ -325,11 +325,11 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getTopShip($status=null,$limit=null)
+    public function getTopShip($status = null, $limit = null)
     {
         // return 404 if status is not recognized
-        if(!array_key_exists($status, $this->srp_statuses)){
-            return response([],404);
+        if(! array_key_exists($status, $this->srp_statuses)){
+            return response([], 404);
         }
 
         $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
@@ -344,7 +344,7 @@ class SrpMetricsApiController extends ApiController {
         return [
             'ships' => $raw->pluck('ship_type'),
             'requests' => $raw->pluck('requests'),
-            'payouts' => $raw->pluck('payouts')
+            'payouts' => $raw->pluck('payouts'),
         ];
     }
 
@@ -413,11 +413,11 @@ class SrpMetricsApiController extends ApiController {
      *
      * @param int $limit
      */
-    public function getTopUser($status=null,$limit=null)
+    public function getTopUser($status = null, $limit = null)
     {
         // return 404 if status is not recognized
-        if(!array_key_exists($status, $this->srp_statuses)){
-            return response([],404);
+        if(! array_key_exists($status, $this->srp_statuses)){
+            return response([], 404);
         }
 
         $raw = KillMail::whereIn('approved', $this->srp_statuses[$status])
@@ -426,7 +426,6 @@ class SrpMetricsApiController extends ApiController {
             ->groupBy('main')
             ->orderByDesc('payouts');
 
-
         if($limit){
             $raw = $raw->take($limit);
         }
@@ -434,7 +433,7 @@ class SrpMetricsApiController extends ApiController {
         return [
             'main' => $raw->pluck('main'),
             'payouts' => $raw->pluck('payouts'),
-            'requests' => $raw->pluck('requests')
+            'requests' => $raw->pluck('requests'),
         ];
     }
 }

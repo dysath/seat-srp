@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class MigrateSrpVersionFour extends Migration
 {
@@ -36,7 +36,7 @@ class MigrateSrpVersionFour extends Migration
                 ->update(['user_id' => $new_id->new_user_id]);
         }
 
-        Schema::table('seat_srp_srp', function(Blueprint $table){
+        Schema::table('seat_srp_srp', function (Blueprint $table) {
 
             $table->unsignedInteger('user_id')->change();
         });

@@ -2,15 +2,15 @@
 /**
  * User: Warlof Tutsimo <loic.leuilliot@gmail.com>
  * Date: 29/12/2017
- * Time: 15:13
+ * Time: 15:13.
  */
 
 namespace Denngarr\Seat\SeatSrp\Models\Sde;
 
-
 use Illuminate\Database\Eloquent\Model;
 
-class InvFlag extends Model {
+class InvFlag extends Model
+{
 
     public $timestamps = false;
 

@@ -15,7 +15,7 @@ class ValidateSettings extends FormRequest
     {
         return [
             'webhook_url'    => 'url|present|nullable',
-            'mention_role'   => 'string|present|nullable'
+            'mention_role'   => 'string|present|nullable',
         ];
     }
 }

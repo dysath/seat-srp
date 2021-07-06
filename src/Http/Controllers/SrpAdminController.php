@@ -1,26 +1,21 @@
-<?PHP
+<?php
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Illuminate\Http\Request;
-use DB;
-use GuzzleHttp\Client;
-use Seat\Web\Http\Controllers\Controller;
-use Denngarr\Seat\SeatSrp\Models\KillMail;
+use Denngarr\Seat\SeatSrp\Http\DataTables\GroupRulesDataTable;
+use Denngarr\Seat\SeatSrp\Http\DataTables\TypeRulesDataTable;
 use Denngarr\Seat\SeatSrp\Models\AdvRule;
+use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddReason;
 use Denngarr\Seat\SeatSrp\Validation\ValidateAdvancedSettings;
-use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
 use Denngarr\Seat\SeatSrp\Validation\ValidateRule;
-use Denngarr\Seat\SeatSrp\Http\DataTables\TypeRulesDataTable;
-use Denngarr\Seat\SeatSrp\Http\DataTables\GroupRulesDataTable;
-use Seat\Eveapi\Models\Sde\InvType;
+use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
 use Seat\Eveapi\Models\Sde\InvGroup;
-
+use Seat\Eveapi\Models\Sde\InvType;
+use Seat\Web\Http\Controllers\Controller;
 
 class SrpAdminController extends Controller
 {
-
     public function srpGetKillMails()
     {
         $killmails = KillMail::where('approved', '>', '-2')->orderby('created_at', 'desc')->get();
@@ -60,20 +55,18 @@ class SrpAdminController extends Controller
 
         $kill_id = $request->input('srpKillId');
 
-        $killmail  = Killmail::find($kill_id);
-
-        
+        $killmail = Killmail::find($kill_id);
 
         if (is_null($killmail))
         return redirect()->back()
             ->with('error', trans('srp::srp.not_found'));
 
         $reason = $killmail->reason();
-        if (!is_null($reason)) 
+        if (! is_null($reason))
             $reason->delete();
 
         KillMail::addNote($request->input('srpKillId'), 'reason', $request->input('srpReasonContent'));
-        
+
         return redirect()->back()
                          ->with('success', trans('srp::srp.note_updated'));
     }
@@ -84,7 +77,7 @@ class SrpAdminController extends Controller
 
         $groups = InvGroup::where('categoryID', 6)->get();
         $types = InvType::whereIn('groupID', $groups->pluck('groupID')->all())->get();
-        
+
         $type_rules = $rules->where('rule_type', 'type');
         $group_rules = $rules->where('rule_type', 'group');
 
@@ -93,9 +86,9 @@ class SrpAdminController extends Controller
 
     public function saveSrpSettings(ValidateSettings $request)
     {
-        setting(["denngarr_seat_srp_webhook_url", $request->webhook_url], true);
-        setting(["denngarr_seat_srp_mention_role", $request->mention_role], true);
-        setting(["denngarr_seat_srp_advanced_srp", $request->srp_method], true);
+        setting(['denngarr_seat_srp_webhook_url', $request->webhook_url], true);
+        setting(['denngarr_seat_srp_mention_role', $request->mention_role], true);
+        setting(['denngarr_seat_srp_advanced_srp', $request->srp_method], true);
 
         return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
     }
@@ -110,7 +103,7 @@ class SrpAdminController extends Controller
             ->get();
         if ($e->count() > 0) { // Only an issue for now. In future want to update existing
             // We are updating an exisiting row
-            return response()->json(["message" => "Entry already exists for this type"],400);
+            return response()->json(['message' => 'Entry already exists for this type'], 400);
         }
 
         $rule = AdvRule::updateOrCreate([
@@ -122,7 +115,7 @@ class SrpAdminController extends Controller
             'hull_percent' => $request->hull_percent,
             'cargo_percent' => $request->cargo_percent,
             'fit_percent' => $request->fit_percent,
-            'deduct_insurance' => $request->deduct_insurance
+            'deduct_insurance' => $request->deduct_insurance,
         ]);
 
         return response('Added/Updated Type Rule', 200);
@@ -148,31 +141,32 @@ class SrpAdminController extends Controller
     public function saveAdvDefaultSettings(ValidateAdvancedSettings $request)
     {
 
-        setting(["denngarr_seat_srp_advrule_def_source", $request->default_source], true);
-        setting(["denngarr_seat_srp_advrule_def_base", $request->default_base], true);
-        setting(["denngarr_seat_srp_advrule_def_hull", $request->default_hull_pc], true);
-        setting(["denngarr_seat_srp_advrule_def_fit", $request->default_fit_pc], true);
-        setting(["denngarr_seat_srp_advrule_def_cargo", $request->default_cargo_pc], true);
+        setting(['denngarr_seat_srp_advrule_def_source', $request->default_source], true);
+        setting(['denngarr_seat_srp_advrule_def_base', $request->default_base], true);
+        setting(['denngarr_seat_srp_advrule_def_hull', $request->default_hull_pc], true);
+        setting(['denngarr_seat_srp_advrule_def_fit', $request->default_fit_pc], true);
+        setting(['denngarr_seat_srp_advrule_def_cargo', $request->default_cargo_pc], true);
 
         $insurance = 1;
         if (is_null($request->default_ins)) {
             $insurance = 0;
         }
 
-        setting(["denngarr_seat_srp_advrule_def_ins", $insurance], true);
+        setting(['denngarr_seat_srp_advrule_def_ins', $insurance], true);
 
         return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
     }
 
     public function getTestView()
     {
-        return view("srp::srptest");
+        return view('srp::srptest');
     }
 
     public function runDeletions()
     {
         $deleted = KillMail::where('approved', 99)->delete();
         logger()->info('Deleted ' . $deleted . ' killmails from SRP table');
+
         return json_encode(['deleted' => $deleted]);
     }
 }

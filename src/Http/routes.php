@@ -3,7 +3,7 @@
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
     'middleware' => ['web', 'auth'],
-    'prefix' => 'api/v2/srp/metrics/web'
+    'prefix' => 'api/v2/srp/metrics/web',
 ], function () {
 
     Route::get('/summary/monthly/{status}/{limit?}', [
@@ -23,14 +23,14 @@ Route::group([
 
     Route::get('/top/user/{status}/{limit?}', [
         'as' => 'srp.metrics.api.web.top.user',
-        'uses' => 'SrpMetricsApiController@getTopUser'
+        'uses' => 'SrpMetricsApiController@getTopUser',
     ]);
 });
 
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
     'middleware' => ['api.auth'],
-    'prefix' => 'api/v2/srp/metrics'
+    'prefix' => 'api/v2/srp/metrics',
 ], function () {
     Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.summary.monthly',
@@ -49,14 +49,13 @@ Route::group([
 
     Route::get('/top/user/{status}/{limit?}', [
         'as' => 'srp.metrics.api.top.user',
-        'uses' => 'SrpMetricsApiController@getTopUser'
+        'uses' => 'SrpMetricsApiController@getTopUser',
     ]);
 });
 
-
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
-    'prefix' => 'srp'
+    'prefix' => 'srp',
 ], function () {
 
     Route::group([
@@ -66,37 +65,37 @@ Route::group([
         Route::get('/', [
             'as'   => 'srp.request',
             'uses' => 'SrpController@srpGetRequests',
-            'middleware' => 'can:srp.request'
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/getkillmail', [
             'as'   => 'srp.getKillMail',
             'uses' => 'SrpController@srpGetKillMail',
-            'middleware' => 'can:srp.request'
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::post('/savekillmail', [
             'as'   => 'srp.saveKillMail',
             'uses' => 'SrpController@srpSaveKillMail',
-            'middleware' => 'can:srp.request'
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/admin', [
             'as'   => 'srpadmin.list',
             'uses' => 'SrpAdminController@srpGetKillMails',
-            'middleware' => 'can:srp.settle'
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::post('/admin/addreason', [
             'as'   => 'srp.addReason',
             'uses' => 'SrpAdminController@srpAddReason',
-            'middleware' => 'can:srp.settle'
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::get('/admin/{kill_id}/{action}', [
             'as'   => 'srpadmin.settle',
             'uses' => 'SrpAdminController@srpApprove',
-            'middleware' => 'can:srp.settle'
+            'middleware' => 'can:srp.settle',
         ])->where(['action' => 'Approve|Reject|Paid Out|Pending|Delete']);
 
         Route::get('/insurances/{kill_id}', [
@@ -120,42 +119,42 @@ Route::group([
         Route::get('/about', [
             'as'   => 'srp.about',
             'uses' => 'SrpController@getAboutView',
-            'middleware' => 'can:srp.request'
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/instructions', [
             'as'   => 'srp.instructions',
             'uses' => 'SrpController@getInstructionsView',
-            'middleware' => 'can:srp.request'
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/test', [
             'as'   => 'srp.testsrp',
             'uses' => 'SrpAdminController@getTestView',
-            'middleware' => 'can:srp.settings'
+            'middleware' => 'can:srp.settings',
         ]);
 
         Route::get('/settings', [
             'as'   => 'srp.settings',
             'uses' => 'SrpAdminController@getSrpSettings',
-            'middleware' => 'can:srp.settings'
+            'middleware' => 'can:srp.settings',
         ]);
 
         Route::get('/settings/processdeletion', [
             'as'   => 'srp.deletions',
             'uses' => 'SrpAdminController@runDeletions',
-            'middleware' => 'can:srp.settings'
+            'middleware' => 'can:srp.settings',
         ]);
 
         Route::post('/settings', [
             'as'   => 'srp.savesettings',
             'uses' => 'SrpAdminController@saveSrpSettings',
-            'middleware' => 'can:srp.settings'
+            'middleware' => 'can:srp.settings',
         ]);
 
         Route::group([
             'middleware' => 'can:srp.settings',
-            'prefix' => 'advanced-settings'
+            'prefix' => 'advanced-settings',
         ], function () {
 
             Route::post('/add-type', [
@@ -181,15 +180,14 @@ Route::group([
             Route::post('/defaults', [
                 'as'   => 'srp.saveadvdefault',
                 'uses' => 'SrpAdminController@saveAdvDefaultSettings',
-                'middleware' => 'can:srp.settings'
+                'middleware' => 'can:srp.settings',
             ]);
-
 
         });
 
         Route::group([
             'middleware' => 'can:srp.settle',
-            'prefix' => 'metrics'
+            'prefix' => 'metrics',
         ], function () {
 
             Route::get('/{srp_status?}', [
