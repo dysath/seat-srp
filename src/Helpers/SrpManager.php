@@ -170,7 +170,7 @@ trait SrpManager
         if($deduct_insurance) {
             $ins = Insurance::where('type_id', $killmail->victim->ship_type_id)->where('Name', 'Platinum')->first();
             if(!is_null($ins)){
-                $total = $total + $ins->cost - $ins->payout;
+                $total = $total + $ins->cost - $ins->refunded;
             }
         }
 
@@ -241,7 +241,7 @@ trait SrpManager
         if($deduct_insurance) {
             $ins = Insurance::where('type_id', $killmail->victim->ship_type_id)->where('Name', 'Platinum')->first();
             if(!is_null($ins)){
-                $total = $total + $ins->cost - $ins->payout;
+                $total = $total + $ins->cost - $ins->refunded;
             }
         }
 
