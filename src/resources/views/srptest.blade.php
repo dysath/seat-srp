@@ -2,7 +2,7 @@
 
 @section('title', trans('srp::srp.srp'))
 @section('page_header', trans('srp::srp.srp'))
-@section('page_description', trans('srp::srp.instructions'))
+@section('page_description', trans('srp::srp.test_killmail'))
 
 @push('head')
 <link rel="stylesheet" type="text/css" href="https://snoopy.crypta.tech/snoopy/seat-srp-test.css" />
@@ -142,21 +142,24 @@
             if (result) {
 
                 console.log(result);
-                
-                formattedPrice = result["price"]["price"];
-                $('#price').html(formattedPrice.toLocaleString() + " ISK");
-                $('#shipType').text(result["shipType"]);
-                $('#characterName').text(result["characterName"]);
-                $('#characterName').attr('data-id', result["characterName"]);
-                // id_to_names();
+                try {
+                    formattedPrice = result["price"]["price"];
+                    $('#price').html(formattedPrice.toLocaleString() + " ISK");
+                    $('#shipType').text(result["shipType"]);
+                    $('#characterName').text(result["characterName"]);
+                    $('#characterName').attr('data-id', result["characterName"]);
+                    // id_to_names();
 
-                $('#type').text(result["price"]["rule"]);
-                $('#base').text(result["price"]["base_value"].toLocaleString() + " ISK");
-                $('#hull').text((result["price"]["hull_percent"] * 100).toLocaleString() + " %");
-                $('#fit').text((result["price"]["fit_percent"] * 100).toLocaleString() + " %");
-                $('#cargo').text((result["price"]["cargo_percent"] * 100).toLocaleString() + " %");
-                $('#insurance').text(result["price"]["deduct_insurance"]);
-
+                    $('#type').text(result["price"]["rule"]);
+                    $('#base').text(result["price"]["base_value"].toLocaleString() + " ISK");
+                    $('#hull').text((result["price"]["hull_percent"] * 100).toLocaleString() + " %");
+                    $('#fit').text((result["price"]["fit_percent"] * 100).toLocaleString() + " %");
+                    $('#cargo').text((result["price"]["cargo_percent"] * 100).toLocaleString() + " %");
+                    $('#insurance').text(result["price"]["deduct_insurance"]);
+                }
+                catch (err) {
+                    console.log(err);
+                }
                 ids_to_names();
             } else {
                 $('.overlay').hide();
