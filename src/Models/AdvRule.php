@@ -2,22 +2,17 @@
 /**
  * User: Warlof Tutsimo <loic.leuilliot@gmail.com>
  * Date: 01/12/2017
- * Time: 20:42
+ * Time: 20:42.
  */
 
 namespace Denngarr\Seat\SeatSrp\Models;
 
-
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
-use Seat\Eveapi\Models\Sde\InvGroup;
-use Denngarr\Seat\SeatSrp\Notifications\SrpRequestSubmitted;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Seat\Services\Models\Note;
-use Seat\Services\Traits\NotableTrait;
+use Seat\Eveapi\Models\Sde\InvGroup;
 
-class AdvRule extends Model {
-
+class AdvRule extends Model
+{
 
     public $timestamps = true;
 
@@ -26,7 +21,7 @@ class AdvRule extends Model {
     protected $table = 'denngarr_seat_srp_advrule';
 
     protected $fillable = [
-        'rule_type', 'type_id', 'group_id', 'price_source', 'base_value', 'hull_percent', 'fit_percent', 'cargo_percent', 'deduct_insurance'
+        'rule_type', 'type_id', 'group_id', 'price_source', 'base_value', 'hull_percent', 'fit_percent', 'cargo_percent', 'deduct_insurance',
     ];
 
     public function type()

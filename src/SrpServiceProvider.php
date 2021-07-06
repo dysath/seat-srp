@@ -2,8 +2,8 @@
 
 namespace Denngarr\Seat\SeatSrp;
 
-use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
 use Denngarr\Seat\SeatSrp\Commands\FlagShim;
+use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
 use Seat\Services\AbstractSeatPlugin;
 
 class SrpServiceProvider extends AbstractSeatPlugin
@@ -121,7 +121,6 @@ class SrpServiceProvider extends AbstractSeatPlugin
     {
         return 'SRP';
     }
-
 
     /**
      * Return the plugin repository address.

@@ -34,5 +34,5 @@ return [
     'rigs'              =>  '船插',
     'drone_bay'         =>  '无人机舱',
     'cargo_bay'         =>  '货仓',
-    'number'            =>  '数量'
+    'number'            =>  '数量',
 ];

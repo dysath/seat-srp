@@ -3,17 +3,16 @@
 namespace Denngarr\Seat\SeatSrp\Helpers;
 
 use Denngarr\Seat\SeatSrp\Models\AdvRule;
-use Seat\Eveapi\Models\Killmails\Killmail;
-use Seat\Eveapi\Models\Character\CharacterInfo;
-use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Denngarr\Seat\SeatSrp\Models\Eve\Insurance;
+use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Exception;
 use GuzzleHttp\Client;
+use Seat\Eveapi\Models\Character\CharacterInfo;
+use Seat\Eveapi\Models\Killmails\Killmail;
 use stdClass;
 
 trait SrpManager
 {
-
     private function srpPopulateSlots(Killmail $killMail): array
     {
         $priceList = [];
@@ -29,38 +28,38 @@ trait SrpManager
         foreach ($killMail->victim->items as $item) {
             $searchedItem = $item;
             $slotName = InvFlag::find($item->pivot->flag);
-            if (!is_object($searchedItem)) {
+            if (! is_object($searchedItem)) {
             } else {
                 array_push($priceList, $searchedItem->typeName);
                 // dd($item->pivot);
                 switch ($slotName->flagName) {
                     case 'Cargo':
                         $slots['cargo'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-                        if (!isset($slots['cargo'][$searchedItem->typeID]['qty']))
+                        if (! isset($slots['cargo'][$searchedItem->typeID]['qty']))
                             $slots['cargo'][$searchedItem->typeID]['qty'] = 0;
-                        if (!is_null($item->pivot->quantity_destroyed))
+                        if (! is_null($item->pivot->quantity_destroyed))
                             $slots['cargo'][$searchedItem->typeID]['qty'] += $item->pivot->quantity_destroyed;
-                        if (!is_null($item->pivot->quantity_dropped))
+                        if (! is_null($item->pivot->quantity_dropped))
                             $slots['cargo'][$searchedItem->typeID]['qty'] += $item->pivot->quantity_dropped;
                         break;
                     case 'DroneBay':
                         $slots['dronebay'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-                        if (!isset($slots['dronebay'][$searchedItem->typeID]['qty']))
+                        if (! isset($slots['dronebay'][$searchedItem->typeID]['qty']))
                             $slots['dronebay'][$searchedItem->typeID]['qty'] = 0;
-                        if (!is_null($item->pivot->quantity_destroyed))
+                        if (! is_null($item->pivot->quantity_destroyed))
                             $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->pivot->quantity_destroyed;
-                        if (!is_null($item->pivot->quantity_dropped))
+                        if (! is_null($item->pivot->quantity_dropped))
                             $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->pivot->quantity_dropped;
                         break;
                     default:
-                        if (!(preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
+                        if (! (preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
                             $slots[$slotName->flagName]['id'] = $searchedItem->typeID;
                             $slots[$slotName->flagName]['name'] = $searchedItem->typeName;
-                            if (!isset($slots[$slotName->flagName]['qty']))
+                            if (! isset($slots[$slotName->flagName]['qty']))
                                 $slots[$slotName->flagName]['qty'] = 0;
-                            if (!is_null($item->pivot->quantity_destroyed))
+                            if (! is_null($item->pivot->quantity_destroyed))
                                 $slots[$slotName->flagName]['qty'] += $item->pivot->quantity_destroyed;
-                            if (!is_null($item->pivot->quantity_dropped))
+                            if (! is_null($item->pivot->quantity_dropped))
                                 $slots[$slotName->flagName]['qty'] += $item->pivot->quantity_dropped;
                         }
                         break;
@@ -77,12 +76,11 @@ trait SrpManager
         $pilot = CharacterInfo::find($killMail->victim->character_id);
 
         $slots['characterName'] = $killMail->victim->character_id;
-        if (!is_null($pilot))
+        if (! is_null($pilot))
             $slots['characterName'] = $pilot->name;
 
         $slots['killId'] = $killMail->killmail_id;
         $slots['price'] = $prices;
-
 
         return $slots;
     }
@@ -91,7 +89,7 @@ trait SrpManager
     {
         // Switching logic between advanced and simple rules
         // Try advanced first, becasue if the setting hasnt been set it will be empty.
-        if (setting('denngarr_seat_srp_advanced_srp', true) == "1") {
+        if (setting('denngarr_seat_srp_advanced_srp', true) == '1') {
             return $this->srpGetAdvancedPrice($killmail, $priceList);
         }
 
@@ -122,22 +120,22 @@ trait SrpManager
         $cargo_percent = $rule->cargo_percent / 100;
         $deduct_insurance = $rule->deduct_insurance;
 
-        $deduct_insurance = $deduct_insurance == "1" ? true : false;
+        $deduct_insurance = $deduct_insurance == '1' ? true : false;
 
         $prices = [];
 
         // Moot point for now.... But will expand later
         switch ($source) {
-            case "evepraisal":
+            case 'evepraisal':
                 $prices = $this->srpGetAppraisal($priceList)->appraisal->items;
                 break;
             default:
                 // TODO handle this nicer
-                throw new Exception("BAD PRICE SOURCE");
+                throw new Exception('BAD PRICE SOURCE');
                 break;
         }
 
-        $prices = collect($prices); // Handy to query the collection 
+        $prices = collect($prices); // Handy to query the collection
 
         // Hull Price
         $hp = $prices->where('typeID', $killmail->victim->ship_type_id)->first();
@@ -169,7 +167,7 @@ trait SrpManager
 
         if($deduct_insurance) {
             $ins = Insurance::where('type_id', $killmail->victim->ship_type_id)->where('Name', 'Platinum')->first();
-            if(!is_null($ins)){
+            if(! is_null($ins)){
                 $total = $total + $ins->cost - $ins->refunded;
             }
         }
@@ -177,9 +175,9 @@ trait SrpManager
         $total = round($total, 2);
 
         return [
-            "price" => $total,
-            "rule" => $rule->rule_type,
-            "source" => $source,
+            'price' => $total,
+            'rule' => $rule->rule_type,
+            'source' => $source,
             'base_value' => $base_value,
             'hull_percent' => $hull_percent,
             'fit_percent' => $fit_percent,
@@ -191,24 +189,24 @@ trait SrpManager
     private function srpGetDefaultRulePrice(Killmail $killmail, array $priceList): array
     {
 
-        $source = "evepraisal";
+        $source = 'evepraisal';
         $base_value = setting('denngarr_seat_srp_advrule_def_base', true) ? setting('denngarr_seat_srp_advrule_def_base', true) : 0;
         $hull_percent = setting('denngarr_seat_srp_advrule_def_hull', true) ? setting('denngarr_seat_srp_advrule_def_hull', true) / 100 : 0;
         $fit_percent = setting('denngarr_seat_srp_advrule_def_fit', true) ? setting('denngarr_seat_srp_advrule_def_fit', true) / 100 : 0;
         $cargo_percent = setting('denngarr_seat_srp_advrule_def_cargo', true) ? setting('denngarr_seat_srp_advrule_def_cargo', true) / 100 : 0;
         $deduct_insurance = setting('denngarr_seat_srp_advrule_def_ins', true) ? setting('denngarr_seat_srp_advrule_def_ins', true) : 0;
 
-        $deduct_insurance = $deduct_insurance == "1" ? true : false;
+        $deduct_insurance = $deduct_insurance == '1' ? true : false;
 
         $prices = [];
 
         // Moot point for now.... But will expand later
         switch ($source) {
-            case "evepraisal":
+            case 'evepraisal':
                 $prices = $this->srpGetAppraisal($priceList)->appraisal->items;
         }
 
-        $prices = collect($prices); // Handy to query the collection 
+        $prices = collect($prices); // Handy to query the collection
 
         // Hull Price
         $hp = $prices->where('typeID', $killmail->victim->ship_type_id)->first();
@@ -240,15 +238,15 @@ trait SrpManager
 
         if($deduct_insurance) {
             $ins = Insurance::where('type_id', $killmail->victim->ship_type_id)->where('Name', 'Platinum')->first();
-            if(!is_null($ins)){
+            if(! is_null($ins)){
                 $total = $total + $ins->cost - $ins->refunded;
             }
         }
 
         return [
-            "price" => $total,
-            "rule" => "default",
-            "source" => $source,
+            'price' => $total,
+            'rule' => 'default',
+            'source' => $source,
             'base_value' => $base_value,
             'hull_percent' => $hull_percent,
             'fit_percent' => $fit_percent,
@@ -259,7 +257,7 @@ trait SrpManager
 
     private function srpGetSimplePrice(array $priceList): array
     {
-        return ["price" => $this->srpGetAppraisal($priceList)->appraisal->totals->sell, "rule" => "simple"];
+        return ['price' => $this->srpGetAppraisal($priceList)->appraisal->totals->sell, 'rule' => 'simple'];
     }
 
     /*
@@ -279,9 +277,9 @@ trait SrpManager
                         'filename' => 'notme',
                         'headers' => [
                             'Content-Type' => 'text/plain',
-                        ]
+                        ],
                     ],
-                ]
+                ],
             ]);
 
         return json_decode($response->getBody()->getContents());

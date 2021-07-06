@@ -2,16 +2,16 @@
 /**
  * User: Warlof Tutsimo <loic.leuilliot@gmail.com>
  * Date: 29/12/2017
- * Time: 19:57
+ * Time: 19:57.
  */
 
 namespace Denngarr\Seat\SeatSrp\Jobs;
 
-
-use Seat\Eveapi\Jobs\EsiBase;
 use Denngarr\Seat\SeatSrp\Models\Eve\Insurance;
+use Seat\Eveapi\Jobs\EsiBase;
 
-class UpdateEsiInsurance extends EsiBase {
+class UpdateEsiInsurance extends EsiBase
+{
 
     /**
      * @var string
@@ -53,7 +53,5 @@ class UpdateEsiInsurance extends EsiBase {
 
         }
 
-        return;
     }
-
 }
