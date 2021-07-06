@@ -2,16 +2,16 @@
 
 namespace Denngarr\Seat\SeatSrp\Notifications;
 
-use Seat\Web\Models\User;
 use Denngarr\Seat\SeatSrp\Notifications\Channels\DiscordChannel;
 use Denngarr\Seat\SeatSrp\Notifications\Webhooks\Discord;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Seat\Web\Models\User;
 
 class SrpRequestSubmitted extends Notification
 {
     use Queueable;
+
     /**
      * Create a new notification instance.
      *
@@ -19,7 +19,7 @@ class SrpRequestSubmitted extends Notification
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -38,7 +38,7 @@ class SrpRequestSubmitted extends Notification
         $uid = $notifiable->user_id;
         $user = User::where('id', $uid)->first();
 
-        return (new Discord)->post("```New SRP Request Received:```" .
+        return (new Discord)->post('```New SRP Request Received:```' .
             "\t**Requested On:** $notifiable->created_at" .
             "\n\t**Requested By:** " . $user->name .
             "\n\t**Kill Mail for:** $notifiable->character_name" .
@@ -46,6 +46,4 @@ class SrpRequestSubmitted extends Notification
             "\n\t**Cost:** " . number_format($notifiable->cost)
         );
     }
-
-
 }

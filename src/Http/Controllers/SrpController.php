@@ -1,20 +1,21 @@
-<?PHP
+<?php
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
-use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
-use Illuminate\Http\Request;
-use GuzzleHttp\Client;
-use Seat\Services\Models\Note;
-use Seat\Web\Http\Controllers\Controller;
-use Seat\Eveapi\Models\Character\CharacterInfo;
+use Denngarr\Seat\SeatSrp\Helpers\SrpManager;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
 use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
-use stdClass;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Seat\Eveapi\Jobs\Killmails\Detail;
+use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
+use Seat\Eveapi\Models\Killmails\KillmailDetail;
+use Seat\Web\Http\Controllers\Controller;
 
+class SrpController extends Controller
+{
 
-class SrpController extends Controller {
+    use SrpManager;
 
     public function srpGetRequests()
     {
@@ -28,12 +29,28 @@ class SrpController extends Controller {
 
     public function srpGetKillMail(Request $request)
     {
+
+        // The submitted url is available at $request->km;
+        $url_parts = explode('/', rtrim($request->km, "/ \t\n\r\0\x0B"));
+
+        $token = $url_parts[5];
+        $hash = $url_parts[6];
+
+        $killmail = EveKillmail::firstOrCreate([
+            'killmail_id' => $token,
+        ], [
+            'killmail_hash' => $hash,
+        ]);
+
+        if (! KillmailDetail::find($killmail->killmail_id))
+                    Detail::dispatchNow($killmail->killmail_id, $killmail->killmail_hash);
+
         $totalKill = [];
 
-        $response = (new Client())->request('GET', $request->km);
+        // $response = (new Client())->request('GET', $request->km);
 
-        $killMail = json_decode($response->getBody());
-        $totalKill = array_merge($totalKill, $this->srpPopulateSlots($killMail));
+        // $killMail = json_decode($response->getBody());
+        $totalKill = array_merge($totalKill, $this->srpPopulateSlots($killmail));
         preg_match('/([a-z0-9]{35,42})/', $request->km, $tokens);
         $totalKill['killToken'] = $tokens[0];
 
@@ -51,168 +68,73 @@ class SrpController extends Controller {
             'approved'       => 0,
             'cost'           => $request->input('srpCost'),
             'type_id'        => $request->input('srpTypeId'),
-            'ship_type'      => $request->input('srpShipType')
+            'ship_type'      => $request->input('srpShipType'),
         ]);
 
-        if (!is_null($request->input('srpPingContent')) && $request->input('srpPingContent') != '')
-        	KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
+        if (! is_null($request->input('srpPingContent')) && $request->input('srpPingContent') != '')
+            KillMail::addNote($request->input('srpKillId'), 'ping', $request->input('srpPingContent'));
 
         return redirect()->back()
                          ->with('success', trans('srp::srp.submitted'));
     }
 
-	public function getInsurances($kill_id)
-	{
-		$killmail = KillMail::where('kill_id', $kill_id)->first();
-
-		if (is_null($killmail))
-			return response()->json(['msg' => sprintf('Unable to retried killmail %s', $kill_id)], 404);
-
-		$data = [];
-
-		foreach ($killmail->type->insurances as $insurance) {
-
-			array_push($data, [
-				'name' => $insurance->name,
-				'cost' => $insurance->cost,
-				'payout' => $insurance->payout,
-				'refunded' => $insurance->refunded(),
-				'remaining' => $insurance->remaining($killmail),
-			]);
-
-		}
-
-		return response()->json($data);
-	}
-
-	public function getPing($kill_id)
-	{
-		$killmail = KillMail::find($kill_id);
-
-		if (is_null($killmail))
-			return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
-
-		if (!is_null($killmail->ping()))
-			return response()->json($killmail->ping());
-
-		return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
-    }
-    
-    public function getReason($kill_id)
-	{
-		$killmail = KillMail::find($kill_id);
-
-		if (is_null($killmail))
-			return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
-
-		if (!is_null($killmail->reason()))
-			return response()->json($killmail->reason());
-
-		return response()->json(['msg' => sprintf('There are no reason information related to kill %s', $kill_id)], 204);
-	}
-
-    private function srpPopulateSlots(stdClass $killMail) : array
+    public function getInsurances($kill_id)
     {
-        $priceList = [];
-        $slots = [
-            'killId' => 0,
-            'price' => 0.0,
-            'shipType' => null,
-            'characterName' => null,
-            'cargo' => [],
-            'dronebay' => [],
-        ];
+        $killmail = KillMail::where('kill_id', $kill_id)->first();
 
-        foreach ($killMail->victim->items as $item) {
-            $searchedItem = InvType::find($item->item_type_id);
-            $slotName = InvFlag::find($item->flag);
-			if (!is_object($searchedItem)) {
-			} else {
-	            array_push($priceList, $searchedItem->typeName);
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retried killmail %s', $kill_id)], 404);
 
-            	switch ($slotName->flagName)
-            	{
-        	        case 'Cargo':
-    	                $slots['cargo'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-	                    if (!isset($slots['cargo'][$searchedItem->typeID]['qty']))
-                	        $slots['cargo'][$searchedItem->typeID]['qty'] = 0;
-            	        if (property_exists($item, 'quantity_destroyed'))
-        	                $slots['cargo'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
-    	                if (property_exists($item, 'quantity_dropped'))
-	                        $slots['cargo'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
-                	    break;
-            	    case 'DroneBay':
-        	            $slots['dronebay'][$searchedItem->typeID]['name'] = $searchedItem->typeName;
-    	                if (!isset($slots['dronebay'][$searchedItem->typeID]['qty']))
-	                        $slots['dronebay'][$searchedItem->typeID]['qty'] = 0;
-                    	if (property_exists($item, 'quantity_destroyed'))
-                	        $slots['dronebay'][$searchedItem->typeID]['qty'] = $item->quantity_destroyed;
-            	        if (property_exists($item, 'quantity_dropped'))
-        	                $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->quantity_dropped;
-    	                break;
-	                default:
-                	    if (!(preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
-            	            $slots[$slotName->flagName]['id'] = $searchedItem->typeID;
-        	                $slots[$slotName->flagName]['name'] = $searchedItem->typeName;
-    	                    if (!isset($slots[$slotName->flagName]['qty']))
-	                            $slots[$slotName->flagName]['qty'] = 0;
-                        	if (property_exists($item, 'quantity_destroyed'))
-                    	        $slots[$slotName->flagName]['qty'] = $item->quantity_destroyed;
-                	        if (property_exists($item, 'quantity_dropped'))
-            	                $slots[$slotName->flagName]['qty'] += $item->quantity_dropped;
-        	            }
-   	                break;
-	            }
-            }
-        }
+        $data = [];
 
-        $searchedItem = InvType::find($killMail->victim->ship_type_id);
-        $slots['typeId'] = $killMail->victim->ship_type_id;
-        $slots['shipType'] = $searchedItem->typeName;
-        array_push($priceList, $searchedItem->typeName);
-        $prices = $this->srpGetPrice($priceList);
+        foreach ($killmail->type->insurances as $insurance) {
 
-        $pilot = CharacterInfo::find($killMail->victim->character_id);
-
-        $slots['characterName'] = $killMail->victim->character_id;
-        if (!is_null($pilot))
-            $slots['characterName'] = $pilot->name;
-
-        $slots['killId'] = $killMail->killmail_id;
-        $slots['price'] = $prices->appraisal->totals->sell;
-
-        return $slots;
-    }
-
-    private function srpGetPrice(array $priceList) : stdClass
-    {
-
-        $partsList = implode("\n", $priceList);
-        
-        $response = (new Client())
-            ->request('POST', 'http://evepraisal.com/appraisal.json?market=jita', [
-                'multipart' => [
-                    [
-                        'name' => 'uploadappraisal',
-                        'contents' => $partsList,
-                        'filename' => 'notme',
-                        'headers' => [
-                            'Content-Type' => 'text/plain'
-                        ]
-                    ],
-                ]
+            array_push($data, [
+                'name' => $insurance->name,
+                'cost' => $insurance->cost,
+                'payout' => $insurance->payout,
+                'refunded' => $insurance->refunded(),
+                'remaining' => $insurance->remaining($killmail),
             ]);
 
-        return json_decode($response->getBody()->getContents());
+        }
+
+        return response()->json($data);
+    }
+
+    public function getPing($kill_id)
+    {
+        $killmail = KillMail::find($kill_id);
+
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
+
+        if (! is_null($killmail->ping()))
+            return response()->json($killmail->ping());
+
+        return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
+    }
+
+    public function getReason($kill_id)
+    {
+        $killmail = KillMail::find($kill_id);
+
+        if (is_null($killmail))
+            return response()->json(['msg' => sprintf('Unable to retrieve kill %s', $kill_id)], 404);
+
+        if (! is_null($killmail->reason()))
+            return response()->json($killmail->reason());
+
+        return response()->json(['msg' => sprintf('There is no reason information related to kill %s', $kill_id)], 204);
     }
 
     public function getAboutView()
     {
-        return view("srp::about");
+        return view('srp::about');
     }
 
     public function getInstructionsView()
     {
-        return view("srp::instructions");
+        return view('srp::instructions');
     }
 }

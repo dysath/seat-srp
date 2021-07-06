@@ -2,16 +2,16 @@
 /**
  * User: Warlof Tutsimo <loic.leuilliot@gmail.com>
  * Date: 29/12/2017
- * Time: 19:51
+ * Time: 19:51.
  */
 
 namespace Denngarr\Seat\SeatSrp\Commands;
 
-
-use Illuminate\Console\Command;
 use Denngarr\Seat\SeatSrp\Jobs\UpdateEsiInsurance;
+use Illuminate\Console\Command;
 
-class InsuranceUpdate extends Command {
+class InsuranceUpdate extends Command
+{
 
     protected $signature = 'esi:insurances:update';
 
@@ -21,5 +21,4 @@ class InsuranceUpdate extends Command {
     {
         UpdateEsiInsurance::dispatch();
     }
-
 }

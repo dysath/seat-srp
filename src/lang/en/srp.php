@@ -20,6 +20,8 @@ return [
     'instructions' => 'Instructions',
     'about' => 'About',
     'settings' => 'Settings',
+    'advanced_settings' => 'Advanced Settings',
+    'test_killmail' => 'Test Killmail',
 
     'request_inst'      =>  'Copy and paste the link from the Character Sheet -> Interactions -> Combat Log -> Losses -> External URL into the box below.',
     'request_new'       =>  'Request New SRP',
@@ -32,6 +34,8 @@ return [
     'pilot'             =>  'Pilot',
     'ship'              =>  'Ship',
     'cost'              =>  'Cost',
+    'add'               =>  'Add',
+    'remove'            =>  'Remove',
 
     'low_slot_mod'      =>  'Low Slot Module',
     'mid_slot_mod'      =>  'Mid Slot Module',
@@ -40,5 +44,5 @@ return [
     'rigs'              =>  'Rigs',
     'drone_bay'         =>  'Drone Bay',
     'cargo_bay'         =>  'Cargo Bay',
-    'number'            =>  'Number'
+    'number'            =>  'Number',
 ];

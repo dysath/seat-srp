@@ -40,7 +40,37 @@ php artisan migrate
 php artisan up
 ```
 
-And now, when you log into 'Seat', you should see a 'Ship Replacement Program' link on the left.
+And now, when you log into SeAT, you should see a 'Ship Replacement Program' link on the left.
+
+## SRP Payout Calculations
+
+### Simple SRP
+
+By default, the application is configured in simple mode. In this mode, the SRP payout is calculated by using the evepraisal value returned from Jita sell for the whole killmail.
+
+### Advanced SRP
+
+Advanced SRP can be enabled in the settings menu. Once enabled, the SRP Admin will need to specify rules around payout calculations. The rule types available are `Type`, `Group` and `Default`. The rules are matched in that order with the first match being used to calculate payout value.
+
+#### Shared Configuration Options
+
+- **Price Source** - Where the pricing of individual elements will be drawn from
+- **Base Value** - A fixed ISK amount added to each payout from this rule
+- **Hull %** - The percentage of the ship hull value to be paid out. 
+- **Fit %** - The percentage of the ship fit value to be paid out. 
+- **Cargo %** - The percentage of the ship cargo value to be paid out. 
+- **Deduct Insurance** - If selected, the payout will be reduced by the benefit gained from insurance (payout - cost)
+
+#### Rule Types
+
+##### Type Rules
+Type rules match the ship type exactly, for example a Scorpion or Blackbird. Note that variants are considered separate ships. Ie a Raven is different to a Raven Navy Issue. 
+
+##### Group Rules
+Group rules match based on the group of the ship, such as `Frigate`, `Shuttle` or `Battleship`.
+
+##### Default Rule
+The default rule is the rule used when there are no type or group rules that have been triggered. The default rule is a catch all for any remaining payout calculations.
 
 ## Discord Webhook (optional)
 
