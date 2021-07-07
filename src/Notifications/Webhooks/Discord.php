@@ -12,7 +12,7 @@ class Discord
         if(! $url){
             return [500, 'SRP DISCORD WEBHOOK URL is not defined in SRP Settings'];
         }
-        $srp_role_mention = setting('mention_role', true);
+        $srp_role_mention = setting('denngarr_seat_srp_mention_role', true);
         $headers = [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
