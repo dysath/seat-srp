@@ -8,7 +8,7 @@ class Discord
 {
     public function post($content)
     {
-        $url = setting('webhook_url', true);
+        $url = setting('denngarr_seat_srp_webhook_url', true);
         if(! $url){
             return [500, 'SRP DISCORD WEBHOOK URL is not defined in SRP Settings'];
         }
