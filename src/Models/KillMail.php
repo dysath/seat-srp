@@ -35,7 +35,7 @@ class KillMail extends Model
         parent::boot();
 
         self::created(function ($model) {
-            if(setting('webhook_url', true) != ''){
+            if(setting('denngarr_seat_srp_webhook_url', true) != ''){
                 $model->notify(new SrpRequestSubmitted());
             }
         });
