@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Seat\Services\Models\Note;
 use Seat\Services\Traits\NotableTrait;
+use Seat\Web\Models\User;
 
 class KillMail extends Model
 {
@@ -39,6 +40,11 @@ class KillMail extends Model
                 $model->notify(new SrpRequestSubmitted());
             }
         });
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function type()
