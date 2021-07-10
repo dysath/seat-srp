@@ -30,6 +30,7 @@
                 <tr>
                   <th>{{ trans('srp::srp.id') }}</th>
                   <th>{{ trans('srp::srp.characterName') }}</th>
+                  <th>{{ trans('srp::srp.submittedby') }}</th>
                   <th>{{ trans('srp::srp.shipType') }}</th>
                   <th>{{ trans('srp::srp.costs') }}</th>
                   <th>{{ trans('srp::srp.paidout') }}</th>
@@ -52,6 +53,7 @@
                       @endif
                   </td>
                   <td><span class='id-to-name' data-id="{{ $kill->character_name }}">{{ $kill->character_name }}</span></td>
+                  <td>{{$kill->user->name}}</td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
                       <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">

@@ -9,6 +9,7 @@ return [
     'request' => 'Request SRP',
     'id' => 'ID',
     'submitted' => 'Submitted',
+    'submittedby' => 'Submitted By',
     'changedby' => 'Changed By',
     'approvedby' => 'Approved By',
     'notes' => 'Notes',
