@@ -168,7 +168,7 @@
 
                                 <div class="form-group col-md">
                                     <label for="type_add">Submit</label>
-                                    <button type="button" data-placement="top" class="btn btn-primary form-control" id="type_add">Add</button>
+                                    <button type="button" data-placement="top" class="btn btn-primary form-control" id="type_add">Add / Update</button>
                                 </div>
 
 
@@ -276,7 +276,7 @@
 
                                 <div class="form-group col-md">
                                     <label for="group_add">Submit</label>
-                                    <button type="button" data-placement="top" class="btn btn-primary form-control" id="group_add">Add</button>
+                                    <button type="button" data-placement="top" class="btn btn-primary form-control" id="group_add">Add / Update</button>
                                 </div>
 
 
