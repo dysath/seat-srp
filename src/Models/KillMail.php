@@ -11,6 +11,7 @@ use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Denngarr\Seat\SeatSrp\Notifications\SrpRequestSubmitted;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
 use Seat\Services\Models\Note;
 use Seat\Services\Traits\NotableTrait;
 use Seat\Web\Models\User;
@@ -66,5 +67,10 @@ class KillMail extends Model
             ->where('object_id', $this->kill_id)
             ->where('title', 'reason')
             ->first();
+    }
+
+    public function details()
+    {
+        return $this->hasOne(EveKillmail::class, 'killmail_id', 'kill_id');
     }
 }

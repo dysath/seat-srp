@@ -12,6 +12,7 @@ use Denngarr\Seat\SeatSrp\Validation\ValidateRule;
 use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
 use Seat\Eveapi\Models\Sde\InvGroup;
 use Seat\Eveapi\Models\Sde\InvType;
+use \Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
 use Seat\Web\Http\Controllers\Controller;
 
 class SrpAdminController extends Controller
@@ -173,5 +174,14 @@ class SrpAdminController extends Controller
         logger()->info('Deleted ' . $deleted . ' killmails from SRP table');
 
         return json_encode(['deleted' => $deleted]);
+    }
+
+    /**
+     * @param \Seat\Eveapi\Models\Killmails\Killmail $killmail
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showKillmailDetail(EveKillmail $killmail)
+    {
+        return view('web::common.killmails.modals.show.content', compact('killmail'));
     }
 }
