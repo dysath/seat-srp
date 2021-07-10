@@ -116,6 +116,12 @@ Route::group([
             'middleware' => 'can:srp.request',
         ]);
 
+        Route::get('/details/{killmail}', [
+            'as' => 'srp.killmaildetail',
+            'uses' => 'SrpAdminController@showKillmailDetail',
+            'middleware' => 'can:srp.settle',
+        ]);
+
         Route::get('/about', [
             'as'   => 'srp.about',
             'uses' => 'SrpController@getAboutView',

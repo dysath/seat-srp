@@ -51,6 +51,14 @@
                           <i class="fa fa-comment"></i>
                       </button>
                       @endif
+
+                      <!-- This is to open the killmail details modal -->
+                      <button data-toggle="modal" data-target="#killmail-detail"
+                        data-url="{{ route('srp.killmaildetail', ['killmail' => $kill]) }}"
+                        class="btn btn-sm btn-link">
+                        <i class="fas fa-eye"></i>
+                      </button>
+
                   </td>
                   <td><span class='id-to-name' data-id="{{ $kill->character_name }}">{{ $kill->character_name }}</span></td>
                   <td>{{$kill->user->name}}</td>
@@ -172,6 +180,7 @@
     @include('srp::includes.ping-modal')
     @include('srp::includes.reason-edit-modal')
     @include('srp::includes.reason-modal')
+    @include('web::common.killmails.modals.show.show')
     <div class="card-footer text-muted">
         Plugin maintained by <a href="{{ route('srp.about') }}"> {!! img('characters', 'portrait', 96057938, 64, ['class' => 'img-circle eve-icon small-icon']) !!} Crypta Electrica</a>. <span class="float-right snoopy" style="color: #fa3333;"><i class="fas fa-signal"></i></span>
     </div>
