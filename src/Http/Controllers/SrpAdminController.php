@@ -98,18 +98,21 @@ class SrpAdminController extends Controller
 
         // logger()->error($request->rule_type);
 
-        $e = AdvRule::where('type_id', $request->type_id)
-            ->where('rule_type', $request->rule_type)
-            ->get();
-        if ($e->count() > 0) { // Only an issue for now. In future want to update existing
-            // We are updating an exisiting row
-            return response()->json(['message' => 'Entry already exists for this type'], 400);
-        }
+        // $e = AdvRule::where('type_id', $request->type_id)
+        //     ->where('rule_type', $request->rule_type)
+        //     ->get();
+        // if ($e->count() > 0) { // Only an issue for now. In future want to update existing
+        //     // We are updating an exisiting row
+        //     return response()->json(['message' => 'Entry already exists for this type'], 400);
+        // }
 
         $rule = AdvRule::updateOrCreate([
             'rule_type' => $request->rule_type,
             'type_id' => $request->type_id,
             'group_id' => $request->group_id,
+        ]);
+
+        $rule->update([
             'price_source' => $request->source,
             'base_value' => $request->base_value,
             'hull_percent' => $request->hull_percent,
@@ -117,6 +120,8 @@ class SrpAdminController extends Controller
             'fit_percent' => $request->fit_percent,
             'deduct_insurance' => $request->deduct_insurance,
         ]);
+
+        $rule->save();
 
         return response('Added/Updated Type Rule', 200);
     }
