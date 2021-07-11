@@ -152,6 +152,12 @@ Route::group([
             'middleware' => 'can:srp.settings',
         ]);
 
+        Route::get('/settings/processmissing', [
+            'as'   => 'srp.missings',
+            'uses' => 'SrpAdminController@runMissingSearch',
+            'middleware' => 'can:srp.settings',
+        ]);
+
         Route::post('/settings', [
             'as'   => 'srp.savesettings',
             'uses' => 'SrpAdminController@saveSrpSettings',
