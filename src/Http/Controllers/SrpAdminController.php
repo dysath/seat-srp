@@ -10,9 +10,11 @@ use Denngarr\Seat\SeatSrp\Validation\AddReason;
 use Denngarr\Seat\SeatSrp\Validation\ValidateAdvancedSettings;
 use Denngarr\Seat\SeatSrp\Validation\ValidateRule;
 use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
+use Seat\Eveapi\Jobs\Killmails\Detail;
 use Seat\Eveapi\Models\Sde\InvGroup;
 use Seat\Eveapi\Models\Sde\InvType;
-use \Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
+use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
+use Seat\Eveapi\Models\Killmails\KillmailDetail;
 use Seat\Web\Http\Controllers\Controller;
 
 class SrpAdminController extends Controller
@@ -174,6 +176,31 @@ class SrpAdminController extends Controller
         logger()->info('Deleted ' . $deleted . ' killmails from SRP table');
 
         return json_encode(['deleted' => $deleted]);
+    }
+
+    public function runMissingSearch()
+    {
+        $md = KillMail::doesntHave('details')->get();
+        $mdv = KillMail::doesntHave('details.victim')->get();
+        $mda = KillMail::doesntHave('details.attackers')->get();
+
+        $missing = collect($md);
+        // $missing = $missing->merge($mdd);
+        $missing = $missing->merge($mdv);
+        $missing = $missing->merge($mda);
+
+        foreach($missing as $mis){
+            $killmail = EveKillmail::firstOrCreate([
+                'killmail_id' => $mis->kill_id,
+            ], [
+                'killmail_hash' => $mis->kill_token,
+            ]);
+            if (! KillmailDetail::find($killmail->killmail_id))
+                    Detail::dispatch($killmail->killmail_id, $killmail->killmail_hash);
+        }
+
+
+        return json_encode(['dispatched' => $missing->count()]);
     }
 
     /**

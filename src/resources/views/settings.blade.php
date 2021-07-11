@@ -59,6 +59,10 @@
                             <label for="srp_delete" class="col-sm-3 col-form-label">Process Pending Deletions</label>
                             <input id="srp_delete" class="btn btn-danger float-right" value="DELETE!">
                         </div>
+                        <div class="form-group row">
+                            <label for="srp_missing" class="col-sm-3 col-form-label">Process Missing Killmail Details</label>
+                            <input id="srp_missing" class="btn btn-danger float-right" value="Search!">
+                        </div>
                     </div>
                     <div class="card-footer">
                         <input class="btn btn-success float-right" type="submit" value="Update">
@@ -620,6 +624,26 @@
                 $('#srp_delete').removeClass("btn-warning");
                 $('#srp_delete').addClass("btn-danger");
                 $('#srp_delete').prop('value', "Failed Deletion, check your logs");
+            }
+        })
+    });
+
+    $('#srp_missing').on('click', function() {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('srp.missings') }}",
+            success: function(data) {
+                $('#srp_missing').removeClass("btn-danger");
+                $('#srp_missing').removeClass("btn-warning");
+                $('#srp_missing').addClass("btn-success");
+                $('#srp_missing').prop('value', 'Dispatched ' + JSON.parse(data).dispatched + ' killmails');
+                console.log(data);
+            },
+            error: function() {
+                $('#srp_missing').removeClass("btn-success");
+                $('#srp_missing').removeClass("btn-warning");
+                $('#srp_missing').addClass("btn-danger");
+                $('#srp_missing').prop('value', "Failed Search, check your logs");
             }
         })
     });
