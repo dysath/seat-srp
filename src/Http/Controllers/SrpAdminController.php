@@ -11,10 +11,10 @@ use Denngarr\Seat\SeatSrp\Validation\ValidateAdvancedSettings;
 use Denngarr\Seat\SeatSrp\Validation\ValidateRule;
 use Denngarr\Seat\SeatSrp\Validation\ValidateSettings;
 use Seat\Eveapi\Jobs\Killmails\Detail;
-use Seat\Eveapi\Models\Sde\InvGroup;
-use Seat\Eveapi\Models\Sde\InvType;
 use Seat\Eveapi\Models\Killmails\Killmail as EveKillmail;
 use Seat\Eveapi\Models\Killmails\KillmailDetail;
+use Seat\Eveapi\Models\Sde\InvGroup;
+use Seat\Eveapi\Models\Sde\InvType;
 use Seat\Web\Http\Controllers\Controller;
 
 class SrpAdminController extends Controller
