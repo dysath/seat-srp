@@ -98,17 +98,6 @@ class SrpAdminController extends Controller
 
     public function saveSrpRule(ValidateRule $request)
     {
-
-        // logger()->error($request->rule_type);
-
-        // $e = AdvRule::where('type_id', $request->type_id)
-        //     ->where('rule_type', $request->rule_type)
-        //     ->get();
-        // if ($e->count() > 0) { // Only an issue for now. In future want to update existing
-        //     // We are updating an exisiting row
-        //     return response()->json(['message' => 'Entry already exists for this type'], 400);
-        // }
-
         $rule = AdvRule::updateOrCreate([
             'rule_type' => $request->rule_type,
             'type_id' => $request->type_id,
@@ -198,7 +187,6 @@ class SrpAdminController extends Controller
             if (! KillmailDetail::find($killmail->killmail_id))
                     Detail::dispatch($killmail->killmail_id, $killmail->killmail_hash);
         }
-
 
         return json_encode(['dispatched' => $missing->count()]);
     }
