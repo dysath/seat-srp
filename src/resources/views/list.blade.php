@@ -142,7 +142,13 @@
                       @endif
                   </td>
                   <td><span class='id-to-name' data-id="{{ $kill->character_name }}">{{ $kill->character_name }}</span></td>
-                  <td>{{$kill->user->name}}</td>
+                  <td>
+                  @if (!is_null($kill->user))
+                  {{$kill->user->name}}
+                  @else
+                  User Missing
+                  @endif
+                  </td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
                       <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
