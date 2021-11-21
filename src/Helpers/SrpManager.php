@@ -13,6 +13,11 @@ use stdClass;
 
 trait SrpManager
 {
+
+    public static $FIT_FLAGS = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 87,
+                               92, 93, 94, 95, 96, 97, 98, 99, 125, 126, 127, 128, 129, 130, 131, 132, 158, 159, 160, 161, 162, 163];
+    public static $CARGO_FLAGS = [5, 90, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 148, 149, 151, 155, 176, 177, 179];
+
     private function srpPopulateSlots(Killmail $killMail): array
     {
         $priceList = [];
@@ -218,14 +223,14 @@ trait SrpManager
         $cp = 0;
         foreach ($killmail->victim->items as $item) {
             // Fitted Item
-            if ((($item->pivot->flag >= 11) && ($item->pivot->flag <= 34)) || ($item->pivot->flag == 87)) {
+            if (in_array($item->pivot->flag, SrpManager::$FIT_FLAGS) ) {
                 $p = $prices->where('typeID', $item->typeID)->first();
                 $fp += is_null($p) ? 0 : $p->prices->sell->percentile;
                 continue;
             }
 
             // Cargo Item
-            if (($item->pivot->flag == 5) || ($item->pivot->flag == 155)) {
+            if (in_array($item->pivot->flag, SrpManager::$CARGO_FLAGS) ) {
                 $p = $prices->where('typeID', $item->typeID)->first();
                 $cp += is_null($p) ? 0 : $p->prices->sell->percentile;
                 continue;
