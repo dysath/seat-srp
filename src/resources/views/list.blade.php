@@ -155,17 +155,22 @@
                           {{ number_format($kill->cost, 2) }} ISK
                       </button>
                   </td>
+                  <td id="id-arch-{{ $kill->kill_id }}">
                   @if ($kill->approved === 0)
-                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-warning">Pending</span></td>
+                    <span class="badge badge-warning">Pending</span>
                   @elseif ($kill->approved === -1)
-                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-danger">Rejected</span></td>
+                    <span class="badge badge-danger">Rejected</span>
                   @elseif ($kill->approved === 1)
-                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-success">Approved</span></td>
+                    <span class="badge badge-success">Approved</span>
                   @elseif ($kill->approved === 2)
-                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Paid Out</span></td>
+                    <span class="badge badge-primary">Paid Out</span>
                   @elseif ($kill->approved === 99)
-                    <td id="id-{{ $kill->kill_id }}"><span class="badge badge-primary">Pending Deletion</span></td>
+                    <span class="badge badge-primary">Pending Deletion</span>
                   @endif
+                  @can('srp.delete')
+                      <button type="button" class="btn btn-xs btn-danger srp-status" id="srp-completed-status" name="{{ $kill->kill_id }}">Delete?</button>
+                  @endcan
+                  </td>
                   <td data-order="{{ strtotime($kill->created_at) }}>
                       <span data-toggle="tooltip" data-placement="top" title="{{ $kill->created_at }}">{{ human_diff($kill->created_at) }}</span>
                   </td>
@@ -356,6 +361,19 @@
             $("#id-"+data.value).html('<span class="badge badge-info">Pending Deletion</span>');
           }
           $("#approver-"+data.value).html(data.approver);
+        });
+    });
+
+    $('#srps-arch tbody').on('click', 'button', function(btn) {
+        $.ajax({
+          headers: function() {},
+          url: "{{ route('srpadmin.list') }}/" + btn.target.name + "/" + $(btn.target).text(),
+          dataType: 'json',
+          timeout: 5000
+        }).done(function (data) {
+        if (data.name === "Delete") {
+            $("#id-arch-"+data.value).html('<span class="badge badge-info">Pending Deletion</span>');
+          }
         });
     });
 
