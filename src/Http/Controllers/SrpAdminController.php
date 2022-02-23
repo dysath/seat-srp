@@ -192,7 +192,7 @@ class SrpAdminController extends Controller
     }
 
     /**
-     * @param \Seat\Eveapi\Models\Killmails\Killmail $killmail
+     * @param  \Seat\Eveapi\Models\Killmails\Killmail  $killmail
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showKillmailDetail(EveKillmail $killmail)
