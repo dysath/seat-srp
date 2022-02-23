@@ -18,7 +18,8 @@ class SrpMetricsController extends Controller
 
     /**
      * Renders SRP Metric view by consuming data from SRP API for the charts and User list from the KillMail model.
-     * @param string $srp_status
+     *
+     * @param  string  $srp_status
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function getIndex($srp_status = 'all')

@@ -8,6 +8,7 @@ use Seat\Web\Models\User;
 
 /**
  * Class SrpMetricsApiController.
+ *
  * @package Denngarr\Seat\SeatSrp\Http\Controllers
  */
 class SrpMetricsApiController extends ApiController
@@ -84,7 +85,7 @@ class SrpMetricsApiController extends ApiController
      *      @OA\Response(response=401, description="Unauthorized"),
      *     )
      *
-     * @param int $limit
+     * @param  int  $limit
      */
     public function getSummaryMonthly($status = null, $limit = null)
     {
@@ -217,7 +218,7 @@ class SrpMetricsApiController extends ApiController
      *      @OA\Response(response=404, description="User Id not found"),
      *     )
      *
-     * @param int $limit
+     * @param  int  $limit
      */
     public function getSummaryUser($status = null, $user_id, $limit = null)
     {
@@ -323,7 +324,7 @@ class SrpMetricsApiController extends ApiController
      *      @OA\Response(response=401, description="Unauthorized"),
      *     )
      *
-     * @param int $limit
+     * @param  int  $limit
      */
     public function getTopShip($status = null, $limit = null)
     {
@@ -411,7 +412,7 @@ class SrpMetricsApiController extends ApiController
      *      @OA\Response(response=401, description="Unauthorized"),
      *     )
      *
-     * @param int $limit
+     * @param  int  $limit
      */
     public function getTopUser($status = null, $limit = null)
     {
