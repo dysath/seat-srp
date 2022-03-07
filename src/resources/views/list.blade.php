@@ -151,9 +151,7 @@
                   </td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
-                      <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
-                          {{ number_format($kill->cost, 2) }} ISK
-                      </button>
+                          {{ number_format($kill->cost, 2) }}
                   </td>
                   <td id="id-arch-{{ $kill->kill_id }}">
                   @if ($kill->approved === 0)
