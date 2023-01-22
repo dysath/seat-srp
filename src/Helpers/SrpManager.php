@@ -95,18 +95,10 @@ trait SrpManager
         // Switching logic between advanced and simple rules
         // Try advanced first, becasue if the setting hasnt been set it will be empty.
         if (setting('denngarr_seat_srp_advanced_srp', true) == '1') {
-            $price = $this->srpGetAdvancedPrice($killmail, $priceList);
-        } else {
-            $price = $this->srpGetSimplePrice($priceList);
+            return $this->srpGetAdvancedPrice($killmail, $priceList);
         }
 
-        //check if there is a price cap on srp
-        $maxPrice = intval(setting('denngarr_seat_srp_price_cap', true) ?? 0);
-        if ($maxPrice > 0 && $price['price']>$maxPrice){
-            $price['price'] = $maxPrice;
-        }
-
-        return $price;
+        return $this->srpGetSimplePrice($priceList);
     }
 
     private function srpGetAdvancedPrice(Killmail $killmail, array $priceList): array

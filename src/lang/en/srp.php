@@ -46,7 +46,4 @@ return [
     'drone_bay'         =>  'Drone Bay',
     'cargo_bay'         =>  'Cargo Bay',
     'number'            =>  'Number',
-
-    'srp_price_cap_label'       => 'SRP Price Cap',
-    'srp_price_cap_explanation' => 'This setting caps the price of an SRP request to a specified amount. Set it to 0 for no limit.'
 ];
