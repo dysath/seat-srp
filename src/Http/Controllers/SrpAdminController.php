@@ -92,6 +92,7 @@ class SrpAdminController extends Controller
         setting(['denngarr_seat_srp_webhook_url', $request->webhook_url], true);
         setting(['denngarr_seat_srp_mention_role', $request->mention_role], true);
         setting(['denngarr_seat_srp_advanced_srp', $request->srp_method], true);
+        setting(['denngarr_seat_srp_price_cap', $request->srp_price_cap], true);
 
         return redirect()->back()->with('success', 'SRP Settings have successfully been updated.');
     }

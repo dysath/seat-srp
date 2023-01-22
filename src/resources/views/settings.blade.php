@@ -55,6 +55,19 @@
                                 <label class="form-check-label" for="method2">Advanced</label>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label for="srp_price_cap" class="col-sm-3 col-form-label">{{ trans("srp::srp.srp_price_cap_label") }}</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group col-sm">
+                                        <input class="form-control" type="number" name="srp_price_cap" id="srp_price_cap" size="32" min="0" step="1" value="{{ setting('denngarr_seat_srp_price_cap', true) ?? 0 }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ trans("srp::srp.srp_price_cap_explanation") }}</small>
+                        </div>
+
                         <div class="form-group row">
                             <label for="srp_delete" class="col-sm-3 col-form-label">Process Pending Deletions</label>
                             <input id="srp_delete" class="btn btn-danger float-right" value="DELETE!">

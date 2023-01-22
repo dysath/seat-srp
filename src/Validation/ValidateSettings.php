@@ -14,8 +14,10 @@ class ValidateSettings extends FormRequest
     public function rules()
     {
         return [
-            'webhook_url'    => 'url|present|nullable',
-            'mention_role'   => 'string|present|nullable',
+            'webhook_url'   => 'url|present|nullable',
+            'mention_role'  => 'string|present|nullable',
+            'srp_method'    => 'present|in:0,1|nullable',
+            'srp_price_cap' => 'required|integer',
         ];
     }
 }
