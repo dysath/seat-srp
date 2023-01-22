@@ -87,7 +87,7 @@
             This section allows for the configuration of an advanced buyback system. Rules are evaluated from top to bottom of the below list, stopping on the first match (will always match the default rule at the bottom).
         </p>
         <p>
-            Once a match is found the formula used is BaseValue + ( HullValue * Hull% ) + ( FitValue * Fit% ) + ( CargoValue * Cargo% ) - [if insurance is deducted](insurance payout - insurance cost).
+            Once a match is found the formula used is BaseValue + ( HullValue * Hull% ) + ( FitValue * Fit% ) + ( CargoValue * Cargo% ) - [if insurance is deducted](insurance payout - insurance cost). If a price cap is specified, the price of the formula can't exceed the price cap.
         </p>
 
         <div class="accordion" id="rulesets">
@@ -164,6 +164,16 @@
                                 </div>
 
                                 <div class="form-group col-md">
+                                    <label for="type_price_cap">Price Cap</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="type_price_cap" class="form-control" id="type_price_cap" min="0" step="1">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">ISK</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
                                     <label for="type_ins">Deduct Insurance?</label>
                                     <div class="input-group mt-2 ml-3">
                                         <input type="checkbox" class="" value="" id="type_ins">
@@ -191,6 +201,7 @@
                                     <th>Hull %</th>
                                     <th>Fit %</th>
                                     <th>Cargo %</th>
+                                    <th>Price Cap</th>
                                     <th>Deduct Insurance</th>
                                     <th>Actions</th>
                                 </tr>
@@ -272,6 +283,16 @@
                                 </div>
 
                                 <div class="form-group col-md">
+                                    <label for="group_price_cap">Price Cap</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="group_price_cap" class="form-control" id="group_price_cap" min="0" step="1">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">ISK</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
                                     <label for="group_ins">Deduct Insurance?</label>
                                     <div class="input-group mt-2 ml-3">
                                         <input type="checkbox" class="" value="" id="group_ins">
@@ -299,6 +320,7 @@
                                     <th>Hull %</th>
                                     <th>Fit %</th>
                                     <th>Cargo %</th>
+                                    <th>Price Cap</th>
                                     <th>Deduct Insurance</th>
                                     <th>Actions</th>
                                 </tr>
@@ -365,6 +387,16 @@
                                         <input type="number" name="default_cargo_pc" class="form-control" id="default_cargo_pc" value="{{ setting('denngarr_seat_srp_advrule_def_cargo', true) }}" required>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md">
+                                    <label for="default_price_cap">Price Cap</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" name="default_price_cap" class="form-control" id="default_price_cap" min="0" step="1" value="{{ setting('denngarr_seat_srp_advrule_def_price_cap', true) }}">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">ISK</span>
                                         </div>
                                     </div>
                                 </div>
@@ -464,6 +496,13 @@
                     "searchable": false
                 },
                 {
+                    data: "srp_price_cap",
+                    name: "srp_price_cap",
+                    title: "Price Cap",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
                     data: "deduct_insurance",
                     name: "deduct_insurance",
                     title: "Insurance Deducted",
@@ -539,6 +578,13 @@
                     data: "cargo_percent",
                     name: "cargo_percent",
                     title: "Cargo Percent",
+                    "orderable": true,
+                    "searchable": false
+                },
+                {
+                    data: "srp_price_cap",
+                    name: "srp_price_cap",
+                    title: "Price Cap",
                     "orderable": true,
                     "searchable": false
                 },
@@ -671,6 +717,7 @@
                 hull_percent: $('#type_hull_pc').val(),
                 fit_percent: $('#type_fit_pc').val(),
                 cargo_percent: $('#type_cargo_pc').val(),
+                price_cap: $('#type_price_cap').val(),
                 deduct_insurance: $('#type_ins').is(":checked") ? 1 : 0,
                 rule_type: 'type',
             }),
@@ -710,6 +757,7 @@
                 hull_percent: $('#group_hull_pc').val(),
                 fit_percent: $('#group_fit_pc').val(),
                 cargo_percent: $('#group_cargo_pc').val(),
+                price_cap: $('#group_price_cap').val(),
                 deduct_insurance: $('#group_ins').is(":checked") ? 1 : 0,
                 rule_type: 'group',
             }),

@@ -124,6 +124,7 @@ trait SrpManager
         $fit_percent = $rule->fit_percent / 100;
         $cargo_percent = $rule->cargo_percent / 100;
         $deduct_insurance = $rule->deduct_insurance;
+        $price_cap = $rule->srp_price_cap;
 
         $deduct_insurance = $deduct_insurance == '1' ? true : false;
 
@@ -179,6 +180,11 @@ trait SrpManager
 
         $total = round($total, 2);
 
+        //apply price cap
+        if($price_cap!==null && $total > $price_cap){
+            $total = $price_cap;
+        }
+
         return [
             'price' => $total,
             'rule' => $rule->rule_type,
@@ -200,6 +206,7 @@ trait SrpManager
         $fit_percent = setting('denngarr_seat_srp_advrule_def_fit', true) ? setting('denngarr_seat_srp_advrule_def_fit', true) / 100 : 0;
         $cargo_percent = setting('denngarr_seat_srp_advrule_def_cargo', true) ? setting('denngarr_seat_srp_advrule_def_cargo', true) / 100 : 0;
         $deduct_insurance = setting('denngarr_seat_srp_advrule_def_ins', true) ? setting('denngarr_seat_srp_advrule_def_ins', true) : 0;
+        $price_cap = setting('denngarr_seat_srp_advrule_def_price_cap', true) ? intval(setting('denngarr_seat_srp_advrule_def_price_cap', true)) : null;
 
         $deduct_insurance = $deduct_insurance == '1' ? true : false;
 
@@ -246,6 +253,11 @@ trait SrpManager
             if(! is_null($ins)){
                 $total = $total + $ins->cost - $ins->payout;
             }
+        }
+
+        //apply price cap
+        if($price_cap!==null && $total > $price_cap){
+            $total = $price_cap;
         }
 
         return [
