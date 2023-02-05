@@ -21,7 +21,7 @@ class AdvRule extends Model
     protected $table = 'denngarr_seat_srp_advrule';
 
     protected $fillable = [
-        'rule_type', 'type_id', 'group_id', 'price_source', 'base_value', 'hull_percent', 'fit_percent', 'cargo_percent', 'deduct_insurance',
+        'rule_type', 'type_id', 'group_id', 'price_source', 'base_value', 'hull_percent', 'fit_percent', 'cargo_percent', 'deduct_insurance', 'srp_price_cap',
     ];
 
     public function type()

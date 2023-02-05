@@ -19,6 +19,7 @@ class ValidateAdvancedSettings extends FormRequest
             'default_hull_pc'   => 'integer|present',
             'default_fit_pc'    => 'integer|present',
             'default_cargo_pc'  => 'integer|present',
+            'default_price_cap'         => 'integer|present|nullable'
         ];
     }
 }

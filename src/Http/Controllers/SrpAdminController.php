@@ -104,12 +104,14 @@ class SrpAdminController extends Controller
             'group_id' => $request->group_id,
         ]);
 
+
         $rule->update([
             'price_source' => $request->source,
             'base_value' => $request->base_value,
             'hull_percent' => $request->hull_percent,
             'cargo_percent' => $request->cargo_percent,
             'fit_percent' => $request->fit_percent,
+            'srp_price_cap'=>$request->price_cap,
             'deduct_insurance' => $request->deduct_insurance,
         ]);
 
@@ -143,6 +145,7 @@ class SrpAdminController extends Controller
         setting(['denngarr_seat_srp_advrule_def_hull', $request->default_hull_pc], true);
         setting(['denngarr_seat_srp_advrule_def_fit', $request->default_fit_pc], true);
         setting(['denngarr_seat_srp_advrule_def_cargo', $request->default_cargo_pc], true);
+        setting(['denngarr_seat_srp_advrule_def_price_cap', $request->default_price_cap], true);
 
         $insurance = 1;
         if (is_null($request->default_ins)) {

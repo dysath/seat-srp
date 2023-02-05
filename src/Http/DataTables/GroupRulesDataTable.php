@@ -90,6 +90,7 @@ class GroupRulesDataTable extends DataTable
             ['data' => 'hull_percent', 'title' => 'Hull Percent'],
             ['data' => 'fit_percent', 'title' => 'Fit Percent'],
             ['data' => 'cargo_percent', 'title' => 'Cargo Percent'],
+            ['data' => 'srp_price_cap', 'title' => 'Price Cap'],
             ['data' => 'deduct_insurance', 'title' => 'Insurance Deducted'],
         ];
     }

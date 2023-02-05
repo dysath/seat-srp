@@ -23,6 +23,7 @@ class ValidateRule extends FormRequest
             'fit_percent' => 'integer|present',
             'cargo_percent' => 'integer|present',
             'deduct_insurance' => 'boolean|present',
+            'price_cap' => 'integer|present|nullable'
         ];
     }
 }
