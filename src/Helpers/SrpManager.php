@@ -286,7 +286,7 @@ trait SrpManager
         $partsList = implode("\n", $priceList);
 
         $response = (new Client())
-            ->request('POST', 'https://' + $_ENV["SRP_APPRAISE_SERVER_DOMAIN"]+'/appraisal.json?market=jita', [
+            ->request('POST', 'https://aoeve.net/appraisal.json?market=jita', [
                 'multipart' => [
                     [
                         'name' => 'uploadappraisal',
