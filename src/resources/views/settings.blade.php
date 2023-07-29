@@ -18,7 +18,7 @@
                 </div>
                 <form method="POST" action="{{ route('srp.savesettings')  }}" class="form-horizontal">
                     <div class="card-body">
-                        {{ csrf_field() }}
+                        @csrf
                         <h4>Webhook Config</h4>
                         <div class="form-group row">
                             <label for="webhook_url" class="col-sm-3 col-form-label">Webhook URL</label>
@@ -26,6 +26,16 @@
                                 <div class="input-group col-sm">
                                     <input class="form-control" type="text" name="webhook_url" id="webhook_url" size="32" value="{{ setting('denngarr_seat_srp_webhook_url', true) }}" />
                                 </div>
+                            </div>
+                        </div>
+                        <h4>EvePraisal Config</h4>
+                        <div class="form-group row">
+                            <label for="evepraisal" class="col-sm-3 col-form-label">EvePraisal Domain</label>
+                            <div class="col-sm-8">
+                                <div class="input-group col-sm">
+                                    <input class="form-control" type="text" name="evepraisal" id="evepraisal" size="32" value="{{ setting('denngarr_seat_srp_evepraisal_domain', true) }}" />
+                                </div>
+                                <small class="text-muted ml-2">Enter the domain to an evepraisal instance like www.goonpraisal.com</small>
                             </div>
                         </div>
                         <div class="form-group row">
