@@ -23,6 +23,7 @@
 namespace Denngarr\Seat\SeatSrp\Http\DataTables;
 
 use Denngarr\Seat\SeatSrp\Models\AdvRule;
+use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Services\DataTable;
 
 /**
@@ -35,7 +36,7 @@ class TypeRulesDataTable extends DataTable
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function ajax()
+    public function ajax(): JsonResponse
     {
         return datatables()
             ->eloquent($this->query())
@@ -51,7 +52,7 @@ class TypeRulesDataTable extends DataTable
                 return $row->deduct_insurance > 0 ? 'Yes' : 'No';
             })
             ->rawColumns(['type', 'action'])
-            ->make(true);
+            ->toJson();
     }
 
     /**

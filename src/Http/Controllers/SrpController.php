@@ -43,7 +43,7 @@ class SrpController extends Controller
         ]);
 
         if (! KillmailDetail::find($killmail->killmail_id))
-                    Detail::dispatchNow($killmail->killmail_id, $killmail->killmail_hash);
+                    Detail::dispatchSync($killmail->killmail_id, $killmail->killmail_hash);
 
         $totalKill = [];
 
