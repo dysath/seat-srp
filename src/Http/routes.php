@@ -2,7 +2,7 @@
 
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
-    'middleware' => ['web', 'auth'],
+    'middleware' => ['web', 'auth', 'locale'],
     'prefix' => 'api/v2/srp/metrics/web',
 ], function () {
 
@@ -59,7 +59,7 @@ Route::group([
 ], function () {
 
     Route::group([
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['web', 'auth', 'locale'],
     ], function () {
 
         Route::get('/', [
