@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateDenggarrInsurancesTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         if (! Schema::hasTable('denngarr_srp_insurances')){
-            Schema::create('denngarr_srp_insurances', function (Blueprint $table) {
+            Schema::create('denngarr_srp_insurances', function (Blueprint $table): void {
 
                 $table->bigInteger('type_id');
                 $table->string('name');
@@ -24,7 +24,7 @@ class CreateDenggarrInsurancesTable extends Migration
         }
 
         if (Schema::hasTable('seat_srp_srp') && ! Schema::hasColumn('seat_srp_srp', 'type_id')) {
-            Schema::table('seat_srp_srp', function (Blueprint $table) {
+            Schema::table('seat_srp_srp', function (Blueprint $table): void {
                 $table->bigInteger('type_id')->after('cost');
 
                 $table->index('type_id');
@@ -50,7 +50,7 @@ class CreateDenggarrInsurancesTable extends Migration
         }
     }
 
-    public function down()
+    public function down(): void
     {
         if (Schema::hasTable('denngarr_srp_insurances'))
             Schema::drop('denngarr_srp_insurances');

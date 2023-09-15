@@ -32,12 +32,12 @@ class Insurance extends Model
         return $this->belongsTo(InvType::class, 'type_id', 'typeID');
     }
 
-    public function refunded()
+    public function refunded(): int|float
     {
         return $this->payout - $this->cost;
     }
 
-    public function remaining(KillMail $kill_mail)
+    public function remaining(KillMail $kill_mail): int|float
     {
         return $kill_mail->cost - $this->refunded();
     }

@@ -35,7 +35,7 @@ trait SrpManager
             $slotName = InvFlag::find($item->pivot->flag);
             if (! is_object($searchedItem)) {
             } else {
-                array_push($priceList, $searchedItem->typeName);
+                $priceList[] = $searchedItem->typeName;
                 // dd($item->pivot);
                 switch ($slotName->flagName) {
                     case 'Cargo':
@@ -57,7 +57,7 @@ trait SrpManager
                             $slots['dronebay'][$searchedItem->typeID]['qty'] += $item->pivot->quantity_dropped;
                         break;
                     default:
-                        if (! (preg_match('/(Charge|Script|[SML])$/', $searchedItem->typeName))) {
+                        if (! (preg_match('/(Charge|Script|[SML])$/', (string) $searchedItem->typeName))) {
                             $slots[$slotName->flagName]['id'] = $searchedItem->typeID;
                             $slots[$slotName->flagName]['name'] = $searchedItem->typeName;
                             if (! isset($slots[$slotName->flagName]['qty']))
@@ -75,7 +75,7 @@ trait SrpManager
         $searchedItem = $killMail->victim->ship;
         $slots['typeId'] = $killMail->victim->ship->typeID;
         $slots['shipType'] = $searchedItem->typeName;
-        array_push($priceList, $searchedItem->typeName);
+        $priceList[] = $searchedItem->typeName;
         $prices = $this->srpGetPrice($killMail, $priceList);
 
         $pilot = CharacterInfo::find($killMail->victim->character_id);
@@ -126,20 +126,14 @@ trait SrpManager
         $deduct_insurance = $rule->deduct_insurance;
         $price_cap = $rule->srp_price_cap;
 
-        $deduct_insurance = $deduct_insurance == '1' ? true : false;
+        $deduct_insurance = $deduct_insurance == '1';
 
         $prices = [];
 
-        // Moot point for now.... But will expand later
-        switch ($source) {
-            case 'evepraisal':
-                $prices = $this->srpGetAppraisal($priceList)->appraisal->items;
-                break;
-            default:
-                // TODO handle this nicer
-                throw new Exception('BAD PRICE SOURCE');
-                break;
-        }
+        $prices = match ($source) {
+            'evepraisal' => $this->srpGetAppraisal($priceList)->appraisal->items,
+            default => throw new Exception('BAD PRICE SOURCE'),
+        };
 
         $prices = collect($prices); // Handy to query the collection
 
@@ -166,8 +160,8 @@ trait SrpManager
                 continue;
             }
         }
-        $fp = $fp * $fit_percent;
-        $cp = $cp * $cargo_percent;
+        $fp *= $fit_percent;
+        $cp *= $cargo_percent;
 
         $total = $hp + $fp + $cp + $base_value;
 
@@ -201,21 +195,19 @@ trait SrpManager
     {
 
         $source = 'evepraisal';
-        $base_value = setting('denngarr_seat_srp_advrule_def_base', true) ? setting('denngarr_seat_srp_advrule_def_base', true) : 0;
+        $base_value = setting('denngarr_seat_srp_advrule_def_base', true) ?: 0;
         $hull_percent = setting('denngarr_seat_srp_advrule_def_hull', true) ? setting('denngarr_seat_srp_advrule_def_hull', true) / 100 : 0;
         $fit_percent = setting('denngarr_seat_srp_advrule_def_fit', true) ? setting('denngarr_seat_srp_advrule_def_fit', true) / 100 : 0;
         $cargo_percent = setting('denngarr_seat_srp_advrule_def_cargo', true) ? setting('denngarr_seat_srp_advrule_def_cargo', true) / 100 : 0;
-        $deduct_insurance = setting('denngarr_seat_srp_advrule_def_ins', true) ? setting('denngarr_seat_srp_advrule_def_ins', true) : 0;
-        $price_cap = setting('denngarr_seat_srp_advrule_def_price_cap', true) ? intval(setting('denngarr_seat_srp_advrule_def_price_cap', true)) : null;
+        $deduct_insurance = setting('denngarr_seat_srp_advrule_def_ins', true) ?: 0;
+        $price_cap = setting('denngarr_seat_srp_advrule_def_price_cap', true) ? (int) setting('denngarr_seat_srp_advrule_def_price_cap', true) : null;
 
-        $deduct_insurance = $deduct_insurance == '1' ? true : false;
+        $deduct_insurance = $deduct_insurance == '1';
 
         $prices = [];
 
-        // Moot point for now.... But will expand later
-        switch ($source) {
-            case 'evepraisal':
-                $prices = $this->srpGetAppraisal($priceList)->appraisal->items;
+        if ($source === 'evepraisal') {
+            $prices = $this->srpGetAppraisal($priceList)->appraisal->items;
         }
 
         $prices = collect($prices); // Handy to query the collection
@@ -243,8 +235,8 @@ trait SrpManager
                 continue;
             }
         }
-        $fp = $fp * $fit_percent;
-        $cp = $cp * $cargo_percent;
+        $fp *= $fit_percent;
+        $cp *= $cargo_percent;
 
         $total = round($hp + $fp + $cp + $base_value, 2);
 
@@ -301,6 +293,6 @@ trait SrpManager
                 ],
             ]);
 
-        return json_decode($response->getBody()->getContents());
+        return json_decode($response->getBody()->getContents(), null, 512, JSON_THROW_ON_ERROR);
     }
 }

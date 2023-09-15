@@ -8,7 +8,7 @@ use Seat\Web\Http\Controllers\Controller;
 class SrpMetricsController extends Controller
 {
 
-    private $srp_statuses = [
+    private array $srp_statuses = [
         'unprocessed' => [0],
         'rejected' => [-1],
         'approved' => [1],
@@ -19,10 +19,9 @@ class SrpMetricsController extends Controller
     /**
      * Renders SRP Metric view by consuming data from SRP API for the charts and User list from the KillMail model.
      *
-     * @param  string  $srp_status
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function getIndex($srp_status = 'all')
+    public function getIndex(string $srp_status = 'all')
     {
         if(! $srp_status || ! array_key_exists($srp_status, $this->srp_statuses)){
             return back()->withErrors(
@@ -35,9 +34,6 @@ class SrpMetricsController extends Controller
             ->orderBy('u.name')
             ->pluck('u.name', 'u.id');
 
-        return view('srp::metrics', compact(
-            'users',
-            'srp_status'
-        ));
+        return view('srp::metrics', ['users' => $users, 'srp_status' => $srp_status]);
     }
 }

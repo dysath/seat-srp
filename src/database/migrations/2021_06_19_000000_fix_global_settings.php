@@ -10,7 +10,7 @@ class FixGlobalSettings extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         DB::update("update global_settings set name = 'denngarr_seat_srp_webhook_url' where name= ?", ['webhook_url']);
         DB::update("update global_settings set name = 'denngarr_seat_srp_mention_role' where name= ?", ['mention_role']);
@@ -21,7 +21,7 @@ class FixGlobalSettings extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         DB::update("update global_settings set name = 'webhook_url' where name= ?", ['denngarr_seat_srp_webhook_url']);
         DB::update("update global_settings set name = 'mention_role' where name= ?", ['denngarr_seat_srp_mention_role']);

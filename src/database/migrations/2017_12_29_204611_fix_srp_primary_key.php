@@ -11,9 +11,9 @@ class FixSrpPrimaryKey extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('seat_srp_srp', function (Blueprint $table) {
+        Schema::table('seat_srp_srp', function (Blueprint $table): void {
 
             $table->dropPrimary(['user_id', 'kill_id']);
             $table->primary('kill_id')->change();
@@ -25,9 +25,9 @@ class FixSrpPrimaryKey extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('seat_srp_srp', function (Blueprint $table) {
+        Schema::table('seat_srp_srp', function (Blueprint $table): void {
 
         });
     }

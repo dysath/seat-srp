@@ -11,9 +11,9 @@ class AddPriceCap extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('denngarr_seat_srp_advrule', function (Blueprint $table) {
+        Schema::table('denngarr_seat_srp_advrule', function (Blueprint $table): void {
             $table->integer('srp_price_cap')->unsigned()->nullable();
         });
     }
@@ -23,9 +23,9 @@ class AddPriceCap extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('denngarr_seat_srp_advrule', function (Blueprint $table) {
+        Schema::table('denngarr_seat_srp_advrule', function (Blueprint $table): void {
             $table->dropColumn('srp_price_cap');
         });
     }

@@ -17,7 +17,7 @@ class FlagShim extends Command
 
     protected $description = 'Update the database with some flags not present in the SDE';
 
-    public function handle()
+    public function handle(): void
     {
         // Frigate Escape Bay
         if(! InvFlag::where('flagID', 179)->exists()){

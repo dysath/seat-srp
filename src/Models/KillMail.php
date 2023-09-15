@@ -36,7 +36,7 @@ class KillMail extends Model
     {
         parent::boot();
 
-        self::created(function ($model) {
+        self::created(function ($model): void {
             if(setting('denngarr_seat_srp_webhook_url', true) != ''){
                 $model->notify(new SrpRequestSubmitted());
             }
@@ -55,7 +55,7 @@ class KillMail extends Model
 
     public function ping()
     {
-        return Note::where('object_type', __CLASS__)
+        return Note::where('object_type', self::class)
             ->where('object_id', $this->kill_id)
             ->where('title', 'ping')
             ->first();
@@ -63,7 +63,7 @@ class KillMail extends Model
 
     public function reason()
     {
-        return Note::where('object_type', __CLASS__)
+        return Note::where('object_type', self::class)
             ->where('object_id', $this->kill_id)
             ->where('title', 'reason')
             ->first();
