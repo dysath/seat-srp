@@ -285,10 +285,10 @@ trait SrpManager
 
         $partsList = implode("\n", $priceList);
 
-        $evepraisal = setting('denngarr_seat_srp_evepraisal_domain', true);
+        $evepraisal = setting('denngarr_seat_srp_evepraisal_endpoint', true);
 
         $response = (new Client())
-            ->request('POST', "https://$evepraisal/appraisal.json?market=jita", [
+            ->request('POST', "$evepraisal", [
                 'multipart' => [
                     [
                         'name' => 'uploadappraisal',

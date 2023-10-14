@@ -30,12 +30,12 @@
                         </div>
                         <h4>EvePraisal Config</h4>
                         <div class="form-group row">
-                            <label for="evepraisal" class="col-sm-3 col-form-label">EvePraisal Domain</label>
+                            <label for="evepraisal" class="col-sm-3 col-form-label">EvePraisal Endpoint</label>
                             <div class="col-sm-8">
                                 <div class="input-group col-sm">
-                                    <input class="form-control" type="text" name="evepraisal" id="evepraisal" size="32" value="{{ setting('denngarr_seat_srp_evepraisal_domain', true) }}" />
+                                    <input class="form-control" type="text" name="evepraisal" id="evepraisal" size="32" value="{{ setting('denngarr_seat_srp_evepraisal_endpoint', true) }}" />
                                 </div>
-                                <small class="text-muted ml-2">Enter the domain to an evepraisal instance like www.goonpraisal.com</small>
+                                <small class="text-muted ml-2">Enter the Endpoint to an evepraisal instance like https or (http)://evepraisal.com/appraisal.json?market=jita</small>
                             </div>
                         </div>
                         <div class="form-group row">
