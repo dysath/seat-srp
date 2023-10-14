@@ -286,7 +286,7 @@ trait SrpManager
         $partsList = implode("\n", $priceList);
 
         $response = (new Client())
-            ->request('POST', "$evepraisal/appraisal.json?market=jita", [
+            ->request('POST', "$evepraisal", [
                 'multipart' => [
                     [
                         'name' => 'uploadappraisal',
