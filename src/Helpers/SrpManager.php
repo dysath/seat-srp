@@ -285,6 +285,8 @@ trait SrpManager
 
         $partsList = implode("\n", $priceList);
 
+        $evepraisal = setting('denngarr_seat_srp_evepraisal_endpoint', true);
+
         $response = (new Client())
             ->request('POST', "$evepraisal", [
                 'multipart' => [
