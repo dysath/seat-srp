@@ -42,7 +42,7 @@ class Insurance extends Model
         return $kill_mail->cost - $this->refunded();
     }
 
-    protected function setKeysForSaveQuery(Builder $query) {
+    protected function setKeysForSaveQuery($query) {∆
 
         if (is_array($this->getKeyName())) {
 
