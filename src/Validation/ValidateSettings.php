@@ -6,12 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ValidateSettings extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'webhook_url'    => 'url|present|nullable',

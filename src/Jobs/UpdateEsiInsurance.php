@@ -33,7 +33,7 @@ class UpdateEsiInsurance extends EsiBase
      */
     protected $tags = ['insurance'];
 
-    public function handle() {
+    public function handle(): void {
 
         $insurance = $this->retrieve();
 

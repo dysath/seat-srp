@@ -23,10 +23,10 @@ class SrpAdminController extends Controller
     {
         $killmails = KillMail::where('approved', '>', '-2')->orderby('created_at', 'desc')->get();
 
-        return view('srp::list', compact('killmails'));
+        return view('srp::list', ['killmails' => $killmails]);
     }
 
-    public function srpApprove($kill_id, $action)
+    public function srpApprove($kill_id, $action): string
     {
         $killmail = KillMail::find($kill_id);
 
@@ -50,7 +50,7 @@ class SrpAdminController extends Controller
         $killmail->approver = auth()->user()->name;
         $killmail->save();
 
-        return json_encode(['name' => $action, 'value' => $kill_id, 'approver' => auth()->user()->name]);
+        return json_encode(['name' => $action, 'value' => $kill_id, 'approver' => auth()->user()->name], JSON_THROW_ON_ERROR);
     }
 
     public function srpAddReason(AddReason $request)
@@ -84,7 +84,7 @@ class SrpAdminController extends Controller
         $type_rules = $rules->where('rule_type', 'type');
         $group_rules = $rules->where('rule_type', 'group');
 
-        return view('srp::settings', compact(['groups', 'types', 'type_rules', 'group_rules']));
+        return view('srp::settings', ['groups' => $groups, 'types' => $types, 'type_rules' => $type_rules, 'group_rules' => $group_rules]);
     }
 
     public function saveSrpSettings(ValidateSettings $request)
@@ -163,15 +163,15 @@ class SrpAdminController extends Controller
         return view('srp::srptest');
     }
 
-    public function runDeletions()
+    public function runDeletions(): string
     {
         $deleted = KillMail::where('approved', 99)->delete();
         logger()->info('Deleted ' . $deleted . ' killmails from SRP table');
 
-        return json_encode(['deleted' => $deleted]);
+        return json_encode(['deleted' => $deleted], JSON_THROW_ON_ERROR);
     }
 
-    public function runMissingSearch()
+    public function runMissingSearch(): string
     {
         $md = KillMail::doesntHave('details')->get();
         $mdv = KillMail::doesntHave('details.victim')->get();
@@ -192,15 +192,14 @@ class SrpAdminController extends Controller
                     Detail::dispatch($killmail->killmail_id, $killmail->killmail_hash);
         }
 
-        return json_encode(['dispatched' => $missing->count()]);
+        return json_encode(['dispatched' => $missing->count()], JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @param  \Seat\Eveapi\Models\Killmails\Killmail  $killmail
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showKillmailDetail(EveKillmail $killmail)
     {
-        return view('web::common.killmails.modals.show.content', compact('killmail'));
+        return view('web::common.killmails.modals.show.content', ['killmail' => $killmail]);
     }
 }

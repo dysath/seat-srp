@@ -13,7 +13,7 @@ class SrpServiceProvider extends AbstractSeatPlugin
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->addCommands();
         $this->add_routes();
@@ -28,14 +28,14 @@ class SrpServiceProvider extends AbstractSeatPlugin
     /**
      * Include the routes.
      */
-    public function add_routes()
+    public function add_routes(): void
     {
         if (! $this->app->routesAreCached()) {
             include __DIR__ . '/Http/routes.php';
         }
     }
 
-    public function add_translations()
+    public function add_translations(): void
     {
         $this->loadTranslationsFrom(__DIR__ . '/lang', 'srp');
     }
@@ -43,7 +43,7 @@ class SrpServiceProvider extends AbstractSeatPlugin
     /**
      * Set the path and namespace for the views.
      */
-    public function add_views()
+    public function add_views(): void
     {
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'srp');
     }
@@ -53,7 +53,7 @@ class SrpServiceProvider extends AbstractSeatPlugin
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__ . '/Config/srp.config.php', 'srp.config');
@@ -65,19 +65,19 @@ class SrpServiceProvider extends AbstractSeatPlugin
             __DIR__ . '/Config/Permissions/srp.permissions.php', 'srp');
     }
 
-    public function add_publications()
+    public function add_publications(): void
     {
         $this->publishes([
             __DIR__ . '/resources/assets'     => public_path('web'),
         ]);
     }
 
-    private function add_migrations()
+    private function add_migrations(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations/');
     }
 
-    private function addCommands()
+    private function addCommands(): void
     {
         $this->commands([
             InsuranceUpdate::class,
@@ -92,7 +92,7 @@ class SrpServiceProvider extends AbstractSeatPlugin
      * In the case of this service provider, this is mostly
      * configuration items for L5-Swagger.
      */
-    public function apply_custom_configuration()
+    public function apply_custom_configuration(): void
     {
         // Tell L5-swagger where to find annotations. These form
         // part of the controllers themselves.

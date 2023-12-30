@@ -35,23 +35,19 @@ class TypeRulesDataTable extends DataTable
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function ajax()
+    public function ajax(): \Illuminate\Http\JsonResponse
     {
         return datatables()
             ->eloquent($this->query())
-            ->addColumn('type', function ($row) {
+            ->addColumn('type', fn($row) =>
                 // dd($row->type);
-                return view('web::partials.type', ['type_id' => $row->type_id, 'type_name' => $row->type->typeName])->render();
-            })
-            ->editColumn('action', function ($row) {
+                view('web::partials.type', ['type_id' => $row->type_id, 'type_name' => $row->type->typeName])->render())
+            ->editColumn('action', fn($row) =>
                 // dd($row);
-                return view('srp::buttons.ruleremove', compact('row'))->render();
-            })
-            ->editColumn('deduct_insurance', function ($row) {
-                return $row->deduct_insurance > 0 ? 'Yes' : 'No';
-            })
+                view('srp::buttons.ruleremove', ['row' => $row])->render())
+            ->editColumn('deduct_insurance', fn($row): string => $row->deduct_insurance > 0 ? 'Yes' : 'No')
             ->rawColumns(['type', 'action'])
-            ->make(true);
+            ->toJson();
     }
 
     /**
@@ -79,7 +75,7 @@ class TypeRulesDataTable extends DataTable
     /**
      * @return array
      */
-    public function columns()
+    public function columns(): array
     {
         return [
             // ['data' => 'type', 'title' => 'Type'],

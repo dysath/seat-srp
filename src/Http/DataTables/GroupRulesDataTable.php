@@ -36,7 +36,7 @@ class GroupRulesDataTable extends DataTable
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function ajax()
+    public function ajax(): \Illuminate\Http\JsonResponse
     {
         return datatables()
             ->eloquent($this->query())
@@ -46,14 +46,10 @@ class GroupRulesDataTable extends DataTable
 
                 return view('web::partials.type', ['type_id' => $type->typeID, 'type_name' => $row->group->groupName])->render();
             })
-            ->editColumn('action', function ($row) {
-                return view('srp::buttons.ruleremove', compact('row'))->render();
-            })
-            ->editColumn('deduct_insurance', function ($row) {
-                return $row->deduct_insurance > 0 ? 'Yes' : 'No';
-            })
+            ->editColumn('action', fn($row) => view('srp::buttons.ruleremove', ['row' => $row])->render())
+            ->editColumn('deduct_insurance', fn($row): string => $row->deduct_insurance > 0 ? 'Yes' : 'No')
             ->rawColumns(['group', 'action'])
-            ->make(true);
+            ->toJson();
     }
 
     /**
@@ -81,7 +77,7 @@ class GroupRulesDataTable extends DataTable
     /**
      * @return array
      */
-    public function columns()
+    public function columns(): array
     {
         return [
             // ['data' => 'type', 'title' => 'Type'],

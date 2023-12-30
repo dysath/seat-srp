@@ -14,7 +14,7 @@ use Seat\Web\Models\User;
 class SrpMetricsApiController extends ApiController
 {
 
-    private $srp_statuses = [
+    private array $srp_statuses = [
         'unprocessed' => [0],
         'rejected' => [-1],
         'approved' => [1],
@@ -220,7 +220,7 @@ class SrpMetricsApiController extends ApiController
      *
      * @param  int  $limit
      */
-    public function getSummaryUser($status = null, $user_id, $limit = null)
+    public function getSummaryUser($user_id, $status = null, $limit = null)
     {
         // return 404 if status is not recognized
         if(! array_key_exists($status, $this->srp_statuses)){

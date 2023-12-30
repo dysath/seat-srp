@@ -24,14 +24,14 @@ class SrpController extends Controller
                          ->take(20)
                          ->get();
 
-        return view('srp::request', compact('kills'));
+        return view('srp::request', ['kills' => $kills]);
     }
 
     public function srpGetKillMail(Request $request)
     {
 
         // The submitted url is available at $request->km;
-        $url_parts = explode('/', rtrim($request->km, "/ \t\n\r\0\x0B"));
+        $url_parts = explode('/', rtrim((string) $request->km, "/ \t\n\r\0\x0B"));
 
         $token = $url_parts[5];
         $hash = $url_parts[6];
@@ -43,7 +43,7 @@ class SrpController extends Controller
         ]);
 
         if (! KillmailDetail::find($killmail->killmail_id))
-                    Detail::dispatchNow($killmail->killmail_id, $killmail->killmail_hash);
+                    Detail::dispatchSync($killmail->killmail_id, $killmail->killmail_hash);
 
         $totalKill = [];
 
@@ -51,7 +51,7 @@ class SrpController extends Controller
 
         // $killMail = json_decode($response->getBody());
         $totalKill = array_merge($totalKill, $this->srpPopulateSlots($killmail));
-        preg_match('/([a-z0-9]{35,42})/', $request->km, $tokens);
+        preg_match('/([a-z0-9]{35,42})/', (string) $request->km, $tokens);
         $totalKill['killToken'] = $tokens[0];
 
         return response()->json($totalKill);
@@ -89,13 +89,13 @@ class SrpController extends Controller
 
         foreach ($killmail->type->insurances as $insurance) {
 
-            array_push($data, [
+            $data[] = [
                 'name' => $insurance->name,
                 'cost' => $insurance->cost,
                 'payout' => $insurance->payout,
                 'refunded' => $insurance->refunded(),
                 'remaining' => $insurance->remaining($killmail),
-            ]);
+            ];
 
         }
 

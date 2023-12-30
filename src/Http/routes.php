@@ -4,7 +4,7 @@ Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
     'middleware' => ['web', 'auth'],
     'prefix' => 'api/v2/srp/metrics/web',
-], function () {
+], function (): void {
 
     Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.web.summary.monthly',
@@ -31,7 +31,7 @@ Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
     'middleware' => ['api.auth'],
     'prefix' => 'api/v2/srp/metrics',
-], function () {
+], function (): void {
     Route::get('/summary/monthly/{status}/{limit?}', [
         'as' => 'srp.metrics.api.summary.monthly',
         'uses' => 'SrpMetricsApiController@getSummaryMonthly',
@@ -56,11 +56,11 @@ Route::group([
 Route::group([
     'namespace' => 'Denngarr\Seat\SeatSrp\Http\Controllers',
     'prefix' => 'srp',
-], function () {
+], function (): void {
 
     Route::group([
         'middleware' => ['web', 'auth'],
-    ], function () {
+    ], function (): void {
 
         Route::get('/', [
             'as'   => 'srp.request',
@@ -167,7 +167,7 @@ Route::group([
         Route::group([
             'middleware' => 'can:srp.settings',
             'prefix' => 'advanced-settings',
-        ], function () {
+        ], function (): void {
 
             Route::post('/add-type', [
                 'as' => 'srp.adv.type.add',
@@ -200,7 +200,7 @@ Route::group([
         Route::group([
             'middleware' => 'can:srp.settle',
             'prefix' => 'metrics',
-        ], function () {
+        ], function (): void {
 
             Route::get('/{srp_status?}', [
                 'as' => 'srp.metrics',

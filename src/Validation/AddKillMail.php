@@ -6,12 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AddKillMail extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'srpCharacterName' => 'required|string',

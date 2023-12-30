@@ -17,7 +17,7 @@ class InsuranceUpdate extends Command
 
     protected $description = 'Queue a job which will refresh insurances data';
 
-    public function handle()
+    public function handle(): void
     {
         UpdateEsiInsurance::dispatch();
     }

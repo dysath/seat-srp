@@ -6,7 +6,7 @@ use GuzzleHttp\Client as Requests;
 
 class Discord
 {
-    public function post($content)
+    public function post(string $content): array
     {
         $url = setting('denngarr_seat_srp_webhook_url', true);
         if(! $url){

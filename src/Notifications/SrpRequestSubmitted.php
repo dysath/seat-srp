@@ -25,10 +25,9 @@ class SrpRequestSubmitted extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via(mixed $notifiable): array
     {
         return [DiscordChannel::class];
     }
